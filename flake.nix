@@ -49,6 +49,7 @@
         services.tvheadend.enable = true;
         services.transmission.enable = true;
         services.jackett.enable = true;
+        services.testaustime-backup.enable = true;
         hardware.zfs.enable = true;
       };
 
