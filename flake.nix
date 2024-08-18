@@ -30,32 +30,50 @@
     utils = import ./lib/system.nix {inherit user inputs;};
     inherit (utils) mkHost;
   in {
-    nixosConfigurations.nas = mkHost {
-      extraModules = with inputs.nixos-hardware.nixosModules; [
-        common-pc
-        common-pc-ssd
-        common-cpu-intel
-        common-gpu-nvidia
-      ];
+    nixosConfigurations = {
+      nas = mkHost {
+        extraModules = with inputs.nixos-hardware.nixosModules; [
+          common-pc
+          common-pc-ssd
+          common-cpu-intel
+          common-gpu-nvidia
+        ];
 
-      systemConfig = {
-        core = {
-          hostname = "nas";
-          server = false;
+        systemConfig = {
+          core = {
+            hostname = "nas";
+            server = false;
+          };
+
+          services.ssh.enable = true;
+          services.jellyfin.enable = true;
+          services.tvheadend.enable = true;
+          services.transmission.enable = true;
+          services.jackett.enable = true;
+          services.testaustime-backup.enable = true;
+          services.syncthing.enable = true;
+          hardware.zfs.enable = true;
         };
 
-        services.ssh.enable = true;
-        services.jellyfin.enable = true;
-        services.tvheadend.enable = true;
-        services.transmission.enable = true;
-        services.jackett.enable = true;
-        services.testaustime-backup.enable = true;
-        services.syncthing.enable = true;
-        hardware.zfs.enable = true;
+        userConfig = {
+          editors.nvim.enable = true;
+        };
       };
+      vaasanas = mkHost {
+        extraModules = with inputs.nixos-hardware.nixosModules; [
+          common-pc
+          common-cpu-intel
+        ];
 
-      userConfig = {
-        editors.nvim.enable = true;
+        systemConfig = {
+          core = {
+            hostname = "vaasanas";
+            server = true;
+          };
+
+          services.ssh.enable = true;
+          hardware.zfs.enable = true;
+        };
       };
     };
   };
