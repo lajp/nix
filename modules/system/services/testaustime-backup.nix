@@ -26,7 +26,7 @@ in {
       '';
       serviceConfig = {
         Type = "oneshot";
-        User = "lajp";
+        User = config.lajp.user.username;
       };
     };
   };
