@@ -1,4 +1,4 @@
-{pkgs, ...}:  {
+{pkgs, ...}: {
   imports = [
     ./neovim.nix
     ./tmux.nix
@@ -58,7 +58,7 @@
       enable = true;
       userName = "Luukas Pörtfors";
       userEmail = "lajp@iki.fi";
-      
+
       aliases = {
         br = "branch";
         co = "checkout";

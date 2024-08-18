@@ -1,4 +1,8 @@
-{inputs, user, ...}: let
+{
+  inputs,
+  user,
+  ...
+}: let
   inherit (inputs.nixpkgs.lib) nixosSystem;
 in {
   mkHost = {
@@ -18,8 +22,8 @@ in {
       modules =
         [
           ({config, ...}: let
-           inherit (config.lajp.user) username;
-           inherit (config.lajp.core) server;
+            inherit (config.lajp.user) username;
+            inherit (config.lajp.core) server;
           in {
             imports = [
               ../hosts/${hostname}
@@ -28,7 +32,8 @@ in {
 
             lajp = systemConfig;
 
-            home-manager = if !server
+            home-manager =
+              if !server
               then {
                 useGlobalPkgs = true;
                 useUserPackages = true;
@@ -38,7 +43,6 @@ in {
                 users.${username} = user.mkConfig {inherit userConfig;};
               }
               else {};
-
           })
 
           inputs.home-manager.nixosModule

@@ -19,7 +19,7 @@ in {
     };
 
     systemd.services."testaustime-backup" = {
-      path = with pkgs; [ rsync openssh ];
+      path = with pkgs; [rsync openssh];
       script = ''
         set -eu
         rsync -Pr testaustime.fi:/opt/backups /media/luukas/Backups/testaustime
