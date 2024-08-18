@@ -1,10 +1,10 @@
-{inputs, ...}: let
+{inputs, user, ...}: let
   inherit (inputs.nixpkgs.lib) nixosSystem;
 in {
   mkHost = {
-    extraModules ? [],
     systemConfig,
     userConfig ? {},
+    extraModules ? [],
   }: let
     inherit (systemConfig.core) hostname;
   in
@@ -17,14 +17,32 @@ in {
 
       modules =
         [
-          ({config, ...}: {
+          ({config, ...}: let
+           inherit (config.lajp.user) username;
+           inherit (config.lajp.core) server;
+          in {
             imports = [
               ../hosts/${hostname}
-              ../modules
+              ../modules/system
             ];
 
             lajp = systemConfig;
+
+            home-manager = if !server
+              then {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                extraSpecialArgs = {
+                  inherit inputs;
+                };
+                users.${username} = user.mkConfig {inherit userConfig;};
+              }
+              else {};
+
           })
+
+          inputs.home-manager.nixosModule
+          inputs.agenix.nixosModules.default
         ]
         ++ extraModules;
     };
