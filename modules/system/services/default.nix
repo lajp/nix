@@ -6,5 +6,6 @@
     ./transmission.nix
     ./tvheadend.nix
     ./testaustime-backup.nix
+    ./syncthing.nix
   ];
 }

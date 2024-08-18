@@ -50,6 +50,7 @@
         services.transmission.enable = true;
         services.jackett.enable = true;
         services.testaustime-backup.enable = true;
+        services.syncthing.enable = true;
         hardware.zfs.enable = true;
       };
 
