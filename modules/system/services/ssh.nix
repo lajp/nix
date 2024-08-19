@@ -16,6 +16,7 @@ in {
         PasswordAuthentication = false;
         KbdInteractiveAuthentication = false;
         PermitRootLogin = "without-password";
+        StreamLocalBindUnlink = "yes";
       };
     };
 
