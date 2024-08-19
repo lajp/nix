@@ -52,6 +52,7 @@
           services.jackett.enable = true;
           services.testaustime-backup.enable = true;
           services.syncthing.enable = true;
+          services.samba.enable = true;
           hardware.zfs.enable = true;
         };
 
