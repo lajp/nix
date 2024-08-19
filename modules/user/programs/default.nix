@@ -2,6 +2,7 @@
   imports = [
     ./neovim.nix
     ./tmux.nix
+    ./pass.nix
   ];
 
   home.packages = with pkgs; [
