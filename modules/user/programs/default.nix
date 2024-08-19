@@ -3,6 +3,7 @@
     ./neovim.nix
     ./tmux.nix
     ./pass.nix
+    ./gpg.nix
     ./mail
   ];
 
@@ -32,6 +33,10 @@
 
     fastfetch
   ];
+
+
+  # FIXME: wrong place
+  services.gpg-agent.enable = true;
 
   programs = {
     starship = {
