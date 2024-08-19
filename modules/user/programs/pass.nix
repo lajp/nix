@@ -3,6 +3,7 @@
   osConfig,
   ...
 }: let
+  # TODO: use config.xdg.dataHome
   passDir = osConfig.lajp.user.homeDirectory + "/.password-store";
 in {
   programs.password-store = {
