@@ -12,7 +12,7 @@ in {
     users = mkOption {
       description = "Users allowed to access /media through SMB";
       type = types.listOf types.str;
-      default = [ config.lajp.user.username ];
+      default = [config.lajp.user.username];
     };
   };
 
@@ -25,7 +25,7 @@ in {
         workgroup = WORKGROUP
         server string = ${config.lajp.core.hostname}
         netbios name = ${config.lajp.core.hostname}
-        security = user 
+        security = user
         guest account = nobody
         map to guest = bad user
       '';
@@ -50,6 +50,6 @@ in {
       openFirewall = true;
     };
 
-    environment.systemPackages = [ pkgs.samba ];
+    environment.systemPackages = [pkgs.samba];
   };
 }

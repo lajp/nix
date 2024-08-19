@@ -1,15 +1,15 @@
-{ 
+{
   config,
   pkgs,
-  ... 
+  ...
 }: {
   accounts.email.maildirBasePath = config.xdg.dataHome + "/mail";
   accounts.email.accounts = {
-    iki = let 
+    iki = let
       address = "lajp@iki.fi";
     in {
       inherit address;
-      aliases = [ "luukas.portfors@iki.fi" ];
+      aliases = ["luukas.portfors@iki.fi"];
       msmtp.enable = true;
 
       inherit (config.accounts.email.accounts.personal) imap;
@@ -38,7 +38,7 @@
       address = "lajp@lajp.fi";
     in {
       inherit address;
-      aliases = [ "luukas@portfo.rs" ];
+      aliases = ["luukas@portfo.rs"];
       imap.host = "mail.lajp.fi";
 
       mbsync = {
