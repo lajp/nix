@@ -3,6 +3,7 @@
     ./neovim.nix
     ./tmux.nix
     ./pass.nix
+    ./neomutt
   ];
 
   home.packages = with pkgs; [
