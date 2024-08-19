@@ -7,5 +7,6 @@
     ./tvheadend.nix
     ./testaustime-backup.nix
     ./syncthing.nix
+    ./samba.nix
   ];
 }
