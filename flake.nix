@@ -72,6 +72,10 @@
           };
 
           services.ssh.enable = true;
+          services.samba = {
+            enable = true;
+            users = [ "lajp" "petri" ];
+          };
           hardware.zfs.enable = true;
         };
       };
