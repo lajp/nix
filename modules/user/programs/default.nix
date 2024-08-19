@@ -34,10 +34,6 @@
     fastfetch
   ];
 
-
-  # FIXME: wrong place
-  services.gpg-agent.enable = true;
-
   programs = {
     starship = {
       enable = true;

@@ -2,7 +2,6 @@
   pkgs,
   ...
 }: {
-
   imports = [
     ./accounts.nix
   ];
@@ -12,5 +11,4 @@
   };
 
   programs.mbsync.enable = true;
-  services.mbsync.enable = true;
 }
