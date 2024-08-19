@@ -1,10 +1,9 @@
 {
   pkgs,
-  osConfig,
+  config,
   ...
 }: let
-  # TODO: use config.xdg.dataHome
-  passDir = osConfig.lajp.user.homeDirectory + "/.password-store";
+  passDir = config.xdg.dataHome + "/password-store";
 in {
   programs.password-store = {
     enable = true;
