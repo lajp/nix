@@ -4,7 +4,7 @@
     ./tmux.nix
     ./pass.nix
     ./gpg.nix
-    ./mail
+    ./neomutt
   ];
 
   home.packages = with pkgs; [
@@ -77,6 +77,13 @@
         signByDefault = true;
         key = null;
       };
+    };
+
+    mbsync.enable = true;
+    msmtp.enable = true;
+    notmuch = {
+      enable = true;
+      hooks.preNew = "${pkgs.isync}/bin/mbsync -a";
     };
   };
 }
