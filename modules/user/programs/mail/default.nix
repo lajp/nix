@@ -1,11 +1,8 @@
 {pkgs, ...}: {
   imports = [
     ./accounts.nix
+    ./neomutt.nix
   ];
-
-  programs.neomutt = {
-    enable = true;
-  };
 
   programs.mbsync.enable = true;
 }

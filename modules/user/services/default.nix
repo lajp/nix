@@ -1,6 +1,13 @@
-{config, ...}: {
+{config, pkgs, ...}: {
   services = {
-    gpg-agent.enable = true;
+    #TODO: re-enable
+    #gpg-agent = {
+    #  enable = true;
+    #  pinentryPackage = pkgs.pinentry-tty;
+    #  extraConfig = ''
+    #    allow-loopback-pinentry
+    #  '';
+    #};
     mbsync.enable = true;
 
     # FIXME: the repository still has to be initialized
