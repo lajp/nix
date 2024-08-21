@@ -42,6 +42,8 @@
     htop
     killall
     fd
+    gnupg
+
     inputs.agenix.packages."${system}".default
   ];
 
