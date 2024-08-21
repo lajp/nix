@@ -29,7 +29,7 @@
 
       neomutt = {
         enable = true;
-        extraMailboxes = [ "Drafts" "Junk" "Trash" "Sent" "Archive" ];
+        extraMailboxes = ["Drafts" "Junk" "Trash" "Sent" "Archive"];
         extraConfig = ''
           # This together with `set reverse_name` allows automatically
           # determening the address from which to reply based on the
@@ -76,6 +76,5 @@
         tls.useStartTls = true;
       };
     };
-
   };
 }

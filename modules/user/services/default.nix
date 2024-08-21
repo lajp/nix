@@ -1,4 +1,8 @@
-{config, pkgs, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}: {
   services = {
     #TODO: re-enable
     #gpg-agent = {
