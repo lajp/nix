@@ -2,6 +2,7 @@
   lib,
   config,
   inputs,
+  pkgs,
   ...
 }: let
   inherit (lib) mkEnableOption mkIf;
@@ -9,10 +10,13 @@
 in {
   imports = [
     inputs.nixvim.homeManagerModules.nixvim
+    inputs.agenix.homeManagerModules.default
   ];
 
   options.lajp.editors.nvim.enable = mkEnableOption "Enable Neovim";
+
   config = mkIf cfg.enable {
+    age.secrets.testaustime.file = ../../../secrets/testaustime.age;
     programs.ripgrep.enable = true;
     programs.nixvim = {
       enable = true;
@@ -84,7 +88,84 @@ in {
             "<C-f>" = "live_grep";
           };
         };
+
+        treesitter.enable = true;
+
+        gitsigns = {
+          enable = true;
+          settings.current_line_blame = true;
+        };
+
+        nix.enable = true;
+
+        lsp = {
+          enable = true;
+          servers = {
+            clangd.enable = true;
+            nixd = {
+              enable = true;
+              settings = {
+                formatting.command = [ "${pkgs.alejandra}/bin/alejandra -q" ];
+              };
+            };
+            rust-analyzer = {
+              enable = true;
+              installCargo = true;
+              installRustc = true;
+              cargoPackage = pkgs.rustup;
+              rustcPackage = pkgs.rustup;
+            };
+            typst-lsp.enable = true;
+            metals.enable = true;
+          };
+        };
+
+        lsp-format.enable = true;
+
+        cmp = {
+          enable = true;
+          settings = {
+            autoEnableSources = true;
+            sources = [
+              { name = "nvim_lsp"; }
+            ];
+
+            mapping = {
+              "<Tab>" = "cmp.mapping(cmp.mapping.select_next_item(), {'i', 's'})";
+              "<S-Tab>" = "cmp.mapping(cmp.mapping.select_prev_item(), {'i', 's'})";
+              "<CR>" = "cmp.mapping.confirm({ select = true })";
+            };
+          };
+        };
+
+        cmp-nvim-lsp.enable = true;
       };
+
+      extraPlugins = [
+        (pkgs.vimUtils.buildVimPlugin {
+          name = "testaustime";
+          src = pkgs.fetchFromGitHub {
+            owner = "Testaustime";
+            repo = "testaustime.nvim";
+            rev = "main";
+            sha256 = "gj1a6y2B3D4icsYRdY+ZxJWJ/2ioIWIGZQuBmd0M+wE=";
+          };
+        })
+      ];
+
+      extraConfigLua = ''
+      function os.capture(cmd)
+        local f = assert(io.popen(cmd, 'r'))
+        local s = assert(f:read('*l'))
+        f:close()
+        return s
+      end
+
+
+        require('testaustime').setup({
+          token = os.capture('cat ${config.age.secrets.testaustime.path}')
+        })
+      '';
 
       extraConfigVim = ''
         vnoremap K :m '<-2<CR>gv=gv
