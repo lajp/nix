@@ -5,15 +5,15 @@
 }: {
   services = {
     #TODO: re-enable
-    gpg-agent = {
-      enable = true;
-      enableExtraSocket = true;
-      enableSshSupport = true;
-      pinentryPackage = pkgs.pinentry-gtk2;
-      extraConfig = ''
-        allow-loopback-pinentry
-      '';
-    };
+    #gpg-agent = {
+    #  enable = true;
+    #  enableExtraSocket = true;
+    #  enableSshSupport = true;
+    #  pinentryPackage = pkgs.pinentry-gtk2;
+    #  extraConfig = ''
+    #    allow-loopback-pinentry
+    #  '';
+    #};
 
     mbsync.enable = true;
 
