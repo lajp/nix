@@ -23,6 +23,11 @@
     };
   };
 
+  nixpkgs = {
+    overlays = [inputs.nur.overlay];
+    config.allowUnfree = true;
+  };
+
   networking.firewall.enable = true;
 
   time.timeZone = "Europe/Helsinki";

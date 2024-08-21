@@ -4,13 +4,12 @@
     ./tmux.nix
     ./pass.nix
     ./gpg.nix
+    ./firefox.nix
     ./neomutt
   ];
 
   home.packages = with pkgs; [
     pavucontrol
-
-    firefox
 
     file
     github-cli
