@@ -7,7 +7,8 @@
     #TODO: re-enable
     #gpg-agent = {
     #  enable = true;
-    #  pinentryPackage = pkgs.pinentry-tty;
+    #  enableExtraSocket = true;
+    #  pinentryPackage = pkgs.pinentry-gtk2;
     #  extraConfig = ''
     #    allow-loopback-pinentry
     #  '';
