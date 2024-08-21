@@ -47,6 +47,8 @@
     inputs.agenix.packages."${system}".default
   ];
 
+  # NOTE: On servers we'll use gpg agent forwarding
+  # so we don't want the agent to overwrite the socket
   programs.gnupg.agent.settings.no-autostart = true;
 
   environment.variables.EDITOR = "vim";
