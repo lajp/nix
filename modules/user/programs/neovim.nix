@@ -105,7 +105,7 @@ in {
             nixd = {
               enable = true;
               settings = {
-                formatting.command = [ "${pkgs.alejandra}/bin/alejandra -q" ];
+                formatting.command = ["${pkgs.alejandra}/bin/alejandra -q"];
               };
             };
             rust-analyzer = {
@@ -127,7 +127,7 @@ in {
           settings = {
             autoEnableSources = true;
             sources = [
-              { name = "nvim_lsp"; }
+              {name = "nvim_lsp";}
             ];
 
             mapping = {
@@ -154,17 +154,17 @@ in {
       ];
 
       extraConfigLua = ''
-      function os.capture(cmd)
-        local f = assert(io.popen(cmd, 'r'))
-        local s = assert(f:read('*l'))
-        f:close()
-        return s
-      end
+        function os.capture(cmd)
+          local f = assert(io.popen(cmd, 'r'))
+          local s = assert(f:read('*l'))
+          f:close()
+          return s
+        end
 
 
-        require('testaustime').setup({
-          token = os.capture('cat ${config.age.secrets.testaustime.path}')
-        })
+          require('testaustime').setup({
+            token = os.capture('cat ${config.age.secrets.testaustime.path}')
+          })
       '';
 
       extraConfigVim = ''
