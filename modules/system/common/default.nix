@@ -47,5 +47,7 @@
     inputs.agenix.packages."${system}".default
   ];
 
+  programs.gnupg.agent.settings.no-autostart = true;
+
   environment.variables.EDITOR = "vim";
 }
