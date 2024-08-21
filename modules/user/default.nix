@@ -9,6 +9,7 @@ in {
   imports = [
     ./programs
     ./services
+    ./accounts.nix
     #./shell
   ];
 
