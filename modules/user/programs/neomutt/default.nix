@@ -20,27 +20,27 @@
 
     binds = [
       {
-        map = [ "index" ];
+        map = ["index"];
         key = "l";
         action = "display-message";
       }
       {
-        map = [ "index" ];
+        map = ["index"];
         key = "L";
         action = "limit";
       }
       {
-        map = [ "index" "pager" ];
+        map = ["index" "pager"];
         key = "\\Ck";
         action = "sidebar-prev";
       }
       {
-        map = [ "index" "pager" ];
+        map = ["index" "pager"];
         key = "\\Cj";
         action = "sidebar-next";
       }
       {
-        map = [ "index" "pager" ];
+        map = ["index" "pager"];
         key = "\\Co";
         action = "sidebar-open";
       }
@@ -48,7 +48,7 @@
 
     macros = [
       {
-        map = [ "index" ];
+        map = ["index"];
         key = "O";
         action = "<shell-escape>mbsync -a<enter>";
       }
