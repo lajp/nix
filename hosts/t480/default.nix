@@ -17,7 +17,8 @@
     fsType = "ext4";
   };
 
-  boot.initrd.luks.devices."nixos-crypt".device= "/dev/disk/by-uuid/82f5c2e0-69b4-4564-9775-ec979df706ac";
+  #boot.initrd.luks.devices."nixos-crypt".device= "/dev/disk/by-uuid/82f5c2e0-69b4-4564-9775-ec979df706ac";
+  boot.initrd.luks.devices."nixos-crypt".device= "/dev/disk/by-uuid/95470ada-f9b3-43f4-9ab5-a7d8a97762ab";
 
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/12CE-A600";
