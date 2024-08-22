@@ -50,7 +50,7 @@
         systemConfig = {
           core = {
             hostname = "nas";
-            server = false;
+            server = true;
           };
 
           services.ssh.enable = true;
@@ -62,10 +62,6 @@
           services.syncthing.enable = true;
           services.samba.enable = true;
           hardware.zfs.enable = true;
-        };
-
-        userConfig = {
-          editors.nvim.enable = true;
         };
       };
       vaasanas = mkHost {
@@ -86,6 +82,21 @@
             users = ["lajp" "petri"];
           };
           hardware.zfs.enable = true;
+        };
+      };
+      t480 = mkHost {
+        extraModules = with inputs.nixos-hardware.nixosModules; [
+          lenovo-thinkpad-t480
+        ];
+
+        systemConfig = {
+          core = {
+            hostname = "t480";
+          };
+        };
+
+        userConfig = {
+          editors.nvim.enable = true;
         };
       };
     };

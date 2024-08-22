@@ -1,8 +1,13 @@
 {
   pkgs,
   inputs,
+  config,
+  lib,
   ...
-}: {
+}: let
+  inherit (config.lajp.core) server;
+  inherit (lib) mkIf;
+in {
   imports = [
     ./user.nix
   ];
@@ -54,7 +59,7 @@
 
   # NOTE: On servers we'll use gpg agent forwarding
   # so we don't want the agent to overwrite the socket
-  programs.gnupg.agent.settings.no-autostart = true;
+  programs.gnupg.agent.settings.no-autostart = mkIf server true;
 
   environment.variables.EDITOR = "vim";
 }

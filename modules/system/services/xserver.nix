@@ -1,17 +1,32 @@
 { pkgs, lib, config, ...}: let
   inherit (lib) mkIf;
   inherit (config.lajp.core) server;
-{
-  services.xserver = mkIf (!server) {
-    enable = true;
+in {
+  config = mkIf (!server) {
+    environment.systemPackages = with pkgs; [
+      dmenu
+    ];
 
-    displayManager.gdm.enable = true;
+    # TODO: package lajp/blmgr
+    programs.light.enable = true;
 
-    windowManager.dwm = {
+    services.xserver = {
       enable = true;
-      package = pkgs.overrideAttrs {
-        src = fetchgit {
-          url = "https://github.com/lajp/dwm";
+
+      displayManager.lightdm.enable = true;
+      displayManager.sessionCommands = ''
+        ${pkgs.xorg.xinput}/bin/xinput disable "Synaptics TM3276-022"
+      '';
+
+      windowManager.dwm = {
+        enable = true;
+        package = pkgs.dwm.overrideAttrs {
+          src = pkgs.fetchFromGitHub {
+            owner = "lajp";
+            repo = "dwm";
+            rev = "master";
+            sha256 = "vj56jKOAebAiBFGRtFk9cgSVXL9Fi3QUmn4KKtcNbSk=";
+          };
         };
       };
     };

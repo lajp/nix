@@ -4,16 +4,17 @@
   ...
 }: {
   services = {
-    #TODO: re-enable
-    #gpg-agent = {
-    #  enable = true;
-    #  enableExtraSocket = true;
-    #  enableSshSupport = true;
-    #  pinentryPackage = pkgs.pinentry-gtk2;
-    #  extraConfig = ''
-    #    allow-loopback-pinentry
-    #  '';
-    #};
+    gpg-agent = {
+      enable = true;
+      enableExtraSocket = true;
+      enableSshSupport = true;
+      pinentryPackage = pkgs.pinentry-gtk2;
+    };
+
+    dwm-status = {
+      enable = true;
+      order = [ "audio" "backlight" "battery" "network" "cpu_load" "time" ];
+    };
 
     mbsync.enable = true;
 
