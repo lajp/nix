@@ -17,7 +17,7 @@
     fsType = "ext4";
   };
 
-  boot.initrd.luks.devices."nixos-crypt" = "/dev/disk/by-uuid/82f5c2e0-69b4-4564-9775-ec979df706ac";
+  boot.initrd.luks.devices."nixos-crypt".device= "/dev/disk/by-uuid/82f5c2e0-69b4-4564-9775-ec979df706ac";
 
   fileSystems."/boot" =
     { device = "/dev/disk/by-uuid/12CE-A600";
@@ -32,7 +32,7 @@
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
   boot.loader.systemd-boot.enable = true;
-  networking.hostname = config.lajp.core.hostname;
+  networking.hostName = config.lajp.core.hostname;
 
   services.pipewire = {
     enable = true;
