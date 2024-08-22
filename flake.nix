@@ -50,7 +50,7 @@
         systemConfig = {
           core = {
             hostname = "nas";
-            server = false;
+            server = true;
           };
 
           services.ssh.enable = true;
@@ -62,10 +62,6 @@
           services.syncthing.enable = true;
           services.samba.enable = true;
           hardware.zfs.enable = true;
-        };
-
-        userConfig = {
-          editors.nvim.enable = true;
         };
       };
       vaasanas = mkHost {
