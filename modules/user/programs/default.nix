@@ -84,5 +84,7 @@
       enable = true;
       hooks.preNew = "${pkgs.isync}/bin/mbsync -a";
     };
+
+    alacritty.enable = true;
   };
 }

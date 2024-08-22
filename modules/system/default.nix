@@ -1,3 +1,3 @@
 {...}: {
-  imports = [./common ./services ./core.nix ./hardware];
+  imports = [./common ./services ./core.nix ./hardware ./gui];
 }

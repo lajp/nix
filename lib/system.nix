@@ -47,6 +47,7 @@ in {
 
           inputs.home-manager.nixosModule
           inputs.agenix.nixosModules.default
+          inputs.stylix.nixosModules.stylix
         ]
         ++ extraModules;
     };
