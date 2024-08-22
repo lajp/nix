@@ -34,6 +34,7 @@
 
   boot.loader.systemd-boot.enable = true;
   networking.hostName = config.lajp.core.hostname;
+  networking.networkmanager.enable = true;
 
   services.pipewire = {
     enable = true;

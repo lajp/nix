@@ -34,6 +34,8 @@ in {
     };
   };
 
+  xsession.initExtra = "xset r rate 250 20";
+
   nix = {
     registry.nixpkgs.flake = inputs.nixpkgs;
 
