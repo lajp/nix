@@ -88,6 +88,21 @@
           hardware.zfs.enable = true;
         };
       };
+      t480 = mkHost {
+        extraModules = with inputs.nixos-hardware.nixosModules; [
+          lenovo-thinkpad-t480
+        ];
+
+        systemConfig = {
+          core = {
+            hostname = "t480";
+          };
+        };
+
+        userConfig = {
+          editors.nvim.enable = true;
+        };
+      };
     };
   };
 }
