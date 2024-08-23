@@ -25,7 +25,7 @@ in {
             owner = "lajp";
             repo = "dwm";
             rev = "master";
-            sha256 = "vj56jKOAebAiBFGRtFk9cgSVXL9Fi3QUmn4KKtcNbSk=";
+            sha256 = "+RZyMkRrSzFHXVP2hHGrdf/+CX4NQNhEZxvdWGm75u0=";
           };
         };
       };
