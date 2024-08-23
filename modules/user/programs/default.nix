@@ -5,6 +5,7 @@
     ./pass.nix
     ./gpg.nix
     ./firefox.nix
+    ./ssh.nix
     ./neomutt
   ];
 
