@@ -11,6 +11,8 @@
       pinentryPackage = pkgs.pinentry-gtk2;
     };
 
+    dunst.enable = true;
+
     dwm-status = {
       enable = true;
       order = [ "audio" "backlight" "battery" "network" "cpu_load" "time" ];
