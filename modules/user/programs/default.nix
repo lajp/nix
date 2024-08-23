@@ -13,7 +13,7 @@
     pavucontrol
     discord
     flameshot
-    mpv
+    signal-desktop
 
     file
     github-cli
@@ -33,6 +33,8 @@
     usbutils
 
     ffmpeg
+    mpv
+    playerctl
 
     fastfetch
   ];
@@ -60,6 +62,11 @@
       shellAbbrs = {
         tempdir = "cd $(mktemp -d)";
       };
+    };
+
+    direnv = {
+      enable = true;
+      nix-direnv.enable = true;
     };
 
     git = {
