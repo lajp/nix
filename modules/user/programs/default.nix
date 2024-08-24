@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  inputs,
   ...
 }: {
   imports = [
@@ -11,6 +12,8 @@
     ./firefox.nix
     ./ssh.nix
     ./neomutt
+
+    inputs.nix-index-database.hmModules.nix-index
   ];
 
   home.packages = with pkgs; [
@@ -68,6 +71,13 @@
         tempdir = "cd $(mktemp -d)";
       };
     };
+
+    nix-index = {
+      enable = true;
+      enableFishIntegration = true;
+    };
+
+    nix-index-database.comma.enable = true;
 
     direnv = {
       enable = true;
