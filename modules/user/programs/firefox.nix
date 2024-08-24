@@ -9,7 +9,10 @@
     profiles.default = {
       name = "default";
       id = 0;
-      settings."toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+      settings = {
+        "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+        "media.ffmpeg.vaapi.enabled" = true;
+      };
 
       extensions = with pkgs.nur.repos.rycee.firefox-addons; [
         ublock-origin
