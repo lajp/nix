@@ -12,6 +12,7 @@
     };
 
     dunst.enable = true;
+    picom.enable = true;
 
     dwm-status = {
       enable = true;
