@@ -16,7 +16,7 @@
 
     dwm-status = {
       enable = true;
-      order = [ "audio" "backlight" "battery" "network" "cpu_load" "time" ];
+      order = ["audio" "backlight" "battery" "network" "cpu_load" "time"];
     };
 
     mbsync.enable = true;

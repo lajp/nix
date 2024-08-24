@@ -1,4 +1,8 @@
-{pkgs, lib, ...}: {
+{
+  pkgs,
+  lib,
+  ...
+}: {
   imports = [
     ./neovim.nix
     ./tmux.nix
@@ -108,7 +112,7 @@
       enable = true;
       config.hwdec = "auto-safe";
 
-      scripts = [ pkgs.mpvScripts.mpris ];
+      scripts = [pkgs.mpvScripts.mpris];
 
       extraInput = ''
         n playlist-next
