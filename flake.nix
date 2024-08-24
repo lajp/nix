@@ -6,6 +6,11 @@
 
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     pia-nix.url = "github:Atte/pia-nix";
 
     agenix.url = "github:ryantm/agenix";
