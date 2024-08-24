@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs, lib, ...}: {
   imports = [
     ./neovim.nix
     ./tmux.nix
@@ -100,6 +100,9 @@
       hooks.preNew = "${pkgs.isync}/bin/mbsync -a";
     };
 
-    alacritty.enable = true;
+    alacritty = {
+      enable = true;
+      settings.font.size = lib.mkForce 9;
+    };
   };
 }
