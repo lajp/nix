@@ -9,11 +9,4 @@
       noto-fonts-emoji
     ];
   };
-
-  #stylix.fonts = {
-  #  monospace = {
-  #    package = pkgs.liberation_ttf; 
-  #    name = "Liberation Mono";
-  #  };
-  #};
 }

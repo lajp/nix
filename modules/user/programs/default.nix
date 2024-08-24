@@ -11,9 +11,11 @@
 
   home.packages = with pkgs; [
     pavucontrol
+    helvum
     discord
     flameshot
     signal-desktop
+    zathura
 
     file
     github-cli

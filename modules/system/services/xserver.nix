@@ -13,6 +13,8 @@ in {
     services.xserver = {
       enable = true;
 
+      xautolock.enable = true;
+
       displayManager.lightdm.enable = true;
       displayManager.sessionCommands = ''
         ${pkgs.xorg.xinput}/bin/xinput disable "Synaptics TM3276-022"
