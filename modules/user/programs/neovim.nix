@@ -22,11 +22,6 @@ in {
       enable = true;
       enableMan = false;
 
-      colorschemes.gruvbox = {
-        enable = true;
-        settings.contrast_dark = "hard";
-      };
-
       globals.mapleader = " ";
 
       opts = {
@@ -98,6 +93,8 @@ in {
 
         nix.enable = true;
 
+        typst-vim.enable = true;
+
         lsp = {
           enable = true;
           servers = {
@@ -105,7 +102,7 @@ in {
             nixd = {
               enable = true;
               settings = {
-                formatting.command = ["${pkgs.alejandra}/bin/alejandra -q"];
+                formatting.command = ["${pkgs.alejandra}/bin/alejandra" "-q"];
               };
             };
             rust-analyzer = {
@@ -114,9 +111,24 @@ in {
               installRustc = true;
               cargoPackage = pkgs.rustup;
               rustcPackage = pkgs.rustup;
+              settings.check.command = "clippy";
             };
-            typst-lsp.enable = true;
+            typst-lsp = {
+              enable = true;
+              settings.exportPdf = "never";
+            };
             metals.enable = true;
+            terraformls.enable = true;
+          };
+
+          keymaps = {
+            diagnostic = {
+              "<leader>ee" = "open_float";
+            };
+            lspBuf = {
+              "K" = "hover";
+              "<leader>af" = "code_action";
+            };
           };
         };
 
@@ -162,9 +174,9 @@ in {
         end
 
 
-          require('testaustime').setup({
-            token = os.capture('cat ${config.age.secrets.testaustime.path}')
-          })
+        require('testaustime').setup({
+          token = os.capture('cat ${config.age.secrets.testaustime.path}')
+        })
       '';
 
       extraConfigVim = ''
