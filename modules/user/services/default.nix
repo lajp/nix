@@ -3,6 +3,10 @@
   pkgs,
   ...
 }: {
+  imports = [
+    ./dwm-status.nix
+  ];
+
   services = {
     gpg-agent = {
       enable = true;
@@ -13,11 +17,6 @@
 
     dunst.enable = true;
     picom.enable = true;
-
-    dwm-status = {
-      enable = true;
-      order = ["audio" "backlight" "battery" "network" "cpu_load" "time"];
-    };
 
     # FIXME: the repository still has to be initialized
     # with git clone
