@@ -19,8 +19,6 @@
       order = ["audio" "backlight" "battery" "network" "cpu_load" "time"];
     };
 
-    mbsync.enable = true;
-
     # FIXME: the repository still has to be initialized
     # with git clone
     git-sync = {
