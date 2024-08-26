@@ -2,6 +2,7 @@
   pkgs,
   lib,
   config,
+  inputs,
   ...
 }: let
   inherit (lib) mkIf;
@@ -10,10 +11,10 @@ in {
   config = mkIf (!server) {
     environment.systemPackages = with pkgs; [
       dmenu
+      inputs.blmgr.packages.${system}.default
+      # for volume control through pactl
+      pulseaudio
     ];
-
-    # TODO: package lajp/blmgr
-    programs.light.enable = true;
 
     services.xserver = {
       enable = true;
@@ -32,7 +33,7 @@ in {
             owner = "lajp";
             repo = "dwm";
             rev = "master";
-            sha256 = "ULfOSZ4S+i+MoQoWdQvkQ85Dp+v5qjfmpvtfaxNDgNs=";
+            sha256 = "+eDHMTwUWXMatK/8vyuXsoc5yi6lsqqzCeVAwl7Hvyg=";
           };
         };
       };

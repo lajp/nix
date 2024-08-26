@@ -32,6 +32,11 @@
       url = "github:nix-community/nixvim/nixos-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    blmgr = {
+      url = "github:lajp/blmgr";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = {
