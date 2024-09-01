@@ -16,6 +16,8 @@ in {
       pulseaudio
     ];
 
+    services.udev.packages = [pkgs.light];
+
     services.xserver = {
       enable = true;
 
