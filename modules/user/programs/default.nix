@@ -2,6 +2,7 @@
   pkgs,
   lib,
   inputs,
+  config,
   ...
 }: {
   imports = [
@@ -16,6 +17,8 @@
     inputs.nix-index-database.hmModules.nix-index
   ];
 
+  xdg.mimeApps.defaultApplications."application/pdf" = "zathura.desktop";
+
   home.packages = with pkgs; [
     pavucontrol
     helvum
@@ -23,6 +26,7 @@
     flameshot
     signal-desktop
     zathura
+    sxiv
 
     file
     github-cli
@@ -40,6 +44,7 @@
     lm_sensors
     pciutils
     usbutils
+    yubikey-manager
 
     ffmpeg
     playerctl
@@ -106,11 +111,15 @@
       };
     };
 
-    mbsync.enable = true;
+    mbsync = {
+      enable = true;
+      package = pkgs.isync.override {withCyrusSaslXoauth2 = true;};
+    };
+
     msmtp.enable = true;
     notmuch = {
       enable = true;
-      hooks.preNew = "${pkgs.isync}/bin/mbsync -a";
+      hooks.preNew = "${config.programs.mbsync.package}/bin/mbsync -a";
     };
 
     alacritty = {

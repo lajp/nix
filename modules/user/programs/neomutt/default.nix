@@ -1,7 +1,18 @@
-{...}: {
+{
+  pkgs,
+  config,
+  ...
+}: {
   imports = [
     ./color.nix
   ];
+
+  xdg.configFile."neomutt/mailcap".text = ''
+    text/html; ${pkgs.xdg-utils}/bin/xdg-open %s
+    text/html; ${pkgs.w3m}/bin/w3m -I %{charset} -T text/html; copiousoutput;
+    application/pdf; ${pkgs.xdg-utils}/bin/xdg-open %s &
+    image/*; ${pkgs.xdg-utils}/bin/xdg-open %s &
+  '';
 
   programs.neomutt = {
     enable = true;
@@ -16,6 +27,8 @@
       set forward_quote
       set sidebar_format='%D%?F? [%F]?%* %?N?%N/? %?S?%S?'
       set mail_check_stats
+      set mailcap_path=${config.xdg.configHome}/neomutt/mailcap
+      auto_view text/html
     '';
 
     binds = [
@@ -25,9 +38,34 @@
         action = "display-message";
       }
       {
+        map = ["pager"];
+        key = "l";
+        action = "view-attachments";
+      }
+      {
+        map = ["attach"];
+        key = "l";
+        action = "view-mailcap";
+      }
+      {
+        map = ["pager" "attach"];
+        key = "h";
+        action = "exit";
+      }
+      {
+        map = ["index"];
+        key = "h";
+        action = "noop";
+      }
+      {
         map = ["index"];
         key = "L";
         action = "limit";
+      }
+      {
+        map = ["index"];
+        key = "N";
+        action = "toggle-new";
       }
       {
         map = ["index" "pager"];
@@ -49,7 +87,7 @@
     macros = [
       {
         map = ["index"];
-        key = "O";
+        key = "o";
         action = "<shell-escape>mbsync -a<enter>";
       }
     ];
