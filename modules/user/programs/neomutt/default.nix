@@ -28,6 +28,7 @@
       set sidebar_format='%D%?F? [%F]?%* %?N?%N/? %?S?%S?'
       set mail_check_stats
       set mailcap_path=${config.xdg.configHome}/neomutt/mailcap
+      set mark_old = no
       auto_view text/html
     '';
 
@@ -89,6 +90,11 @@
         map = ["index"];
         key = "o";
         action = "<shell-escape>mbsync -a<enter>";
+      }
+      {
+        map = ["index"];
+        key = "\\Cf";
+        action = "<vfolder-from-query>";
       }
     ];
   };
