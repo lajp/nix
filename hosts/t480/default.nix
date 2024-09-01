@@ -19,6 +19,9 @@
     alsa.enable = true;
   };
 
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
+
   nixpkgs.config.packageOverrides = pkgs: {
     intel-vaapi-driver = pkgs.intel-vaapi-driver.override {enableHybridCodec = true;};
   };
