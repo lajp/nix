@@ -16,7 +16,10 @@
     };
 
     dunst.enable = true;
-    picom.enable = true;
+    picom = {
+      enable = true;
+      vSync = true;
+    };
 
     # FIXME: the repository still has to be initialized
     # with git clone
