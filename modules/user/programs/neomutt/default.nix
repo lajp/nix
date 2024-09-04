@@ -1,6 +1,7 @@
 {
   pkgs,
   config,
+  osConfig,
   ...
 }: {
   imports = [
@@ -29,7 +30,7 @@
       set mail_check_stats
       set mailcap_path=${config.xdg.configHome}/neomutt/mailcap
       set mark_old = no
-      set pgp_default_key = '24E8E4CC0295F4EDB9E0B4A6C9139B8DEA65BD82'
+      set pgp_default_key = '${osConfig.lajp.user.key}'
       auto_view text/html
     '';
 

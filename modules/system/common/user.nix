@@ -18,6 +18,18 @@ in {
       type = types.str;
       default = "/home/${cfg.username}";
     };
+
+    realName = mkOption {
+      description = "Real (not fake) name";
+      type = types.str;
+      default = "Luukas Pörtfors";
+    };
+
+    key = mkOption {
+      description = "User PGP key fingerprint";
+      type = types.str;
+      default = "24E8E4CC0295F4EDB9E0B4A6C9139B8DEA65BD82";
+    };
   };
 
   config = {
