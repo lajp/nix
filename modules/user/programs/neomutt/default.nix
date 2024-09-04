@@ -8,7 +8,7 @@
   ];
 
   xdg.configFile."neomutt/mailcap".text = ''
-    text/html; ${pkgs.xdg-utils}/bin/xdg-open %s
+    text/html; ${pkgs.firefox}/bin/firefox %s
     text/html; ${pkgs.w3m}/bin/w3m -I %{charset} -T text/html; copiousoutput;
     application/pdf; ${pkgs.xdg-utils}/bin/xdg-open %s &
     image/*; ${pkgs.xdg-utils}/bin/xdg-open %s &
@@ -29,6 +29,7 @@
       set mail_check_stats
       set mailcap_path=${config.xdg.configHome}/neomutt/mailcap
       set mark_old = no
+      set pgp_default_key = '24E8E4CC0295F4EDB9E0B4A6C9139B8DEA65BD82'
       auto_view text/html
     '';
 
