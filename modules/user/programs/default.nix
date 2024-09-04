@@ -3,6 +3,7 @@
   lib,
   inputs,
   config,
+  osConfig,
   ...
 }: {
   imports = [
@@ -27,6 +28,8 @@
     signal-desktop
     zathura
     sxiv
+    xclip
+    gnuradio
 
     file
     github-cli
@@ -91,7 +94,7 @@
 
     git = {
       enable = true;
-      userName = "Luukas Pörtfors";
+      userName = osConfig.lajp.user.realName;
       userEmail = "lajp@iki.fi";
 
       aliases = {

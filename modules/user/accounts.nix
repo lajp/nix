@@ -1,14 +1,15 @@
 {
   config,
+  osConfig,
   pkgs,
   ...
 }: let
+  inherit (osConfig.lajp.user) realName;
   mkSchool = {
     address,
     userName ? address,
   }: {
-    inherit address userName;
-    realName = "Luukas Pörtfors";
+    inherit address userName realName;
     msmtp = {
       enable = true;
       extraConfig.auth = "xoauth2";
@@ -65,7 +66,7 @@ in {
     in {
       msmtp.enable = true;
 
-      inherit address;
+      inherit address realName;
       aliases = ["luukas@portfo.rs"];
       imap.host = "mail.lajp.fi";
 
@@ -100,7 +101,6 @@ in {
 
       passwordCommand = "${pkgs.pass}/bin/pass ${address}";
 
-      realName = "Luukas Pörtfors";
       userName = address;
       primary = true;
 
@@ -116,13 +116,12 @@ in {
     iki = let
       address = "lajp@iki.fi";
     in {
-      inherit address;
+      inherit address realName;
       aliases = ["luukas.portfors@iki.fi"];
       msmtp.enable = true;
 
       passwordCommand = "${pkgs.pass}/bin/pass ${address}";
 
-      realName = "Luukas Pörtfors";
       userName = address;
 
       smtp = {
