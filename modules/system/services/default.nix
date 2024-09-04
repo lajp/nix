@@ -16,4 +16,6 @@
     ./xserver.nix
     ./gpg.nix
   ];
+
+  services.tailscale.enable = true;
 }
