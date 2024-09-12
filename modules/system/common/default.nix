@@ -44,7 +44,7 @@ in {
   };
 
   environment.systemPackages = with pkgs; [
-    vim
+    neovim
     wget
     git
     rsync
@@ -61,5 +61,5 @@ in {
   # so we don't want the agent to overwrite the socket
   programs.gnupg.agent.settings.no-autostart = mkIf server true;
 
-  environment.variables.EDITOR = "vim";
+  environment.variables.EDITOR = "nvim";
 }
