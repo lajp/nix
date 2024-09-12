@@ -12,7 +12,6 @@ in {
       enable = true;
       config = {
         ROCKET_ADDRESS = "127.0.0.1";
-        ROCKET_PORT = "8222";
       };
     };
 
@@ -23,7 +22,7 @@ in {
 
       virtualHosts."vaultwarden.lajp.fi" = {
         locations."/" = {
-          proxyPass = "http://localhost:${config.services.vaultwarden.ROCKET_PORT}";
+          proxyPass = "http://localhost:${config.services.vaultwarden.config.ROCKET_PORT}";
           proxyWebsockets = true;
         };
       };
