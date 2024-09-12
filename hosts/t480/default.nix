@@ -32,8 +32,27 @@
       intel-media-driver
       intel-vaapi-driver
       libvdpau-va-gl
+      rocm-opencl-icd
+      rocm-opencl-runtime
+      amdvlk
     ];
   };
+
+  environment.systemPackages = with pkgs; [
+    rocmPackages.clr
+  ];
+
+  hardware.amdgpu = {
+    opencl.enable = true;
+  };
+
+  #services.xserver.videoDrivers = ["amdgpu"];
+  systemd.tmpfiles.rules = [
+    "L+    /opt/rocm/hip   -    -    -     -    ${pkgs.rocmPackages.clr}"
+  ];
+
+  services.hardware.bolt.enable = true;
+
   environment.sessionVariables = {LIBVA_DRIVER_NAME = "iHD";};
 
   system.stateVersion = "24.05";

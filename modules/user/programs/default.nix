@@ -30,6 +30,8 @@
     sxiv
     xclip
     gnuradio
+    quickemu
+    (octaveFull.withPackages (opkgs: with opkgs; [communications signal statistics symbolic]))
 
     file
     github-cli
