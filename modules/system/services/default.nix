@@ -15,6 +15,7 @@
     ./samba.nix
     ./xserver.nix
     ./gpg.nix
+    ./vaultwarden.nix
   ];
 
   services.tailscale.enable = true;
