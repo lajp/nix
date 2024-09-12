@@ -63,7 +63,8 @@ in {
       # Enable smartcard
       use-agent = true;
       # Disable recipient key ID in messages (breaks Mailvelope)
-      throw-keyids = true;
+      # I don't want to break mailvelope
+      #no-throw-keyids = true;
       # Default key ID to use (helpful with throw-keyids)
       #default-key 0xFF00000000000001
       #trusted-key 0xFF00000000000001

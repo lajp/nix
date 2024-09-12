@@ -71,6 +71,7 @@
           services.testaustime-backup.enable = true;
           services.syncthing.enable = true;
           services.samba.enable = true;
+          services.vaultwarden.enable = false;
           hardware.zfs.enable = true;
         };
       };
