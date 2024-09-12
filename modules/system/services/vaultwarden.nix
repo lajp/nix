@@ -8,9 +8,6 @@
 in {
   options.lajp.services.vaultwarden.enable = mkEnableOption "Enable vaultwarden";
   config = mkIf cfg.enable {
-    services.vaultwarden = {
-      enable = true;
-      dbBackend = "postgresql";
-    };
+    services.vaultwarden.enable = true;
   };
 }
