@@ -22,7 +22,7 @@ in {
 
       virtualHosts."vaultwarden.lajp.fi" = {
         locations."/" = {
-          proxyPass = "http://localhost:${config.service.vaultwarden.ROCKET_PORT}";
+          proxyPass = "http://localhost:${config.services.vaultwarden.ROCKET_PORT}";
           proxyWebsockets = true;
         };
       };
