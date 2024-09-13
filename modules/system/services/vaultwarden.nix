@@ -23,6 +23,8 @@ in {
 
       virtualHosts."vaultwarden.lajp.fi" = {
         locations."/" = {
+          enableACME = true;
+          forceSSL = true;
           proxyPass = "http://localhost:${config.services.vaultwarden.config.ROCKET_PORT}";
           proxyWebsockets = true;
         };
