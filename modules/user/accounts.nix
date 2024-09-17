@@ -6,6 +6,7 @@
 }: let
   inherit (osConfig.lajp.user) realName;
   mkSchool = {
+    name,
     address,
     userName ? address,
   }: {
@@ -51,11 +52,73 @@
     neomutt = {
       enable = true;
       extraMailboxes = ["Drafts" "Deleted Items" "Sent Items"];
+      extraConfig = ''
+        source ${config.xdg.configHome}/neomutt/sidebar/${name}
+      '';
     };
 
     notmuch = {
       enable = true;
       neomutt.enable = true;
+    };
+  };
+
+  mkGmail = {
+    name,
+    address,
+    aliases ? [],
+  }: {
+    inherit address realName aliases;
+
+    flavor = "gmail.com";
+
+    gpg = {
+      encryptByDefault = true;
+      signByDefault = true;
+    };
+
+    maildir.path = address;
+
+    msmtp = {
+      enable = true;
+      extraConfig.auth = "xoauth2";
+    };
+
+    mbsync = {
+      enable = true;
+      create = "maildir";
+      expunge = "maildir";
+      extraConfig.account.AuthMechs = "XOAUTH2";
+    };
+
+    neomutt = {
+      enable = true;
+      extraMailboxes = map (x: "[Gmail]/" + x) ["Drafts" "Trash" "Sent Mail"];
+      extraConfig = ''
+        ${
+          if aliases != []
+          then "alternates ${toString aliases}"
+          else ""
+        }
+          source ${config.xdg.configHome}/neomutt/sidebar/${name}
+      '';
+    };
+
+    notmuch = {
+      enable = true;
+      neomutt.enable = true;
+    };
+
+    passwordCommand = let
+      python = "${pkgs.python3}/bin/python3";
+      mutt_oauth2 = "${pkgs.neomutt}/share/neomutt/oauth2/mutt_oauth2.py";
+      passDir = config.programs.password-store.settings.PASSWORD_STORE_DIR;
+    in "${python} ${mutt_oauth2} --encryption-pipe 'gpg -e -r lajp@iki.fi' ${passDir}/oauth/${address}.gpg";
+
+    folders = {
+      sent = "[Gmail]/Sent Mail";
+      drafts = "[Gmail]/Drafts";
+      trash = "[Gmail]/Trash";
     };
   };
 in {
@@ -91,6 +154,7 @@ in {
           # determening the address from which to reply based on the
           # recipient of the original mail
           alternates luukas@portfo.rs lajp@iki.fi luukas.portfors@iki.fi
+          source ${config.xdg.configHome}/neomutt/sidebar/personal
         '';
       };
 
@@ -132,12 +196,25 @@ in {
     };
 
     aalto = mkSchool {
+      name = "aalto";
       address = "luukas.portfors@aalto.fi";
     };
 
     hy = mkSchool {
+      name = "hy";
       address = "luukas.portfors@helsinki.fi";
       userName = "lajportf@ad.helsinki.fi";
+    };
+
+    otanix = mkGmail {
+      name = "otanix";
+      address = "lajp@otanix.fi";
+      aliases = ["luukas@otanix.fi"];
+    };
+
+    helsec = mkGmail {
+      name = "helsec";
+      address = "lajp@helsec.fi";
     };
   };
 }
