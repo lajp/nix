@@ -20,6 +20,7 @@
   };
 
   hardware.bluetooth.enable = true;
+  hardware.rtl-sdr.enable = true;
   services.blueman.enable = true;
 
   nixpkgs.config.packageOverrides = pkgs: {
@@ -40,6 +41,8 @@
 
   environment.systemPackages = with pkgs; [
     rocmPackages.clr
+    rocm-opencl-icd
+    rocm-opencl-runtime
   ];
 
   hardware.amdgpu = {
