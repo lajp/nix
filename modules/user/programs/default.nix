@@ -124,7 +124,10 @@
     msmtp.enable = true;
     notmuch = {
       enable = true;
-      hooks.preNew = "${config.programs.mbsync.package}/bin/mbsync -a";
+      hooks.preNew = ''
+        ACCOUNTS=$(cat ${config.home.homeDirectory}/.mbsyncrc | sed -nr "s/^IMAPAccount (\w+)/\1/p")
+        ${pkgs.parallel}/bin/parallel ${config.programs.mbsync.package}/bin/mbsync ::: $ACCOUNTS
+      '';
     };
 
     alacritty = {

@@ -6,6 +6,7 @@
 }: {
   imports = [
     ./color.nix
+    ./sidebar.nix
   ];
 
   xdg.configFile."neomutt/mailcap".text = ''
@@ -20,6 +21,7 @@
     sidebar.enable = true;
     vimKeys = true;
     sort = "reverse-date";
+    unmailboxes = true;
 
     extraConfig = ''
       set reverse_name
@@ -91,7 +93,7 @@
       {
         map = ["index"];
         key = "o";
-        action = "<shell-escape>mbsync -a<enter>";
+        action = "<shell-escape>notmuch new<enter>";
       }
       {
         map = ["index"];
