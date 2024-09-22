@@ -105,6 +105,13 @@
         st = "status";
       };
 
+      includes = [
+        {
+          contents.user.email = "luukas.portfors@aalto.fi";
+          condition = "gitdir:~/git/work/**";
+        }
+      ];
+
       extraConfig = {
         rerere.enabled = true;
         init.defaultBranch = "main";
