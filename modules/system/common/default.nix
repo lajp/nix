@@ -43,6 +43,8 @@ in {
     keyMap = "fi";
   };
 
+  boot.cleanTmpDir = true;
+
   environment.systemPackages = with pkgs; [
     neovim
     wget
