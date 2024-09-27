@@ -55,6 +55,8 @@ in {
     killall
     fd
     gnupg
+    man-pages
+    man-pages-posix
 
     inputs.agenix.packages."${system}".default
   ];
