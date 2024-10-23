@@ -43,7 +43,7 @@ in {
     keyMap = "fi";
   };
 
-  boot.cleanTmpDir = true;
+  boot.tmp.cleanOnBoot = true;
 
   environment.systemPackages = with pkgs; [
     neovim
