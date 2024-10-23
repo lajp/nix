@@ -16,6 +16,7 @@
     ./xserver.nix
     ./gpg.nix
     ./vaultwarden.nix
+    ./restic.nix
   ];
 
   services.tailscale.enable = true;
