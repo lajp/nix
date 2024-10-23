@@ -9,6 +9,7 @@
 
   programs.firefox = {
     enable = true;
+    nativeMessagingHosts = [pkgs.web-eid-app];
 
     profiles.default = {
       name = "default";
@@ -23,6 +24,7 @@
         sponsorblock
         vimium
         sidebery
+        web-eid
       ];
 
       search = {
