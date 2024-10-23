@@ -104,6 +104,8 @@
           core = {
             hostname = "t480";
           };
+
+          services.restic.enable = true;
         };
 
         userConfig = {
