@@ -106,6 +106,9 @@
           };
 
           services.restic.enable = true;
+          hardware.sound.enable = true;
+          hardware.bluetooth.enable = true;
+          hardware.rtl-sdr.enable = true;
         };
 
         userConfig = {
