@@ -777,7 +777,8 @@
         "pia-nix": "pia-nix",
         "stylix": "stylix",
         "testaustime-nvim": "testaustime-nvim",
-        "vimchant": "vimchant"
+        "vimchant": "vimchant",
+        "zfs-rclone-backup": "zfs-rclone-backup"
       }
     },
     "stylix": {
@@ -941,6 +942,22 @@
       "original": {
         "owner": "Supreeeme",
         "repo": "xwayland-satellite",
+        "type": "github"
+      }
+    },
+    "zfs-rclone-backup": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1730020403,
+        "narHash": "sha256-U8kUyxxkhzPOQBL2c/tujnOHblZZXnImfjn2sz+iqQU=",
+        "owner": "lajp",
+        "repo": "RcloneZFSBackup",
+        "rev": "891150871d1ac5b42e975aa73695a2c04c3e6a1a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lajp",
+        "repo": "RcloneZFSBackup",
         "type": "github"
       }
     }

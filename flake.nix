@@ -15,6 +15,11 @@
 
     pia-nix.url = "github:Atte/pia-nix";
 
+    zfs-rclone-backup = {
+      url = "github:lajp/RcloneZFSBackup";
+      flake = false;
+    };
+
     agenix.url = "github:ryantm/agenix";
 
     nur.url = "github:nix-community/NUR";
@@ -58,9 +63,7 @@
     };
   };
 
-  outputs = {
-    ...
-  } @ inputs: let
+  outputs = {...} @ inputs: let
     user = import ./lib/user.nix {inherit inputs;};
     utils = import ./lib/system.nix {inherit user inputs;};
     inherit (utils) mkHost;
@@ -91,6 +94,10 @@
           services.samba.enable = true;
           services.vaultwarden.enable = false;
           hardware.zfs.enable = true;
+          services.zfs-backup = {
+            enable = true;
+            pool = "naspool";
+          };
         };
       };
       vaasanas = mkHost {

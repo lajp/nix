@@ -1,6 +1,4 @@
-{
-  ...
-}: {
+{...}: {
   imports = [
     ./ssh.nix
     ./jellyfin.nix
@@ -18,6 +16,7 @@
     ./vaultwarden.nix
     ./restic.nix
     ./niri.nix
+    ./zfs-backup.nix
   ];
 
   services.tailscale.enable = true;
