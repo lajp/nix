@@ -229,6 +229,8 @@ in {
         vnoremap J :m '>+1<CR>gv=gv
         nnoremap j gj
         nnoremap k gk
+
+        let g:vimchant_spellcheck_lang = 'fi'
       '';
     };
   };
