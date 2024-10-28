@@ -170,22 +170,12 @@ in {
       extraPlugins = [
         (pkgs.vimUtils.buildVimPlugin {
           name = "testaustime";
-          src = pkgs.fetchFromGitHub {
-            owner = "Testaustime";
-            repo = "testaustime.nvim";
-            rev = "main";
-            sha256 = "gj1a6y2B3D4icsYRdY+ZxJWJ/2ioIWIGZQuBmd0M+wE=";
-          };
+          src = inputs.testaustime-nvim;
         })
 
         (pkgs.vimUtils.buildVimPlugin {
           name = "vimchant";
-          src = pkgs.fetchFromGitHub {
-            owner = "vim-scripts";
-            repo = "Vimchant";
-            rev = "master";
-            hash = "sha256-jcGet5octGQm8MW90GriYHXNkrsmg9RfchKjJ0G9Yis=";
-          };
+          src = inputs.vimchant;
 
           configurePhase = ''
             substituteInPlace autoload/vimchant.vim --replace enchant ${enchant-voikko}/bin/enchant-2

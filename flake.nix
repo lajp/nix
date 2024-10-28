@@ -39,6 +39,21 @@
       url = "github:lajp/blmgr";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    dwm = {
+      url = "github:lajp/dwm";
+      flake = false;
+    };
+
+    testaustime-nvim = {
+      url = "github:Testaustime/testaustime.nvim";
+      flake = false;
+    };
+
+    vimchant = {
+      url = "github:vim-scripts/Vimchant";
+      flake = false;
+    };
   };
 
   outputs = {

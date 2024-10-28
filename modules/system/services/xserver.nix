@@ -31,12 +31,7 @@ in {
       windowManager.dwm = {
         enable = true;
         package = pkgs.dwm.overrideAttrs {
-          src = pkgs.fetchFromGitHub {
-            owner = "lajp";
-            repo = "dwm";
-            rev = "master";
-            hash = "sha256-vS03Uy5fRRCGNW+KdCPHSw2QeIyvxTqrO7JK7p5RbCY=";
-          };
+          src = inputs.dwm;
         };
       };
     };
