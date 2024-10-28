@@ -1,5 +1,6 @@
 {
   pkgs,
+  pkgs-unstable,
   lib,
   inputs,
   config,
@@ -32,6 +33,7 @@
     gnuradio
     quickemu
     (octaveFull.withPackages (opkgs: with opkgs; [communications signal statistics symbolic]))
+    pkgs-unstable.musescore
 
     file
     github-cli
