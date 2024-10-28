@@ -199,6 +199,22 @@
         "type": "github"
       }
     },
+    "dwm": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1725295260,
+        "narHash": "sha256-vS03Uy5fRRCGNW+KdCPHSw2QeIyvxTqrO7JK7p5RbCY=",
+        "owner": "lajp",
+        "repo": "dwm",
+        "rev": "757894cfb3cba162c4477fb8eda6ec3eaee62db3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lajp",
+        "repo": "dwm",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "locked": {
         "lastModified": 1696426674,
@@ -651,6 +667,7 @@
       "inputs": {
         "agenix": "agenix",
         "blmgr": "blmgr",
+        "dwm": "dwm",
         "home-manager": "home-manager_2",
         "nix-index-database": "nix-index-database",
         "nixos-hardware": "nixos-hardware",
@@ -659,7 +676,9 @@
         "nixvim": "nixvim",
         "nur": "nur",
         "pia-nix": "pia-nix",
-        "stylix": "stylix"
+        "stylix": "stylix",
+        "testaustime-nvim": "testaustime-nvim",
+        "vimchant": "vimchant"
       }
     },
     "stylix": {
@@ -756,6 +775,22 @@
         "type": "github"
       }
     },
+    "testaustime-nvim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1709794355,
+        "narHash": "sha256-gj1a6y2B3D4icsYRdY+ZxJWJ/2ioIWIGZQuBmd0M+wE=",
+        "owner": "Testaustime",
+        "repo": "testaustime.nvim",
+        "rev": "0ac103ee10e32e90272c208e9d1b0c68dc4f5739",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Testaustime",
+        "repo": "testaustime.nvim",
+        "type": "github"
+      }
+    },
     "treefmt-nix": {
       "inputs": {
         "nixpkgs": [
@@ -774,6 +809,22 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
+    "vimchant": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1287366999,
+        "narHash": "sha256-jcGet5octGQm8MW90GriYHXNkrsmg9RfchKjJ0G9Yis=",
+        "owner": "vim-scripts",
+        "repo": "Vimchant",
+        "rev": "f4db5b58b2346ca5688ebce616392e025415f1da",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vim-scripts",
+        "repo": "Vimchant",
         "type": "github"
       }
     }
