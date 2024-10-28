@@ -7,6 +7,20 @@
 }: let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.lajp.editors.nvim;
+
+  enchant-voikko = pkgs.enchant.overrideAttrs (final: prev: {
+    buildInputs =
+      [
+        pkgs.libvoikko
+      ]
+      ++ prev.buildInputs;
+
+    configureFlags =
+      [
+        "--enable-voikko"
+      ]
+      ++ prev.configureFlags;
+  });
 in {
   imports = [
     inputs.nixvim.homeManagerModules.nixvim
@@ -162,6 +176,21 @@ in {
             rev = "main";
             sha256 = "gj1a6y2B3D4icsYRdY+ZxJWJ/2ioIWIGZQuBmd0M+wE=";
           };
+        })
+
+        (pkgs.vimUtils.buildVimPlugin {
+          name = "vimchant";
+          src = pkgs.fetchFromGitHub {
+            owner = "vim-scripts";
+            repo = "Vimchant";
+            rev = "master";
+            hash = "sha256-jcGet5octGQm8MW90GriYHXNkrsmg9RfchKjJ0G9Yis=";
+          };
+
+          configurePhase = ''
+            substituteInPlace autoload/vimchant.vim --replace enchant ${enchant-voikko}/bin/enchant-2
+            substituteInPlace plugin/vimchant.vim --replace enchant ${enchant-voikko}/bin/enchant-2
+          '';
         })
       ];
 
