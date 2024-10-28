@@ -8,6 +8,29 @@
   inherit (lib) mkEnableOption mkIf;
   cfg = config.lajp.editors.nvim;
 
+  voikko-fi = pkgs.stdenvNoCC.mkDerivation rec {
+    name = "voikko-fi";
+    version = "2.5";
+    src = pkgs.fetchFromGitHub {
+      owner = "voikko";
+      repo = "corevoikko";
+      rev = "refs/tags/rel-voikko-fi-${version}";
+      hash = "sha256-0MIQ54dCxyAfdgYWmmTVF+Yfa15K2sjJyP1JNxwHP2M=";
+    };
+
+    sourceRoot = "${src.name}/voikko-fi";
+
+    enableParallelBuilding = true;
+
+    installTargets = "vvfst-install DESTDIR=$(out)";
+
+    nativeBuildInputs = with pkgs; [
+      python3
+      foma
+      libvoikko
+    ];
+  };
+
   enchant-voikko = pkgs.enchant.overrideAttrs (final: prev: {
     buildInputs =
       [
@@ -32,6 +55,9 @@ in {
   config = mkIf cfg.enable {
     age.secrets.testaustime.file = ../../../secrets/testaustime.age;
     programs.ripgrep.enable = true;
+
+    xdg.configFile."enchant/voikko".source = voikko-fi;
+
     programs.nixvim = {
       enable = true;
       enableMan = false;
