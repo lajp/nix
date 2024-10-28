@@ -11,13 +11,15 @@ in {
     extraModules ? [],
   }: let
     inherit (systemConfig.core) hostname;
+    system = "x86_64-linux";
+    pkgs-unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
   in
     nixosSystem {
-      specialArgs = {
-        inherit inputs;
-      };
+      inherit system;
 
-      system = "x86_64-linux";
+      specialArgs = {
+        inherit inputs pkgs-unstable;
+      };
 
       modules =
         [
@@ -38,7 +40,7 @@ in {
                 useGlobalPkgs = true;
                 useUserPackages = true;
                 extraSpecialArgs = {
-                  inherit inputs;
+                  inherit inputs pkgs-unstable;
                 };
                 users.${username} = user.mkConfig {inherit userConfig;};
               }

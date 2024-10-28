@@ -4,6 +4,8 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
 
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
     nix-index-database = {
@@ -42,6 +44,7 @@
   outputs = {
     self,
     nixpkgs,
+    nixpkgs-unstable,
     ...
   } @ inputs: let
     user = import ./lib/user.nix {inherit inputs;};
