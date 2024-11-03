@@ -45,6 +45,8 @@
       flake = false;
     };
 
+    niri.url = "github:sodiboo/niri-flake";
+
     testaustime-nvim = {
       url = "github:Testaustime/testaustime.nvim";
       flake = false;
@@ -124,6 +126,7 @@
           };
 
           services.restic.enable = true;
+          services.niri.enable = true;
           hardware.sound.enable = true;
           hardware.bluetooth.enable = true;
           hardware.rtl-sdr.enable = true;

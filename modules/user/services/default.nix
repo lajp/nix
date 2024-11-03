@@ -1,10 +1,16 @@
 {
   config,
   pkgs,
+  osConfig,
+  lib,
   ...
-}: {
+}: let
+  inherit (lib) mkIf;
+  xserver = osConfig.lajp.services.xserver.enable;
+in {
   imports = [
     ./dwm-status.nix
+    ./waybar.nix
   ];
 
   services = {
@@ -15,8 +21,10 @@
       pinentryPackage = pkgs.pinentry-gtk2;
     };
 
+    swayidle = mkIf (!xserver) {enable = true;};
+
     dunst.enable = true;
-    picom = {
+    picom = mkIf xserver {
       enable = true;
       vSync = true;
     };
