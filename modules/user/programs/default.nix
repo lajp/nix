@@ -112,6 +112,10 @@
           contents.user.email = "luukas.portfors@aalto.fi";
           condition = "gitdir:~/git/work/**";
         }
+        {
+          contents.user.email = "luukas.portfors@aalto.fi";
+          condition = "gitdir:~/git/aalto/**";
+        }
       ];
 
       extraConfig = {
