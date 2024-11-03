@@ -36,7 +36,7 @@ in {
     users = {
       users.${cfg.username} = {
         isNormalUser = true;
-        extraGroups = ["wheel" "networkmanager" "video"];
+        extraGroups = ["wheel" "networkmanager" "video" "docker"];
       };
 
       defaultUserShell = pkgs.fish;

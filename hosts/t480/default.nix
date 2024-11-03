@@ -17,6 +17,8 @@
     intel-vaapi-driver = pkgs.intel-vaapi-driver.override {enableHybridCodec = true;};
   };
 
+  virtualisation.docker.enable = true;
+
   hardware.opengl = {
     enable = true;
     extraPackages = with pkgs; [
