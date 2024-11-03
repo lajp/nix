@@ -5,10 +5,11 @@
   inputs,
   ...
 }: let
-  inherit (lib) mkIf;
-  inherit (config.lajp.core) server;
+  inherit (lib) mkEnableOption mkIf;
+  cfg = config.lajp.services.xserver;
 in {
-  config = mkIf (!server) {
+  options.lajp.services.xserver.enable = mkEnableOption "Enable X and DWM";
+  config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
       dmenu
       inputs.blmgr.packages.${system}.default

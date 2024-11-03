@@ -15,6 +15,7 @@
     ./firefox.nix
     ./ssh.nix
     ./neomutt
+    ./niri.nix
 
     inputs.nix-index-database.hmModules.nix-index
   ];
@@ -24,7 +25,7 @@
   home.packages = with pkgs; [
     pavucontrol
     helvum
-    discord
+    webcord
     flameshot
     signal-desktop
     zathura
@@ -34,6 +35,7 @@
     quickemu
     (octaveFull.withPackages (opkgs: with opkgs; [communications signal statistics symbolic]))
     pkgs-unstable.musescore
+    mednaffe
 
     file
     github-cli
@@ -143,10 +145,7 @@
       '';
     };
 
-    alacritty = {
-      enable = true;
-      settings.font.size = lib.mkForce 9;
-    };
+    alacritty.enable = true;
 
     mpv = {
       enable = true;
