@@ -65,6 +65,8 @@ in {
           top = 0;
           bottom = 0;
         };
+
+        gaps = 2;
       };
 
       animations.slowdown = 0.6;
@@ -122,8 +124,8 @@ in {
 
           "Mod+Shift+H".action.move-column-left = [];
           "Mod+Shift+L".action.move-column-right = [];
-          "Mod+Shift+K".action.move-window-down-or-to-workspace-down = [];
-          "Mod+Shift+J".action.move-window-up-or-to-workspace-up = [];
+          "Mod+Shift+J".action.move-window-down-or-to-workspace-down = [];
+          "Mod+Shift+K".action.move-window-up-or-to-workspace-up = [];
           "Mod+Tab".action.focus-workspace-previous = [];
 
           "Mod+Shift+N".action.move-column-to-monitor-up = [];
