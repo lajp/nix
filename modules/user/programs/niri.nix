@@ -67,6 +67,8 @@ in {
         };
       };
 
+      animations.slowdown = 0.6;
+
       spawn-at-startup = [
         {command = ["${pkgs.systemd}/bin/systemctl" "--user" "restart" "waybar"];}
       ];
@@ -115,14 +117,13 @@ in {
 
           "Mod+H".action.focus-column-left = [];
           "Mod+L".action.focus-column-right = [];
-          "Mod+J".action.focus-workspace-down = [];
-          "Mod+K".action.focus-workspace-up = [];
-          "Mod+Up".action.focus-window-up = [];
+          "Mod+J".action.focus-window-or-workspace-down = [];
+          "Mod+K".action.focus-window-or-workspace-up = [];
 
           "Mod+Shift+H".action.move-column-left = [];
           "Mod+Shift+L".action.move-column-right = [];
-          "Mod+Shift+K".action.move-column-to-workspace-up = [];
-          "Mod+Shift+J".action.move-column-to-workspace-down = [];
+          "Mod+Shift+K".action.move-window-down-or-to-workspace-down = [];
+          "Mod+Shift+J".action.move-window-up-or-to-workspace-up = [];
           "Mod+Tab".action.focus-workspace-previous = [];
 
           "Mod+Shift+N".action.move-column-to-monitor-up = [];

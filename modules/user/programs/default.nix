@@ -145,10 +145,7 @@
       '';
     };
 
-    alacritty = {
-      enable = true;
-      settings.font.size = lib.mkForce 9;
-    };
+    alacritty.enable = true;
 
     mpv = {
       enable = true;
