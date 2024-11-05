@@ -15,6 +15,10 @@
     nameservers = ["1.1.1.1" "9.9.9.9"];
   };
 
+  users.users.lajp.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDnZzQYZMQAPPVRLMP1nIDR5cSc2u67aaf1t5OXNUYdy"
+  ];
+
   services.tailscale.extraSetFlags = ["--accept-dns=false"];
 
   hardware.nvidia.prime.offload.enable = false;
