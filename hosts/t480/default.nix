@@ -13,23 +13,19 @@
   networking.hostName = config.lajp.core.hostname;
   networking.networkmanager.enable = true;
 
-  nixpkgs.config.packageOverrides = pkgs: {
-    intel-vaapi-driver = pkgs.intel-vaapi-driver.override {enableHybridCodec = true;};
-  };
-
   virtualisation.docker.enable = true;
 
   hardware.opengl = {
     enable = true;
     extraPackages = with pkgs; [
-      intel-media-driver
-      intel-vaapi-driver
       libvdpau-va-gl
       rocm-opencl-icd
       rocm-opencl-runtime
       amdvlk
     ];
   };
+
+  hardware.intelgpu.enableHybridCodec = true;
 
   environment.systemPackages = with pkgs; [
     rocmPackages.clr
