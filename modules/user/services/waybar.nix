@@ -26,6 +26,7 @@ in {
           modules-right = [
             "wireplumber"
             "backlight"
+            "network"
             "battery"
             "battery#bat2"
             "cpu"
@@ -59,15 +60,23 @@ in {
             format-icons = ["" ""];
           };
 
+          temperature = {
+            hwmon-path = "/sys/devices/platform/thinkpad_hwmon/hwmon/hwmon6/temp1_input";
+          };
+
           network = {
-            "format-wifi" = "{essid} ({signalStrength}%)";
-            "format-ethernet" = "{ifname}";
+            format-wifi = "{essid} ({signalStrength}%)";
+            format-ethernet = "{ifname}";
           };
 
           clock.format = "{:%Y-%m-%d %H:%M:%S}";
         };
       };
-      systemd.enable = true;
+      systemd = {
+        enable = true;
+        # this is really an After rule
+        target = "niri.service";
+      };
     };
   };
 }

@@ -43,20 +43,45 @@ in {
           };
         };
 
-        "HDMI-A-2" = {
-          scale = 1.0;
+        "HP Inc. HP Z27u G3 CN42233KPP" = {
           position = {
             x = 0;
+            y = -1440;
+          };
+        };
+
+        "Philips Consumer Electronics Company Philips FTV 0x01010101" = {
+          #scale = 2.0;
+          mode = {
+            width = 1920;
+            height = 1080;
+          };
+          position = {
+            x = 0;
+            #y = -2160;
             y = -1080;
           };
         };
+
+        #"HDMI-A-2" = {
+        #  scale = 1.0;
+        #  position = {
+        #    x = 0;
+        #    y = -1080;
+        #  };
+        #};
       };
 
       layout = {
-        focus-ring.enable = true;
-        center-focused-column = "never";
-        border = {
+        focus-ring = {
           enable = true;
+          width = 1;
+        };
+
+        center-focused-column = "never";
+
+        border = {
+          enable = false;
           width = 1;
         };
         struts = {
@@ -72,8 +97,15 @@ in {
       animations.slowdown = 0.6;
 
       spawn-at-startup = [
-        {command = ["${pkgs.systemd}/bin/systemctl" "--user" "restart" "waybar"];}
+        {command = ["systemctl" "--user" "restart" "waybar"];}
+        {command = ["systemctl" "--user" "restart" "swayidle"];}
+        # See https://github.com/YaLTeR/niri/wiki/Xwayland
+        {command = ["${lib.getExe pkgs.xwayland-satellite-unstable}" ":25"];}
       ];
+
+      environment = {
+        DISPLAY = ":25";
+      };
 
       binds = let
         playerctl = "${pkgs.playerctl}/bin/playerctl";

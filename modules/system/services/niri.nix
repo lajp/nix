@@ -36,13 +36,17 @@ in {
 
     security.pam.services.greetd.enableGnomeKeyring = true;
 
-    environment.variables.NIXOS_OZONE_WL = "1";
+    environment.variables = {
+      NIXOS_OZONE_WL = "1";
+      XDG_CURRENT_DESKTOP = "niri";
+    };
+
     environment.systemPackages = with pkgs; [
       wl-clipboard
       wayland-utils
       libsecret
       swaybg
-      xwayland
+      xwayland-satellite-unstable
       inputs.blmgr.packages.${pkgs.system}.default
     ];
   };

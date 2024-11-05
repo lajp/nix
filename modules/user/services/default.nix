@@ -13,15 +13,40 @@ in {
     ./waybar.nix
   ];
 
+  systemd.user.services.swayidle.Unit.After = "niri.service";
+
   services = {
     gpg-agent = {
       enable = true;
       enableExtraSocket = true;
       enableSshSupport = true;
-      pinentryPackage = pkgs.pinentry-gtk2;
+      pinentryPackage = pkgs.pinentry-curses;
     };
 
-    swayidle = mkIf (!xserver) {enable = true;};
+    swayidle = let
+      lock = "${pkgs.swaylock}/bin/swaylock -f";
+    in
+      mkIf (!xserver) {
+        enable = true;
+        systemdTarget = "graphical-session.target";
+        events = [
+          {
+            event = "before-sleep";
+            command = "${lock}";
+          }
+          {
+            event = "lock";
+            command = "${lock}";
+          }
+        ];
+
+        timeouts = [
+          {
+            timeout = 1500;
+            command = "${lock}";
+          }
+        ];
+      };
 
     dunst.enable = true;
     picom = mkIf xserver {
