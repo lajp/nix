@@ -25,6 +25,7 @@
         vimium
         sidebery
         web-eid
+        darkreader
       ];
 
       search = {
