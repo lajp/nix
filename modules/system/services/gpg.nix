@@ -8,6 +8,8 @@
     sudo.u2fAuth = true;
   };
 
+  security.pam.services.swaylock.text = "auth include login";
+
   services.udev.extraRules = ''
     ACTION=="remove",\
      ENV{ID_BUS}=="usb",\
