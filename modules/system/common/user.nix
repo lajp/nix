@@ -39,10 +39,11 @@ in {
         extraGroups = ["wheel" "networkmanager" "video" "docker"];
       };
 
-      defaultUserShell = pkgs.fish;
+      defaultUserShell = pkgs.zsh;
     };
 
     programs.fish.enable = true;
-    environment.shells = [pkgs.fish];
+    programs.zsh.enable = true;
+    environment.shells = with pkgs; [fish zsh];
   };
 }
