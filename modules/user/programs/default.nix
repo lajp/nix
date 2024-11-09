@@ -35,6 +35,7 @@
     (octaveFull.withPackages (opkgs: with opkgs; [communications signal statistics symbolic]))
     pkgs-unstable.musescore
     mednaffe
+    gimp
 
     file
     github-cli
