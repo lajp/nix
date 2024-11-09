@@ -10,6 +10,7 @@
 in {
   config = mkIf cfg.enable {
     programs.swaylock.enable = true;
+    programs.fuzzel.enable = true;
     programs.niri.settings = {
       prefer-no-csd = true;
 
@@ -51,25 +52,15 @@ in {
         };
 
         "Philips Consumer Electronics Company Philips FTV 0x01010101" = {
-          #scale = 2.0;
           mode = {
             width = 1920;
             height = 1080;
           };
           position = {
             x = 0;
-            #y = -2160;
             y = -1080;
           };
         };
-
-        #"HDMI-A-2" = {
-        #  scale = 1.0;
-        #  position = {
-        #    x = 0;
-        #    y = -1080;
-        #  };
-        #};
       };
 
       layout = {
@@ -97,8 +88,6 @@ in {
       animations.slowdown = 0.6;
 
       spawn-at-startup = [
-        {command = ["systemctl" "--user" "restart" "waybar"];}
-        {command = ["systemctl" "--user" "restart" "swayidle"];}
         # See https://github.com/YaLTeR/niri/wiki/Xwayland
         {command = ["${lib.getExe pkgs.xwayland-satellite-unstable}" ":25"];}
       ];
