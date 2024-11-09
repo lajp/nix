@@ -8,6 +8,7 @@
   cfg = osConfig.lajp.services.niri;
 in {
   config = mkIf cfg.enable {
+    systemd.user.services.waybar.Unit.After = lib.mkForce "niri.service";
     programs.waybar = {
       enable = true;
       settings = {
@@ -33,6 +34,8 @@ in {
             "temperature"
             "clock"
           ];
+
+          mpris.interval = 1;
 
           wireplumber = {
             format = "{volume}%";
@@ -73,11 +76,7 @@ in {
           };
         };
       };
-      systemd = {
-        enable = true;
-        # this is really an After rule
-        target = "niri.service";
-      };
+      systemd.enable = true;
     };
   };
 }
