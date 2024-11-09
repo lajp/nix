@@ -131,6 +131,7 @@ in {
                 formatting.command = ["${pkgs.alejandra}/bin/alejandra" "-q"];
               };
             };
+            pylsp.enable = true;
             rust-analyzer = {
               enable = true;
               installCargo = true;
