@@ -72,8 +72,8 @@ in {
         number = true;
         relativenumber = true;
 
-        tabstop = 4;
-        shiftwidth = 4;
+        tabstop = 2;
+        shiftwidth = 2;
         expandtab = true;
         smartindent = true;
         wrap = false;
@@ -83,13 +83,7 @@ in {
       };
 
       files = {
-        "ftplugin/nix.lua".localOpts = {
-          tabstop = 2;
-          shiftwidth = 2;
-        };
         "ftplugin/html.lua".localOpts = {
-          tabstop = 2;
-          shiftwidth = 2;
           wrap = true;
         };
         "ftplugin/markdown.lua".localOpts = {
@@ -103,14 +97,6 @@ in {
         "ftplugin/text.lua".localOpts = {
           smartindent = false;
           autoindent = false;
-        };
-        "ftplugin/json.lua".localOpts = {
-          tabstop = 2;
-          shiftwidth = 2;
-        };
-        "ftplugin/scala.lua".localOpts = {
-          tabstop = 2;
-          shiftwidth = 2;
         };
       };
 
