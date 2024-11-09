@@ -9,7 +9,6 @@
 }: {
   imports = [
     ./neovim.nix
-    ./tmux.nix
     ./pass.nix
     ./gpg.nix
     ./firefox.nix
@@ -67,6 +66,26 @@
       settings.add_newline = false;
     };
 
+    zsh = {
+      enable = true;
+      enableCompletion = true;
+      autosuggestion.enable = true;
+      syntaxHighlighting.enable = true;
+
+      envExtra = ''
+        export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+      '';
+
+      history = {
+        size = 9999999999;
+        path = "${config.xdg.dataHome}/zsh/history";
+        ignoreDups = true;
+        ignoreSpace = true;
+      };
+
+      historySubstringSearch.enable = true;
+    };
+
     fish = {
       enable = true;
       shellInit = ''
@@ -89,6 +108,7 @@
     nix-index = {
       enable = true;
       enableFishIntegration = true;
+      enableZshIntegration = true;
     };
 
     nix-index-database.comma.enable = true;
@@ -96,6 +116,7 @@
     direnv = {
       enable = true;
       nix-direnv.enable = true;
+      enableZshIntegration = true;
     };
 
     git = {
@@ -146,6 +167,7 @@
     };
 
     alacritty.enable = true;
+    tmux.enable = true;
 
     mpv = {
       enable = true;

@@ -50,7 +50,6 @@ in {
     wget
     git
     rsync
-    tmux
     htop
     killall
     fd
@@ -64,6 +63,18 @@ in {
   # NOTE: On servers we'll use gpg agent forwarding
   # so we don't want the agent to overwrite the socket
   programs.gnupg.agent.settings.no-autostart = mkIf server true;
+
+  programs.tmux = {
+    enable = true;
+    # It's beneficial to be able to nest tmux sessions
+    shortcut =
+      if config.lajp.core.server
+      then "b"
+      else "Space";
+    keyMode = "vi";
+    baseIndex = 1;
+    clock24 = true;
+  };
 
   environment.variables.EDITOR = "nvim";
 }
