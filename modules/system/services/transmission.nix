@@ -31,6 +31,23 @@ in {
       };
     };
 
+    # stolen from https://github.com/WillPower3309/nixos-config/blob/ff5422d196350b7cc1b1ebd53845147a673c5895/modules/torrents.nix#L68-L83
+    systemd.services.transmission-namespace-forward = {
+      after = ["transmission.service"];
+      wantedBy = ["transmission.service"];
+      serviceConfig = {
+        Restart = "on-failure";
+        ExecStart = let
+          socatBin = "${pkgs.socat}/bin/socat";
+          transmissionAddress = config.services.transmission.settings.rpc-bind-address;
+          transmissionPort = toString config.services.transmission.settings.rpc-port;
+        in ''
+          ${socatBin} tcp-listen:${transmissionPort},fork,reuseaddr \
+            exec:'${pkgs.iproute2}/bin/ip netns exec pia ${socatBin} STDIO "tcp-connect:${transmissionAddress}:${transmissionPort}"',nofork
+        '';
+      };
+    };
+
     services.transmission = {
       enable = true;
       settings = {
@@ -49,7 +66,7 @@ in {
     ];
 
     environment.shellAliases = {
-      t = "sudo ip netns exec pia transmission-remote";
+      t = "transmission-remote";
     };
   };
 }
