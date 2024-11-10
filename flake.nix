@@ -86,7 +86,6 @@
           services.ssh.enable = true;
           services.jellyfin.enable = true;
           services.tvheadend.enable = true;
-          services.threadfin.enable = true;
           services.transmission.enable = true;
           services.jackett.enable = true;
           services.cross-seed.enable = true;
