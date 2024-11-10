@@ -88,7 +88,6 @@
           services.tvheadend.enable = true;
           services.transmission.enable = true;
           services.jackett.enable = true;
-          services.prowlarr.enable = true;
           services.testaustime-backup.enable = true;
           services.syncthing.enable = true;
           services.samba.enable = true;
