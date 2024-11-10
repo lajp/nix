@@ -31,7 +31,7 @@
     ];
   };
 
-  enchant-voikko = pkgs.enchant.overrideAttrs (final: prev: {
+  enchant-voikko = pkgs.enchant.overrideAttrs (_final: prev: {
     buildInputs =
       [
         pkgs.libvoikko

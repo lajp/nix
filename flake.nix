@@ -59,9 +59,6 @@
   };
 
   outputs = {
-    self,
-    nixpkgs,
-    nixpkgs-unstable,
     ...
   } @ inputs: let
     user = import ./lib/user.nix {inherit inputs;};
