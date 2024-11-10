@@ -18,7 +18,7 @@ in {
     virtualisation.oci-containers = {
       backend = "podman";
       containers.flaresolverr = {
-        image = "ghci.io/flaresolverr/flaresolverr:latest";
+        image = "ghcr.io/flaresolverr/flaresolverr:latest";
         hostname = "flaresolverr";
         ports = ["8191:8191"];
         environment.LOG_LEVEL = "info";
