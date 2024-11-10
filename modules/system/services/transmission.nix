@@ -53,9 +53,8 @@ in {
       settings = {
         download-dir = "/media/luukas/Torrents";
         incomplete-dir-enabled = false;
-        pex-enabled = false;
-        dht-enabled = false;
-        lpd-enabled = false;
+        messsage-level = 4;
+        rpc-host-whitelist-enabled = false;
         start-added-torrents = false;
       };
       package = pkgs.transmission_4;
