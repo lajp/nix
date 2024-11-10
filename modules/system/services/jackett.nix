@@ -1,7 +1,6 @@
 {
   lib,
   config,
-  pkgs,
   ...
 }: let
   inherit (lib) mkEnableOption mkIf;
@@ -9,10 +8,7 @@
 in {
   options.lajp.services.jackett.enable = mkEnableOption "Enable jackett";
   config = mkIf cfg.enable {
-    services.jackett = {
-      enable = true;
-      openFirewall = true;
-    };
+    services.jackett.enable = true;
 
     lajp.virtualisation.podman.enable = true;
     virtualisation.oci-containers = {

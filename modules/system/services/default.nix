@@ -10,6 +10,7 @@
     ./jackett.nix
     ./prowlarr.nix
     ./transmission.nix
+    ./cross-seed.nix
     ./tvheadend.nix
     ./testaustime-backup.nix
     ./syncthing.nix
