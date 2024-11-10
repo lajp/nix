@@ -8,4 +8,5 @@ in {
   "transmission.age".publicKeys = [nas];
   "testaustime.age".publicKeys = [lajp-nas nas lajp-t480];
   "restic-t480.age".publicKeys = [t480 lajp-t480];
+  "cross-seed.age".publicKeys = [nas];
 }
