@@ -8,6 +8,7 @@
     ./ssh.nix
     ./jellyfin.nix
     ./jackett.nix
+    ./prowlarr.nix
     ./transmission.nix
     ./tvheadend.nix
     ./testaustime-backup.nix
