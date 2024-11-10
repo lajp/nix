@@ -13,5 +13,16 @@ in {
       enable = true;
       openFirewall = true;
     };
+
+    lajp.virtualisation.podman.enable = true;
+    virtualisation.oci-containers = {
+      backend = "podman";
+      containers.flaresolverr = {
+        image = "ghcr.io/flaresolverr/flaresolverr:latest";
+        hostname = "flaresolverr";
+        ports = ["8191:8191"];
+        environment.LOG_LEVEL = "info";
+      };
+    };
   };
 }
