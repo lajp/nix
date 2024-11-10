@@ -79,6 +79,7 @@
 
       history = {
         size = 9999999999;
+        save = 9999999999;
         path = "${config.xdg.dataHome}/zsh/history";
         ignoreDups = true;
         ignoreSpace = true;
