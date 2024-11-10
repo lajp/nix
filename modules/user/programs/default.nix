@@ -67,6 +67,11 @@
       settings.add_newline = false;
     };
 
+    chromium = {
+      enable = true;
+      package = pkgs.ungoogled-chromium;
+    };
+
     zsh = {
       enable = true;
       enableCompletion = true;
