@@ -12,6 +12,7 @@
     ./transmission.nix
     ./cross-seed.nix
     ./tvheadend.nix
+    ./threadfin.nix
     ./testaustime-backup.nix
     ./syncthing.nix
     ./samba.nix
