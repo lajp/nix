@@ -43,7 +43,19 @@ in {
     };
 
     programs.fish.enable = true;
-    programs.zsh.enable = true;
+    programs.zsh = {
+      enable = true;
+      enableCompletion = true;
+      autosuggestions.enable = true;
+      syntaxHighlighting.enable = true;
+
+      setOptions = [
+        "HIST_IGNORE_DUPS"
+        "HIST_IGNORE_SPACE"
+      ];
+
+      histSize = 9999999999;
+    };
     environment.shells = with pkgs; [fish zsh];
   };
 }
