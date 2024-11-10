@@ -66,7 +66,7 @@ in {
     ];
 
     environment.shellAliases = {
-      t = "sudo ip netns exec pia transmission-remote";
+      t = "transmission-remote";
     };
   };
 }
