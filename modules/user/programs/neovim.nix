@@ -167,6 +167,7 @@ in {
             autoEnableSources = true;
             sources = [
               {name = "nvim_lsp";}
+              {name = "luasnip";}
             ];
 
             mapping = {
