@@ -36,7 +36,7 @@ in {
           browseable = "yes";
           "read only" = "no";
           "guest ok" = "no";
-          "create mask" = "0644";
+          "create mask" = "0777";
           "directory mask" = "0755";
           "valid users" = toString cfg.users;
           "force user" = "${config.lajp.user.username}";
