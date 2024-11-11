@@ -51,7 +51,7 @@ without the home-manager integration, depending on the system.
 
 ### Neovim
 
-My [Neovim configuration](./modules/usr/programs/neovim.nix) 
+My [Neovim configuration](./modules/user/programs/neovim.nix) 
 is probably the single largest component of this repository.
 I use [Nixvim](https://github.com/nix-community/nixvim) for configuring it.
 
