@@ -10,7 +10,6 @@ in {
     ./programs
     ./services
     ./accounts.nix
-    #./shell
   ];
 
   programs.home-manager.enable = true;

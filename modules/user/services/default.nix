@@ -11,9 +11,8 @@ in {
   imports = [
     ./dwm-status.nix
     ./waybar.nix
+    ./swayidle.nix
   ];
-
-  systemd.user.services.swayidle.Unit.After = "niri.service";
 
   services = {
     gpg-agent = {
@@ -22,31 +21,6 @@ in {
       enableSshSupport = true;
       pinentryPackage = pkgs.pinentry-curses;
     };
-
-    swayidle = let
-      lock = "${pkgs.swaylock}/bin/swaylock -f";
-    in
-      mkIf (!xserver) {
-        enable = true;
-        systemdTarget = "graphical-session.target";
-        events = [
-          {
-            event = "before-sleep";
-            command = "${lock}";
-          }
-          {
-            event = "lock";
-            command = "${lock}";
-          }
-        ];
-
-        timeouts = [
-          {
-            timeout = 1500;
-            command = "${lock}";
-          }
-        ];
-      };
 
     dunst.enable = true;
     picom = mkIf xserver {

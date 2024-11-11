@@ -2,8 +2,6 @@
   pkgs,
   pkgs-unstable,
   inputs,
-  config,
-  osConfig,
   ...
 }: {
   imports = [
@@ -14,6 +12,11 @@
     ./ssh.nix
     ./neomutt
     ./niri.nix
+    ./zsh.nix
+    ./fish.nix
+    ./git.nix
+    ./mpv.nix
+    ./mail.nix
 
     inputs.nix-index-database.hmModules.nix-index
   ];
@@ -26,9 +29,6 @@
     webcord
     flameshot
     signal-desktop
-    zathura
-    sxiv
-    xclip
     gnuradio
     quickemu
     (octaveFull.withPackages (opkgs: with opkgs; [communications signal statistics symbolic]))
@@ -66,55 +66,16 @@
       settings.add_newline = false;
     };
 
+    imv.enable = true;
+    zathura.enable = true;
+
     chromium = {
       enable = true;
       package = pkgs.ungoogled-chromium;
     };
 
-    zsh = {
-      enable = true;
-      enableCompletion = true;
-      autosuggestion.enable = true;
-      syntaxHighlighting.enable = true;
-
-      envExtra = ''
-        export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
-      '';
-
-      history = {
-        size = 9999999999;
-        save = 9999999999;
-        path = "${config.xdg.dataHome}/zsh/history";
-        ignoreDups = true;
-        ignoreSpace = true;
-      };
-
-      historySubstringSearch.enable = true;
-    };
-
-    fish = {
-      enable = true;
-      shellInit = ''
-        set -U fish_greeting
-
-        fish_vi_key_bindings
-        set fish_cursor_default block
-        set fish_cursor_insert line
-        set fish_cursor_replace_one underscore
-        set fish_cursor_visual block
-
-        export SSH_AUTH_SOCK=(gpgconf --list-dirs agent-ssh-socket)
-      '';
-
-      shellAbbrs = {
-        tempdir = "cd $(mktemp -d)";
-      };
-    };
-
     nix-index = {
       enable = true;
-      enableFishIntegration = true;
-      enableZshIntegration = true;
     };
 
     nix-index-database.comma.enable = true;
@@ -122,74 +83,9 @@
     direnv = {
       enable = true;
       nix-direnv.enable = true;
-      enableZshIntegration = true;
-    };
-
-    git = {
-      enable = true;
-      userName = osConfig.lajp.user.realName;
-      userEmail = "lajp@iki.fi";
-
-      aliases = {
-        br = "branch";
-        co = "checkout";
-        st = "status";
-      };
-
-      includes = [
-        {
-          contents.user.email = "luukas.portfors@aalto.fi";
-          condition = "gitdir:~/git/work/**";
-        }
-        {
-          contents.user.email = "luukas.portfors@aalto.fi";
-          condition = "gitdir:~/git/aalto/**";
-        }
-      ];
-
-      extraConfig = {
-        rerere.enabled = true;
-        init.defaultBranch = "main";
-      };
-
-      signing = {
-        signByDefault = true;
-        key = null;
-      };
-    };
-
-    mbsync = {
-      enable = true;
-      package = pkgs.isync.override {withCyrusSaslXoauth2 = true;};
-    };
-
-    msmtp.enable = true;
-    notmuch = {
-      enable = true;
-      hooks.preNew = ''
-        ACCOUNTS=$(cat ${config.home.homeDirectory}/.mbsyncrc | sed -nr "s/^IMAPAccount (\w+)/\1/p")
-        ${pkgs.parallel}/bin/parallel ${config.programs.mbsync.package}/bin/mbsync ::: $ACCOUNTS
-      '';
     };
 
     alacritty.enable = true;
     tmux.enable = true;
-
-    mpv = {
-      enable = true;
-      config.hwdec = "auto-safe";
-
-      scripts = [pkgs.mpvScripts.mpris];
-
-      extraInput = ''
-        n playlist-next
-        N playlist-prev
-      '';
-
-      profiles.audio = {
-        ytdl-format = "bestaudio/best";
-        video = false;
-      };
-    };
   };
 }
