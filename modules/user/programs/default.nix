@@ -85,7 +85,10 @@
       nix-direnv.enable = true;
     };
 
-    alacritty.enable = true;
+    alacritty = {
+      enable = true;
+      settings.env.TERM = "xterm-256color";
+    };
     tmux.enable = true;
   };
 }
