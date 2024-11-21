@@ -26,6 +26,25 @@ in {
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       ];
     };
+
+    distributedBuilds = true;
+
+    buildMachines = [
+      {
+        hostName = "pve";
+        system = "x86_64-linux";
+        protocol = "ssh-ng";
+        maxJobs = 48;
+        speedFactor = 10;
+        supportedFeatures = ["benchmark" "big-parallel"];
+        sshUser = "root";
+        sshKey = "/home/lajp/.ssh/id_ed25519";
+      }
+    ];
+
+    extraOptions = ''
+      builders-use-substitutes = true
+    '';
   };
 
   nixpkgs = {
