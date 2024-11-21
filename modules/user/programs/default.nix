@@ -90,6 +90,13 @@
       enable = true;
       settings.env.TERM = "xterm-256color";
     };
-    tmux.enable = true;
+
+    tmux = {
+      enable = true;
+      shortcut = "Space";
+      keyMode = "vi";
+      baseIndex = 1;
+      clock24 = true;
+    };
   };
 }
