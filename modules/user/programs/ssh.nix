@@ -8,6 +8,20 @@
         RemoteForward = "/run/user/1000/gnupg/S.gpg-agent /run/user/1000/gnupg/S.gpg-agent.extra";
       };
     };
+
+    kosh = {
+      hostname = "kosh.aalto.fi";
+      user = "portfol1";
+    };
+
+    tik = {
+      hostname = "old.tietokilta.fi";
+      proxyJump = "kosh";
+      extraOptions = {
+        HostKeyAlgorithms = "ssh-rsa";
+        PubkeyAcceptedAlgorithms = "ssh-rsa";
+      };
+    };
   };
 in {
   programs.ssh = {
