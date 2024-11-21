@@ -22,6 +22,22 @@
         PubkeyAcceptedAlgorithms = "ssh-rsa";
       };
     };
+
+    nas = {
+      forwardAgent = true;
+      extraOptions = {
+        StreamLocalBindUnlink = "yes";
+        RemoteForward = "/run/user/1000/gnupg/S.gpg-agent /run/user/1000/gnupg/S.gpg-agent.extra";
+      };
+    };
+
+    vaasanas = {
+      forwardAgent = true;
+      extraOptions = {
+        StreamLocalBindUnlink = "yes";
+        RemoteForward = "/run/user/1000/gnupg/S.gpg-agent /run/user/1000/gnupg/S.gpg-agent.extra";
+      };
+    };
   };
 in {
   programs.ssh = {
