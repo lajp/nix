@@ -26,7 +26,7 @@
   home.packages = with pkgs; [
     pavucontrol
     helvum
-    webcord
+    discord
     flameshot
     signal-desktop
     gnuradio
