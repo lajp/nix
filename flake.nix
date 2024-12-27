@@ -15,6 +15,8 @@
 
     pia-nix.url = "github:Atte/pia-nix";
 
+    pia.url = "github:Fuwn/pia.nix";
+
     agenix.url = "github:ryantm/agenix";
 
     nur.url = "github:nix-community/NUR";
@@ -123,6 +125,7 @@
 
           services.restic.enable = true;
           services.niri.enable = true;
+          services.pia.enable = true;
           hardware.sound.enable = true;
           hardware.bluetooth.enable = true;
           hardware.rtl-sdr.enable = true;

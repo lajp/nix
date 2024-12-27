@@ -5,6 +5,7 @@ let
   t480 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHB05Rw4+xyxVyJXL84g7TM6jcS73P3yBJA/QI+MBqdc";
 in {
   "pia.age".publicKeys = [nas];
+  "pia2.age".publicKeys = [lajp-t480];
   "transmission.age".publicKeys = [nas];
   "testaustime.age".publicKeys = [lajp-nas nas lajp-t480];
   "restic-t480.age".publicKeys = [t480 lajp-t480];
