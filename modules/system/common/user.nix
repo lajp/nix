@@ -43,6 +43,7 @@ in {
     };
 
     programs.fish.enable = true;
+    programs.kdeconnect.enable = !config.lajp.core.server;
     programs.zsh = {
       enable = true;
       enableCompletion = true;
