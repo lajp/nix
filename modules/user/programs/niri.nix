@@ -51,6 +51,13 @@ in {
           };
         };
 
+        "LG Electronics LG ULTRAGEAR 0x00015DF3" = {
+          position = {
+            x = 0;
+            y = -1080;
+          };
+        };
+
         "Philips Consumer Electronics Company Philips FTV 0x01010101" = {
           mode = {
             width = 1920;
