@@ -131,6 +131,7 @@ in {
                 formatting.command = ["${pkgs.alejandra}/bin/alejandra" "-q"];
               };
             };
+            gleam.enable = true;
             pylsp.enable = true;
             rust-analyzer = {
               enable = true;
