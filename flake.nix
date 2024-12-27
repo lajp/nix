@@ -58,9 +58,7 @@
     };
   };
 
-  outputs = {
-    ...
-  } @ inputs: let
+  outputs = {...} @ inputs: let
     user = import ./lib/user.nix {inherit inputs;};
     utils = import ./lib/system.nix {inherit user inputs;};
     inherit (utils) mkHost;
@@ -128,6 +126,7 @@
           hardware.sound.enable = true;
           hardware.bluetooth.enable = true;
           hardware.rtl-sdr.enable = true;
+          virtualisation.podman.enable = true;
         };
 
         userConfig = {

@@ -13,8 +13,6 @@
   networking.hostName = config.lajp.core.hostname;
   networking.networkmanager.enable = true;
 
-  virtualisation.docker.enable = true;
-
   hardware.opengl = {
     enable = true;
     extraPackages = with pkgs; [
