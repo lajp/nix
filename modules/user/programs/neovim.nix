@@ -152,7 +152,7 @@ in {
               settings.check.command = "clippy";
             };
             typst_lsp = {
-              enable = true;
+              enable = false;
               settings.exportPdf = "never";
             };
             idris2_lsp.enable = true;
