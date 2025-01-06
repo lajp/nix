@@ -109,8 +109,18 @@ in {
             "<C-f>" = "live_grep";
           };
         };
+        web-devicons.enable = true;
 
-        treesitter.enable = true;
+        idris2.enable = true;
+
+        treesitter = {
+          enable = true;
+          settings = {
+            #auto_install = true;
+            highlight.enable = true;
+            indent.enable = true;
+          };
+        };
 
         gitsigns = {
           enable = true;
@@ -133,7 +143,7 @@ in {
             };
             gleam.enable = true;
             pylsp.enable = true;
-            rust-analyzer = {
+            rust_analyzer = {
               enable = true;
               installCargo = true;
               installRustc = true;
@@ -141,10 +151,11 @@ in {
               rustcPackage = pkgs.rustup;
               settings.check.command = "clippy";
             };
-            typst-lsp = {
+            typst_lsp = {
               enable = true;
               settings.exportPdf = "never";
             };
+            idris2_lsp.enable = true;
             metals.enable = true;
             terraformls.enable = true;
           };

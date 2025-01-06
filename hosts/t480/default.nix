@@ -11,14 +11,13 @@
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
   networking.hostName = config.lajp.core.hostname;
+  networking.nameservers = ["1.1.1.1" "9.9.9.9"];
   networking.networkmanager.enable = true;
 
-  hardware.opengl = {
+  hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [
       libvdpau-va-gl
-      rocm-opencl-icd
-      rocm-opencl-runtime
       amdvlk
     ];
   };
@@ -27,8 +26,6 @@
 
   environment.systemPackages = with pkgs; [
     rocmPackages.clr
-    rocm-opencl-icd
-    rocm-opencl-runtime
   ];
 
   hardware.amdgpu = {

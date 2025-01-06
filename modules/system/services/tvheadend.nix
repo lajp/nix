@@ -8,8 +8,15 @@
 in {
   options.lajp.services.tvheadend.enable = mkEnableOption "Enable tvheadend";
   config = mkIf cfg.enable {
-    # NOTE: We may need to load the dvb_usb_rtl28xxu module
-
+    lajp.virtualisation.podman.enable = true;
+    virtualisation.oci-containers = {
+      backend = "podman";
+      containers.tvheadend = {
+        image = "lscr.io/linuxserver/tvheadend:latest";
+        ports = ["9981:9981"];
+        environment.TZ = "Europe/Helsinki";
+      };
+    };
     services.tvheadend.enable = true;
     networking.firewall.allowedTCPPorts = [9981];
   };

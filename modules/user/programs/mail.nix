@@ -12,9 +12,10 @@
     msmtp.enable = true;
     notmuch = {
       enable = true;
-      hooks.preNew = ''
-        ACCOUNTS=$(cat ${config.home.homeDirectory}/.mbsyncrc | sed -nr "s/^IMAPAccount (\w+)/\1/p")
-        ${pkgs.parallel}/bin/parallel ${config.programs.mbsync.package}/bin/mbsync ::: $ACCOUNTS
+      hooks.preNew = let
+        accounts = builtins.attrNames (pkgs.lib.filterAttrs (n: v: v.mbsync.enable) config.accounts.email.accounts);
+      in ''
+        ${pkgs.parallel}/bin/parallel ${config.programs.mbsync.package}/bin/mbsync ::: ${toString accounts}
       '';
     };
   };

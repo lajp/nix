@@ -8,7 +8,7 @@
 in {
   options.lajp.services.jellyfin.enable = mkEnableOption "Enable jellyfin";
   config = mkIf cfg.enable {
-    hardware.opengl.enable = true;
+    hardware.graphics.enable = true;
 
     services.jellyfin = {
       enable = true;

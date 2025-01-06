@@ -2,6 +2,7 @@
   pkgs,
   pkgs-unstable,
   inputs,
+  config,
   ...
 }: {
   imports = [
@@ -61,6 +62,12 @@
     fastfetch
   ];
 
+  # TODO: figure out why this breaks
+  # Parsing this https://github.com/tinted-theming/tinted-tmux/blob/main/templates/config.yaml
+  # fails for some reason
+  # Related: https://github.com/SenchoPens/base16.nix/issues/20
+  stylix.targets.tmux.enable = false;
+
   programs = {
     starship = {
       enable = true;
@@ -97,6 +104,17 @@
       keyMode = "vi";
       baseIndex = 1;
       clock24 = true;
+      terminal = "screen-256color";
+      # NOTE: See line 69
+      extraConfig = let
+        theme = config.lib.stylix.colors {
+          templateRepo = config.lib.stylix.templates.tinted-tmux;
+          target = "base16";
+          use-ifd = "always";
+        };
+      in ''
+        source-file ${theme}
+      '';
     };
   };
 }
