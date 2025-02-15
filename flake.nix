@@ -134,6 +134,7 @@
           hardware.bluetooth.enable = true;
           hardware.rtl-sdr.enable = true;
           virtualisation.podman.enable = false;
+          rickroll.enable = true;
         };
 
         userConfig = {
