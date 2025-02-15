@@ -3,6 +3,7 @@
   config,
   inputs,
   pkgs,
+  pkgs-unstable,
   ...
 }: let
   inherit (lib) mkEnableOption mkIf;
@@ -62,7 +63,14 @@ in {
       enable = true;
       enableMan = false;
 
+      # NOTE: Due to this: https://github.com/neovim/neovim/issues/30675
+      package = pkgs-unstable.neovim-unwrapped;
+
       globals.mapleader = " ";
+
+      filetype.extension = {
+        mdx = "markdown";
+      };
 
       opts = {
         clipboard = "unnamed";
@@ -151,13 +159,13 @@ in {
               rustcPackage = pkgs.rustup;
               settings.check.command = "clippy";
             };
-            typst_lsp = {
-              enable = false;
-              settings.exportPdf = "never";
-            };
+            tinymist.enable = true;
             idris2_lsp.enable = true;
             metals.enable = true;
-            terraformls.enable = true;
+            terraformls = {
+              enable = true;
+              settings.formatting.command = ["${pkgs.terraform}" "fmt"];
+            };
           };
 
           keymaps = {
@@ -169,6 +177,19 @@ in {
               "<leader>af" = "code_action";
             };
           };
+          # FIXME: remove on nvim version bump:
+          # https://github.com/neovim/neovim/issues/30985
+          postConfig = ''
+            for _, method in ipairs({ 'textDocument/diagnostic', 'workspace/diagnostic' }) do
+                local default_diagnostic_handler = vim.lsp.handlers[method]
+                vim.lsp.handlers[method] = function(err, result, context, config)
+                    if err ~= nil and err.code == -32802 then
+                        return
+                    end
+                    return default_diagnostic_handler(err, result, context, config)
+                end
+            end
+          '';
         };
 
         lsp-format.enable = true;

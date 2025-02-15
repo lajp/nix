@@ -21,4 +21,5 @@
   services.tailscale.extraSetFlags = ["--accept-dns=false"];
 
   hardware.nvidia.prime.offload.enable = false;
+  hardware.nvidia.open = true;
 }

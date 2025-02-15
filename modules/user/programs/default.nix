@@ -28,7 +28,7 @@
     pavucontrol
     helvum
     discord
-    flameshot
+    (flameshot.override {enableWlrSupport = true;})
     signal-desktop
     gnuradio
     quickemu
@@ -113,6 +113,7 @@
           use-ifd = "always";
         };
       in ''
+        set-option -g update-environment 'DBUS_SESSION_BUS_ADDRESS'
         source-file ${theme}
       '';
     };

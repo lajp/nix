@@ -7,6 +7,10 @@
     noto-fonts-cjk-sans
     noto-fonts-emoji
     noto-fonts-color-emoji
+    font-awesome
+    source-sans
+    source-sans-pro
+    roboto
     (nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
   ];
 

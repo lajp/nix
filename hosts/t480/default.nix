@@ -14,6 +14,8 @@
   networking.nameservers = ["1.1.1.1" "9.9.9.9"];
   networking.networkmanager.enable = true;
 
+  virtualisation.docker.enable = true;
+
   hardware.graphics = {
     enable = true;
     extraPackages = with pkgs; [

@@ -83,7 +83,7 @@
 
           services.ssh.enable = true;
           services.jellyfin.enable = true;
-          services.tvheadend.enable = true;
+          services.tvheadend.enable = false;
           services.transmission.enable = true;
           services.jackett.enable = true;
           services.cross-seed.enable = true;
@@ -130,7 +130,7 @@
           hardware.sound.enable = true;
           hardware.bluetooth.enable = true;
           hardware.rtl-sdr.enable = true;
-          virtualisation.podman.enable = true;
+          virtualisation.podman.enable = false;
         };
 
         userConfig = {

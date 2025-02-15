@@ -19,18 +19,18 @@ in {
   config = mkIf cfg.enable {
     services.samba = {
       enable = true;
-      securityType = "user";
       openFirewall = true;
-      extraConfig = ''
-        workgroup = WORKGROUP
-        server string = ${config.lajp.core.hostname}
-        netbios name = ${config.lajp.core.hostname}
-        security = user
-        guest account = nobody
-        map to guest = bad user
-      '';
 
-      shares = {
+      settings = {
+        global = {
+          workgroup = "WORKGROUP";
+          "server string" = config.lajp.core.hostname;
+          "netbios name" = config.lajp.core.hostname;
+          security = "user";
+          "guest account" = "nobody";
+          "map to guest" = "bad user";
+        };
+
         media = {
           path = "/media";
           browseable = "yes";

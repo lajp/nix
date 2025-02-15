@@ -63,7 +63,7 @@ in {
             format-icons = ["" ""];
           };
 
-          temperature.hwmon-path = "/sys/devices/platform/thinkpad_hwmon/hwmon/hwmon6/temp1_input";
+          temperature.hwmon-path = "/sys/devices/platform/thinkpad_hwmon/hwmon/hwmon7/temp1_input";
 
           network = {
             format-wifi = "{essid} ({signalStrength}%)";
@@ -72,7 +72,7 @@ in {
 
           clock = {
             format = "{:%Y-%m-%d %H:%M:%S}";
-            inverval = 1;
+            interval = 1;
           };
         };
       };
