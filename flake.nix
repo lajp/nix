@@ -28,7 +28,6 @@
 
     stylix = {
       url = "github:danth/stylix/release-24.11";
-      #url = "github:danth/stylix/7689e62";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
@@ -140,6 +139,23 @@
         userConfig = {
           editors.nvim.enable = true;
         };
+      };
+      framework = mkHost {
+        extraModules = with inputs.nixos-hardware.nixosModules; [
+          framework-13-7040-amd
+        ];
+
+        systemConfig = {
+          core.hostname = "framework";
+
+          services.niri.enable = true;
+          #services.pia.enable = true;
+          hardware.sound.enable = true;
+          hardware.bluetooth.enable = true;
+          hardware.rtl-sdr.enable = true;
+        };
+
+        userConfig.editors.nvim.enable = true;
       };
     };
   };
