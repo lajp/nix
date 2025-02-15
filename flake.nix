@@ -48,7 +48,10 @@
       flake = false;
     };
 
-    niri.url = "github:sodiboo/niri-flake";
+    niri = {
+      url = "github:sodiboo/niri-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     testaustime-nvim = {
       url = "github:Testaustime/testaustime.nvim";

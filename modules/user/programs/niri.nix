@@ -114,6 +114,8 @@ in {
           "XF86AudioRaiseVolume".action.spawn = [wpctl "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"];
           "XF86AudioLowerVolume".action.spawn = [wpctl "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"];
 
+          "Mod+Shift+Space".action.toggle-window-floating = [];
+
           "Mod+P".action.spawn = [playerctl "play-pause"];
           "Mod+Left".action.spawn = [playerctl "previous"];
           "Mod+Right".action.spawn = [playerctl "next"];
