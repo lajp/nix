@@ -1,9 +1,10 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   programs.mpv = {
     enable = true;
     config.hwdec = "auto-safe";
 
-    scripts = [pkgs.mpvScripts.mpris];
+    scripts = [ pkgs.mpvScripts.mpris ];
 
     extraInput = ''
       n playlist-next

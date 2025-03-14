@@ -3,18 +3,20 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.lajp.hardware.zfs;
-in {
+in
+{
   options.lajp.hardware.zfs.enable = mkEnableOption "Enable ZFS support";
   config = mkIf cfg.enable {
     services.zfs.autoScrub.enable = true;
 
     boot = {
-      supportedFilesystems = ["zfs"];
+      supportedFilesystems = [ "zfs" ];
       zfs.forceImportRoot = false;
-      kernelParams = ["zfs.zfs_arc_max=12884901888"];
+      kernelParams = [ "zfs.zfs_arc_max=12884901888" ];
       extraModprobeConfig = ''
         options zfs l2arc_noprefetch=0 l2arc_write_boost=33554432 l2arc_write_max=16777216 zfs_arc_max=2147483648
       '';

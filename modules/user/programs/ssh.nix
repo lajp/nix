@@ -1,4 +1,5 @@
-{...}: let
+{ ... }:
+let
   hosts = {
     jellyfin = {
       hostname = "jellyfin.lajp.fi";
@@ -39,7 +40,8 @@
       };
     };
   };
-in {
+in
+{
   programs.ssh = {
     enable = true;
     matchBlocks = hosts;

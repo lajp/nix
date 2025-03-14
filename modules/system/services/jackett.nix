@@ -2,10 +2,12 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.lajp.services.jackett;
-in {
+in
+{
   options.lajp.services.jackett.enable = mkEnableOption "Enable jackett";
   config = mkIf cfg.enable {
     services.jackett.enable = true;
@@ -16,7 +18,7 @@ in {
       containers.flaresolverr = {
         image = "ghcr.io/flaresolverr/flaresolverr:latest";
         hostname = "flaresolverr";
-        ports = ["8191:8191"];
+        ports = [ "8191:8191" ];
         environment.LOG_LEVEL = "info";
       };
     };

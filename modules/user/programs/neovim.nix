@@ -5,7 +5,8 @@
   pkgs,
   pkgs-unstable,
   ...
-}: let
+}:
+let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.lajp.editors.nvim;
 
@@ -32,20 +33,19 @@
     ];
   };
 
-  enchant-voikko = pkgs.enchant.overrideAttrs (_final: prev: {
-    buildInputs =
-      [
+  enchant-voikko = pkgs.enchant.overrideAttrs (
+    _final: prev: {
+      buildInputs = [
         pkgs.libvoikko
-      ]
-      ++ prev.buildInputs;
+      ] ++ prev.buildInputs;
 
-    configureFlags =
-      [
+      configureFlags = [
         "--enable-voikko"
-      ]
-      ++ prev.configureFlags;
-  });
-in {
+      ] ++ prev.configureFlags;
+    }
+  );
+in
+{
   imports = [
     inputs.nixvim.homeManagerModules.nixvim
     inputs.agenix.homeManagerModules.default
@@ -121,6 +121,11 @@ in {
 
         idris2.enable = true;
 
+        lean = {
+          enable = true;
+          leanPackage = pkgs.elan;
+        };
+
         treesitter = {
           enable = true;
           settings = {
@@ -146,7 +151,7 @@ in {
             nixd = {
               enable = true;
               settings = {
-                formatting.command = ["${pkgs.alejandra}/bin/alejandra" "-q"];
+                formatting.command = [ "${pkgs.nixfmt-rfc-style}/bin/nixfmt" ];
               };
             };
             gleam.enable = true;
@@ -164,7 +169,10 @@ in {
             metals.enable = true;
             terraformls = {
               enable = true;
-              settings.formatting.command = ["${pkgs.terraform}" "fmt"];
+              settings.formatting.command = [
+                "${pkgs.terraform}"
+                "fmt"
+              ];
             };
           };
 
@@ -175,6 +183,8 @@ in {
             lspBuf = {
               "K" = "hover";
               "<leader>af" = "code_action";
+              "gd" = "definition";
+              "gi" = "implementation";
             };
           };
           # FIXME: remove on nvim version bump:
@@ -199,8 +209,8 @@ in {
           settings = {
             autoEnableSources = true;
             sources = [
-              {name = "nvim_lsp";}
-              {name = "luasnip";}
+              { name = "nvim_lsp"; }
+              { name = "luasnip"; }
             ];
 
             mapping = {

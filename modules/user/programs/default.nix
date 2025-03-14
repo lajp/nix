@@ -4,7 +4,8 @@
   inputs,
   config,
   ...
-}: {
+}:
+{
   imports = [
     ./neovim.nix
     ./pass.nix
@@ -28,11 +29,18 @@
     pavucontrol
     helvum
     discord
-    (flameshot.override {enableWlrSupport = true;})
+    (flameshot.override { enableWlrSupport = true; })
     signal-desktop
     gnuradio
     quickemu
-    (octaveFull.withPackages (opkgs: with opkgs; [communications signal statistics symbolic]))
+    (octaveFull.withPackages (
+      opkgs: with opkgs; [
+        communications
+        signal
+        statistics
+        symbolic
+      ]
+    ))
     pkgs-unstable.musescore
     xclip
     mednaffe
@@ -106,16 +114,18 @@
       clock24 = true;
       terminal = "screen-256color";
       # NOTE: See line 69
-      extraConfig = let
-        theme = config.lib.stylix.colors {
-          templateRepo = config.lib.stylix.templates.tinted-tmux;
-          target = "base16";
-          use-ifd = "always";
-        };
-      in ''
-        set-option -g update-environment 'DBUS_SESSION_BUS_ADDRESS'
-        source-file ${theme}
-      '';
+      extraConfig =
+        let
+          theme = config.lib.stylix.colors {
+            templateRepo = config.lib.stylix.templates.tinted-tmux;
+            target = "base16";
+            use-ifd = "always";
+          };
+        in
+        ''
+          set-option -g update-environment 'DBUS_SESSION_BUS_ADDRESS'
+          source-file ${theme}
+        '';
     };
   };
 }

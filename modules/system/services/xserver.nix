@@ -4,20 +4,19 @@
   config,
   inputs,
   ...
-}: let
+}:
+let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.lajp.services.xserver;
-in {
+in
+{
   options.lajp.services.xserver.enable = mkEnableOption "Enable X and DWM";
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
       dmenu
-      inputs.blmgr.packages.${system}.default
       # for volume control through pactl
       pulseaudio
     ];
-
-    services.udev.packages = [pkgs.light];
 
     services.xserver = {
       enable = true;

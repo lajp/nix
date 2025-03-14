@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   imports = [
     ./podman.nix
   ];

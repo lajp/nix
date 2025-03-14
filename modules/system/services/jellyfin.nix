@@ -2,10 +2,12 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.lajp.services.jellyfin;
-in {
+in
+{
   options.lajp.services.jellyfin.enable = mkEnableOption "Enable jellyfin";
   config = mkIf cfg.enable {
     hardware.graphics.enable = true;
@@ -35,6 +37,9 @@ in {
       defaults.email = "lajp@iki.fi";
     };
 
-    networking.firewall.allowedTCPPorts = [80 443];
+    networking.firewall.allowedTCPPorts = [
+      80
+      443
+    ];
   };
 }

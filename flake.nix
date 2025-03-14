@@ -63,100 +63,114 @@
     };
   };
 
-  outputs = {...} @ inputs: let
-    user = import ./lib/user.nix {inherit inputs;};
-    utils = import ./lib/system.nix {inherit user inputs;};
-    inherit (utils) mkHost;
-  in {
-    nixosConfigurations = {
-      nas = mkHost {
-        extraModules = with inputs.nixos-hardware.nixosModules; [
-          common-pc
-          common-pc-ssd
-          common-cpu-intel
-          common-gpu-nvidia
-        ];
+  outputs =
+    { ... }@inputs:
+    let
+      user = import ./lib/user.nix { inherit inputs; };
+      utils = import ./lib/system.nix { inherit user inputs; };
+      inherit (utils) mkHost;
+    in
+    {
+      nixosConfigurations = {
+        nas = mkHost {
+          extraModules = with inputs.nixos-hardware.nixosModules; [
+            common-pc
+            common-pc-ssd
+            common-cpu-intel
+            common-gpu-nvidia
+          ];
 
-        systemConfig = {
-          core = {
-            hostname = "nas";
-            server = true;
+          systemConfig = {
+            core = {
+              hostname = "nas";
+              server = true;
+            };
+
+            services.ssh.enable = true;
+            services.jellyfin.enable = true;
+            services.tvheadend.enable = false;
+            services.transmission.enable = true;
+            services.jackett.enable = true;
+            services.cross-seed.enable = true;
+            services.testaustime-backup.enable = true;
+            services.syncthing.enable = true;
+            services.samba.enable = true;
+            services.vaultwarden.enable = false;
+            hardware.zfs.enable = true;
+          };
+        };
+        vaasanas = mkHost {
+          extraModules = with inputs.nixos-hardware.nixosModules; [
+            common-pc
+            common-cpu-intel
+          ];
+
+          systemConfig = {
+            core = {
+              hostname = "vaasanas";
+              server = true;
+            };
+
+            services.ssh.enable = true;
+            services.samba = {
+              enable = true;
+              users = [
+                "lajp"
+                "petri"
+              ];
+            };
+            hardware.zfs.enable = true;
+          };
+        };
+        t480 = mkHost {
+          extraModules = with inputs.nixos-hardware.nixosModules; [
+            lenovo-thinkpad-t480
+          ];
+
+          systemConfig = {
+            core = {
+              hostname = "t480";
+            };
+
+            services.restic.enable = true;
+            services.niri.enable = true;
+            services.pia.enable = true;
+            hardware.sound.enable = true;
+            hardware.bluetooth.enable = true;
+            hardware.rtl-sdr.enable = true;
+            virtualisation.podman.enable = false;
+            hardware.backlight.enable = true;
+            rickroll.enable = true;
           };
 
-          services.ssh.enable = true;
-          services.jellyfin.enable = true;
-          services.tvheadend.enable = false;
-          services.transmission.enable = true;
-          services.jackett.enable = true;
-          services.cross-seed.enable = true;
-          services.testaustime-backup.enable = true;
-          services.syncthing.enable = true;
-          services.samba.enable = true;
-          services.vaultwarden.enable = false;
-          hardware.zfs.enable = true;
+          userConfig = {
+            editors.nvim.enable = true;
+          };
         };
-      };
-      vaasanas = mkHost {
-        extraModules = with inputs.nixos-hardware.nixosModules; [
-          common-pc
-          common-cpu-intel
-        ];
+        framework = mkHost {
+          extraModules = with inputs.nixos-hardware.nixosModules; [
+            framework-13-7040-amd
+          ];
 
-        systemConfig = {
-          core = {
-            hostname = "vaasanas";
-            server = true;
+          systemConfig = {
+            core.hostname = "framework";
+
+            services.restic.enable = true;
+            services.niri.enable = true;
+            services.ssh.enable = true;
+            services.pia.enable = true;
+            hardware.sound.enable = true;
+            hardware.bluetooth.enable = true;
+            hardware.rtl-sdr.enable = true;
+            hardware.backlight = {
+              enable = true;
+              gpu = "amd";
+            };
+            rickroll.enable = true;
           };
 
-          services.ssh.enable = true;
-          services.samba = {
-            enable = true;
-            users = ["lajp" "petri"];
-          };
-          hardware.zfs.enable = true;
+          userConfig.editors.nvim.enable = true;
         };
-      };
-      t480 = mkHost {
-        extraModules = with inputs.nixos-hardware.nixosModules; [
-          lenovo-thinkpad-t480
-        ];
-
-        systemConfig = {
-          core = {
-            hostname = "t480";
-          };
-
-          services.restic.enable = true;
-          services.niri.enable = true;
-          services.pia.enable = true;
-          hardware.sound.enable = true;
-          hardware.bluetooth.enable = true;
-          hardware.rtl-sdr.enable = true;
-          virtualisation.podman.enable = false;
-          rickroll.enable = true;
-        };
-
-        userConfig = {
-          editors.nvim.enable = true;
-        };
-      };
-      framework = mkHost {
-        extraModules = with inputs.nixos-hardware.nixosModules; [
-          framework-13-7040-amd
-        ];
-
-        systemConfig = {
-          core.hostname = "framework";
-
-          services.niri.enable = true;
-          #services.pia.enable = true;
-          hardware.sound.enable = true;
-          hardware.bluetooth.enable = true;
-          hardware.rtl-sdr.enable = true;
-        };
-
-        userConfig.editors.nvim.enable = true;
       };
     };
-  };
 }

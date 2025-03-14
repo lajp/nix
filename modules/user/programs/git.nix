@@ -1,4 +1,5 @@
-{osConfig, ...}: {
+{ osConfig, ... }:
+{
   programs.git = {
     enable = true;
     userName = osConfig.lajp.user.realName;

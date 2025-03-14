@@ -4,10 +4,12 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (config.lajp.core) server;
   inherit (lib) mkIf;
-in {
+in
+{
   imports = [
     ./user.nix
   ];
@@ -22,29 +24,32 @@ in {
     registry.nixpkgs.flake = inputs.nixpkgs;
 
     settings = {
-      trusted-users = ["@wheel"];
-      experimental-features = ["nix-command" "flakes"];
+      trusted-users = [ "@wheel" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
       auto-optimise-store = true;
-      substituters = ["https://nix-community.cachix.org"];
+      substituters = [ "https://nix-community.cachix.org" ];
       trusted-public-keys = [
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       ];
     };
 
-    distributedBuilds = true;
+    #distributedBuilds = true;
 
-    buildMachines = [
-      {
-        hostName = "pve";
-        system = "x86_64-linux";
-        protocol = "ssh-ng";
-        maxJobs = 48;
-        speedFactor = 10;
-        supportedFeatures = ["benchmark" "big-parallel"];
-        sshUser = "root";
-        sshKey = "/home/lajp/.ssh/id_ed25519";
-      }
-    ];
+    #buildMachines = [
+    #  {
+    #    hostName = "pve";
+    #    system = "x86_64-linux";
+    #    protocol = "ssh-ng";
+    #    maxJobs = 48;
+    #    speedFactor = 10;
+    #    supportedFeatures = ["benchmark" "big-parallel"];
+    #    sshUser = "root";
+    #    sshKey = "/home/lajp/.ssh/id_ed25519";
+    #  }
+    #];
 
     extraOptions = ''
       builders-use-substitutes = true
@@ -52,7 +57,10 @@ in {
   };
 
   nixpkgs = {
-    overlays = [inputs.nur.overlay inputs.niri.overlays.niri];
+    overlays = [
+      inputs.nur.overlay
+      inputs.niri.overlays.niri
+    ];
     config.allowUnfree = true;
   };
 
@@ -90,10 +98,7 @@ in {
   programs.tmux = {
     enable = true;
     # It's beneficial to be able to nest tmux sessions
-    shortcut =
-      if config.lajp.core.server
-      then "b"
-      else "Space";
+    shortcut = if config.lajp.core.server then "b" else "Space";
     keyMode = "vi";
     baseIndex = 1;
     clock24 = true;

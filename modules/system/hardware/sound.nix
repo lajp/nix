@@ -2,10 +2,12 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.lajp.hardware.sound;
-in {
+in
+{
   options.lajp.hardware.sound.enable = mkEnableOption "Enable sound";
   config = mkIf cfg.enable {
     services.pipewire = {

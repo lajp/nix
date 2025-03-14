@@ -1,7 +1,9 @@
 _: {
-  mkConfig = {userConfig, ...}: {
-    lajp = userConfig;
+  mkConfig =
+    { userConfig, ... }:
+    {
+      lajp = userConfig;
 
-    imports = [../modules/user];
-  };
+      imports = [ ../modules/user ];
+    };
 }

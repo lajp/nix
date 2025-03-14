@@ -3,16 +3,23 @@
   config,
   pkgs,
   ...
-}: let
-  inherit (lib) mkEnableOption mkIf types mkOption;
+}:
+let
+  inherit (lib)
+    mkEnableOption
+    mkIf
+    types
+    mkOption
+    ;
   cfg = config.lajp.services.samba;
-in {
+in
+{
   options.lajp.services.samba = {
     enable = mkEnableOption "Enable samba";
     users = mkOption {
       description = "Users allowed to access /media through SMB";
       type = types.listOf types.str;
-      default = [config.lajp.user.username];
+      default = [ config.lajp.user.username ];
     };
   };
 
@@ -50,6 +57,6 @@ in {
       openFirewall = true;
     };
 
-    environment.systemPackages = [pkgs.samba];
+    environment.systemPackages = [ pkgs.samba ];
   };
 }

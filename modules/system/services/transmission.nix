@@ -4,10 +4,12 @@
   inputs,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.lajp.services.transmission;
-in {
+in
+{
   imports = [
     inputs.pia-nix.nixosModules.default
   ];
@@ -21,7 +23,7 @@ in {
       enable = true;
       username = "p2726913";
       region = "sweden";
-      services = ["transmission"];
+      services = [ "transmission" ];
       passwordFile = config.age.secrets.pia.path;
       portForwarding = {
         enable = true;
@@ -33,18 +35,20 @@ in {
 
     # stolen from https://github.com/WillPower3309/nixos-config/blob/ff5422d196350b7cc1b1ebd53845147a673c5895/modules/torrents.nix#L68-L83
     systemd.services.transmission-namespace-forward = {
-      after = ["transmission.service"];
-      wantedBy = ["transmission.service"];
+      after = [ "transmission.service" ];
+      wantedBy = [ "transmission.service" ];
       serviceConfig = {
         Restart = "on-failure";
-        ExecStart = let
-          socatBin = "${pkgs.socat}/bin/socat";
-          transmissionAddress = config.services.transmission.settings.rpc-bind-address;
-          transmissionPort = toString config.services.transmission.settings.rpc-port;
-        in ''
-          ${socatBin} tcp-listen:${transmissionPort},fork,reuseaddr \
-            exec:'${pkgs.iproute2}/bin/ip netns exec pia ${socatBin} STDIO "tcp-connect:${transmissionAddress}:${transmissionPort}"',nofork
-        '';
+        ExecStart =
+          let
+            socatBin = "${pkgs.socat}/bin/socat";
+            transmissionAddress = config.services.transmission.settings.rpc-bind-address;
+            transmissionPort = toString config.services.transmission.settings.rpc-port;
+          in
+          ''
+            ${socatBin} tcp-listen:${transmissionPort},fork,reuseaddr \
+              exec:'${pkgs.iproute2}/bin/ip netns exec pia ${socatBin} STDIO "tcp-connect:${transmissionAddress}:${transmissionPort}"',nofork
+          '';
       };
     };
 

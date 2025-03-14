@@ -4,10 +4,12 @@
   osConfig,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib) mkIf;
   xserver = osConfig.lajp.services.xserver.enable;
-in {
+in
+{
   imports = [
     ./dwm-status.nix
     ./waybar.nix

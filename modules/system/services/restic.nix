@@ -2,17 +2,19 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.lajp.services.restic;
   hostname = config.lajp.core.hostname;
   username = config.lajp.user.username;
   home = config.lajp.user.homeDirectory;
-in {
+in
+{
   options.lajp.services.restic.enable = mkEnableOption "Enable restic";
   config = mkIf cfg.enable {
     age = {
-      identityPaths = ["${home}/.ssh/id_ed25519"];
+      identityPaths = [ "${home}/.ssh/id_ed25519" ];
       secrets.restic = {
         file = ../../../secrets/restic-${hostname}.age;
         owner = username;

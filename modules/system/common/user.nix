@@ -3,10 +3,12 @@
   pkgs,
   lib,
   ...
-}: let
+}:
+let
   inherit (lib) types mkOption;
   cfg = config.lajp.user;
-in {
+in
+{
   options.lajp.user = {
     username = mkOption {
       description = "Username";
@@ -36,7 +38,12 @@ in {
     users = {
       users.${cfg.username} = {
         isNormalUser = true;
-        extraGroups = ["wheel" "networkmanager" "video" "docker"];
+        extraGroups = [
+          "wheel"
+          "networkmanager"
+          "video"
+          "docker"
+        ];
       };
 
       defaultUserShell = pkgs.zsh;
@@ -57,6 +64,9 @@ in {
 
       histSize = 9999999999;
     };
-    environment.shells = with pkgs; [fish zsh];
+    environment.shells = with pkgs; [
+      fish
+      zsh
+    ];
   };
 }

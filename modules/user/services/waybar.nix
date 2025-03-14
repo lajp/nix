@@ -3,10 +3,12 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib) mkIf;
   cfg = osConfig.lajp.services.niri;
-in {
+in
+{
   config = mkIf cfg.enable {
     systemd.user.services.waybar.Unit.After = lib.mkForce "niri.service";
     programs.waybar = {
@@ -48,19 +50,34 @@ in {
           battery = {
             bat = "BAT0";
             format = "{capacity}% {icon}";
-            format-icons = ["" "" "" "" ""];
+            format-icons = [
+              ""
+              ""
+              ""
+              ""
+              ""
+            ];
           };
 
           "battery#bat2" = {
             bat = "BAT1";
             format = "{capacity}% {icon}";
-            format-icons = ["" "" "" "" ""];
+            format-icons = [
+              ""
+              ""
+              ""
+              ""
+              ""
+            ];
           };
 
           backlight = {
             device = "intel_backlight";
             format = "{percent}% {icon}";
-            format-icons = ["" ""];
+            format-icons = [
+              ""
+              ""
+            ];
           };
 
           temperature.hwmon-path = "/sys/devices/platform/thinkpad_hwmon/hwmon/hwmon7/temp1_input";

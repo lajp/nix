@@ -3,9 +3,11 @@
   pkgs,
   inputs,
   ...
-}: let
+}:
+let
   inherit (osConfig.lajp.user) username homeDirectory;
-in {
+in
+{
   imports = [
     ./programs
     ./services
@@ -17,7 +19,7 @@ in {
   home = {
     inherit username homeDirectory;
 
-    packages = [pkgs.xdg-utils];
+    packages = [ pkgs.xdg-utils ];
     stateVersion = "24.05";
   };
 

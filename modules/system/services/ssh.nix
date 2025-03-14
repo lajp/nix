@@ -2,11 +2,13 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib) mkEnableOption mkIf;
   inherit (config.lajp.user) username;
   cfg = config.lajp.services.ssh;
-in {
+in
+{
   options.lajp.services.ssh.enable = mkEnableOption "Enable the OpenSSH server";
   config = mkIf cfg.enable {
     services.openssh = {

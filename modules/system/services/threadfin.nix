@@ -2,10 +2,12 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.lajp.services.threadfin;
-in {
+in
+{
   options.lajp.services.threadfin.enable = mkEnableOption "Enable Threadfin";
   config = mkIf cfg.enable {
     lajp.virtualisation.podman.enable = true;
@@ -13,7 +15,7 @@ in {
       backend = "podman";
       containers.threadfin = {
         image = "fyb3roptik/threadfin:latest";
-        ports = ["34400:34400"];
+        ports = [ "34400:34400" ];
         environment.TZ = "Europe/Helsinki";
       };
     };

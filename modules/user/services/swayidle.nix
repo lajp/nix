@@ -3,11 +3,13 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib) mkIf;
   xserver = osConfig.lajp.services.xserver.enable;
   lock = "${pkgs.swaylock}/bin/swaylock -f";
-in {
+in
+{
   systemd.user.services = mkIf (!xserver) {
     swayidle.Unit.After = "niri.service";
   };

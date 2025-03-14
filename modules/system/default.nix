@@ -1,3 +1,12 @@
-{...}: {
-  imports = [./common ./services ./core.nix ./hardware ./gui ./virtualisation ./rickroll.nix];
+{ ... }:
+{
+  imports = [
+    ./common
+    ./services
+    ./core.nix
+    ./hardware
+    ./gui
+    ./virtualisation
+    ./rickroll.nix
+  ];
 }

@@ -1,3 +1,8 @@
-{...}: {
-  imports = [./theme.nix ./keyboard.nix ./fonts.nix];
+{ ... }:
+{
+  imports = [
+    ./theme.nix
+    ./keyboard.nix
+    ./fonts.nix
+  ];
 }

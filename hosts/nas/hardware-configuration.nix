@@ -1,7 +1,8 @@
 {
   modulesPath,
   ...
-}: {
+}:
+{
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
@@ -12,6 +13,6 @@
   };
 
   swapDevices = [
-    {device = "/dev/disk/by-uuid/aa4ebcc4-bdda-4941-8969-e4ed060ea0e3";}
+    { device = "/dev/disk/by-uuid/aa4ebcc4-bdda-4941-8969-e4ed060ea0e3"; }
   ];
 }

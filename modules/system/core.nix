@@ -1,9 +1,8 @@
-{
-  lib,
-  ...
-}: let
+{ lib, ... }:
+let
   inherit (lib) mkOption mkEnableOption types;
-in {
+in
+{
   options.lajp.core = {
     hostname = mkOption {
       description = "System hostname";

@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   programs.neomutt.extraConfig = ''
     color index yellow default '.*'
     color index_author red default '.*'

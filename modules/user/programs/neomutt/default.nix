@@ -3,7 +3,8 @@
   config,
   osConfig,
   ...
-}: {
+}:
+{
   imports = [
     ./color.nix
     ./sidebar.nix
@@ -38,52 +39,64 @@
 
     binds = [
       {
-        map = ["index"];
+        map = [ "index" ];
         key = "l";
         action = "display-message";
       }
       {
-        map = ["pager"];
+        map = [ "pager" ];
         key = "l";
         action = "view-attachments";
       }
       {
-        map = ["attach"];
+        map = [ "attach" ];
         key = "l";
         action = "view-mailcap";
       }
       {
-        map = ["pager" "attach"];
+        map = [
+          "pager"
+          "attach"
+        ];
         key = "h";
         action = "exit";
       }
       {
-        map = ["index"];
+        map = [ "index" ];
         key = "h";
         action = "noop";
       }
       {
-        map = ["index"];
+        map = [ "index" ];
         key = "L";
         action = "limit";
       }
       {
-        map = ["index"];
+        map = [ "index" ];
         key = "N";
         action = "toggle-new";
       }
       {
-        map = ["index" "pager"];
+        map = [
+          "index"
+          "pager"
+        ];
         key = "\\Ck";
         action = "sidebar-prev";
       }
       {
-        map = ["index" "pager"];
+        map = [
+          "index"
+          "pager"
+        ];
         key = "\\Cj";
         action = "sidebar-next";
       }
       {
-        map = ["index" "pager"];
+        map = [
+          "index"
+          "pager"
+        ];
         key = "\\Co";
         action = "sidebar-open";
       }
@@ -91,12 +104,12 @@
 
     macros = [
       {
-        map = ["index"];
+        map = [ "index" ];
         key = "o";
         action = "<shell-escape>notmuch new<enter>";
       }
       {
-        map = ["index"];
+        map = [ "index" ];
         key = "\\Cf";
         action = "<vfolder-from-query>";
       }

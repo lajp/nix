@@ -3,14 +3,17 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.lajp.services.testaustime-backup;
-in {
-  options.lajp.services.testaustime-backup.enable = mkEnableOption "Enable testaustime backup service";
+in
+{
+  options.lajp.services.testaustime-backup.enable =
+    mkEnableOption "Enable testaustime backup service";
   config = mkIf cfg.enable {
     systemd.timers."testaustime-backup" = {
-      wantedBy = ["timers.target"];
+      wantedBy = [ "timers.target" ];
       timerConfig = {
         OnCalendar = "daily";
         Persistent = true;
@@ -19,7 +22,10 @@ in {
     };
 
     systemd.services."testaustime-backup" = {
-      path = with pkgs; [rsync openssh];
+      path = with pkgs; [
+        rsync
+        openssh
+      ];
       script = ''
         set -eu
         rsync -Pr testaustime.fi:/opt/backups /media/luukas/Backups/testaustime

@@ -3,7 +3,8 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.lajp.rickroll;
 
@@ -19,7 +20,10 @@
       hash = "sha256-mu2DbgvnamdrW7sSjSgjkYnAxNhIsHuIwR3MOm5HDq8=";
     };
 
-    hardeningDisable = ["pic" "format"];
+    hardeningDisable = [
+      "pic"
+      "format"
+    ];
     nativeBuildInputs = kernel.moduleBuildDependencies;
 
     makeFlags = [
@@ -28,10 +32,11 @@
       "INSTALL_MOD_PATH=$(out)"
     ];
   };
-in {
+in
+{
   options.lajp.rickroll.enable = mkEnableOption "Enable /dev/rickroll device";
 
   config = mkIf cfg.enable {
-    boot.extraModulePackages = [rickroll];
+    boot.extraModulePackages = [ rickroll ];
   };
 }

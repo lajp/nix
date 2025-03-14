@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   stylix = {
     enable = true;
     image = ../../../images/haskell.jpg;

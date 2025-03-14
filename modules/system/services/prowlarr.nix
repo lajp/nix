@@ -2,10 +2,12 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.lajp.services.prowlarr;
-in {
+in
+{
   options.lajp.services.prowlarr.enable = mkEnableOption "Enable Prowlarr";
   config = mkIf cfg.enable {
     services.prowlarr = {

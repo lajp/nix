@@ -3,10 +3,12 @@
   config,
   inputs,
   ...
-}: let
+}:
+let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.lajp.services.pia;
-in {
+in
+{
   options.lajp.services.pia.enable = mkEnableOption "Enable PIA";
 
   imports = [

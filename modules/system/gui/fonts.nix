@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   fonts.packages = with pkgs; [
     liberation_ttf
     libertinus
@@ -11,7 +12,7 @@
     source-sans
     source-sans-pro
     roboto
-    (nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
+    (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
   ];
 
   fonts.enableDefaultPackages = true;

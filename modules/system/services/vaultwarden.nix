@@ -2,10 +2,12 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.lajp.services.vaultwarden;
-in {
+in
+{
   options.lajp.services.vaultwarden.enable = mkEnableOption "Enable vaultwarden";
   config = mkIf cfg.enable {
     services.vaultwarden = {
@@ -36,6 +38,9 @@ in {
       defaults.email = "lajp@iki.fi";
     };
 
-    networking.firewall.allowedTCPPorts = [80 443];
+    networking.firewall.allowedTCPPorts = [
+      80
+      443
+    ];
   };
 }

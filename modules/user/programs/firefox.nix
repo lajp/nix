@@ -2,7 +2,8 @@
   pkgs,
   inputs,
   ...
-}: {
+}:
+{
   imports = [
     inputs.nur.hmModules.nur
   ];
@@ -22,7 +23,7 @@
 
   programs.firefox = {
     enable = true;
-    nativeMessagingHosts = [pkgs.web-eid-app];
+    nativeMessagingHosts = [ pkgs.web-eid-app ];
 
     profiles.default = {
       name = "default";
@@ -30,6 +31,31 @@
       settings = {
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         "media.ffmpeg.vaapi.enabled" = true;
+        "signon.rememberSignons" = false;
+        "extensions.autoDisableScopes" = 0;
+        "browser.newtabpage.activity-stream.showSponsored" = false;
+        "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
+      };
+
+      containersForce = true;
+      containers = {
+        "TiK" = {
+          id = 5;
+          color = "purple";
+          icon = "fence";
+        };
+
+        "OtaNix" = {
+          id = 6;
+          color = "blue";
+          icon = "food";
+        };
+
+        "School" = {
+          id = 7;
+          color = "blue";
+          icon = "pet";
+        };
       };
 
       extensions = with pkgs.nur.repos.rycee.firefox-addons; [

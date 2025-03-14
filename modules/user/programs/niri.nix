@@ -1,13 +1,14 @@
 {
   osConfig,
   lib,
-  inputs,
   pkgs,
   ...
-}: let
+}:
+let
   inherit (lib) mkIf;
   cfg = osConfig.lajp.services.niri;
-in {
+in
+{
   config = mkIf cfg.enable {
     programs.swaylock.enable = true;
     programs.fuzzel.enable = true;
@@ -37,7 +38,7 @@ in {
 
       outputs = {
         "eDP-1" = {
-          scale = 1.0;
+          scale = if (osConfig.lajp.core.hostname == "framework") then 2.0 else 1.0;
           position = {
             x = 0;
             y = 0;
@@ -55,6 +56,13 @@ in {
           position = {
             x = 0;
             y = -1080;
+          };
+        };
+
+        "HP Inc. HP E27u G5 CN44260NYD" = {
+          position = {
+            x = 0;
+            y = -1440;
           };
         };
 
@@ -96,81 +104,121 @@ in {
 
       spawn-at-startup = [
         # See https://github.com/YaLTeR/niri/wiki/Xwayland
-        {command = ["${lib.getExe pkgs.xwayland-satellite-unstable}" ":25"];}
+        {
+          command = [
+            "${lib.getExe pkgs.xwayland-satellite-unstable}"
+            ":25"
+          ];
+        }
       ];
 
       environment = {
         DISPLAY = ":25";
       };
 
-      binds = let
-        playerctl = "${pkgs.playerctl}/bin/playerctl";
-        wpctl = "${pkgs.wireplumber}/bin/wpctl";
-        blmgr = "${inputs.blmgr.packages.${pkgs.system}.default}/bin/blmgr";
-      in
+      binds =
+        let
+          playerctl = "${pkgs.playerctl}/bin/playerctl";
+          wpctl = "${pkgs.wireplumber}/bin/wpctl";
+          blmgr = "${osConfig.lajp.hardware.backlight.package}/bin/blmgr";
+        in
         {
-          "XF86AudioMute".action.spawn = [wpctl "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"];
-          "XF86AudioMicMute".action.spawn = [wpctl "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"];
-          "XF86AudioRaiseVolume".action.spawn = [wpctl "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"];
-          "XF86AudioLowerVolume".action.spawn = [wpctl "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"];
+          "XF86AudioMute".action.spawn = [
+            wpctl
+            "set-mute"
+            "@DEFAULT_AUDIO_SINK@"
+            "toggle"
+          ];
+          "XF86AudioMicMute".action.spawn = [
+            wpctl
+            "set-mute"
+            "@DEFAULT_AUDIO_SOURCE@"
+            "toggle"
+          ];
+          "XF86AudioRaiseVolume".action.spawn = [
+            wpctl
+            "set-volume"
+            "@DEFAULT_AUDIO_SINK@"
+            "5%+"
+          ];
+          "XF86AudioLowerVolume".action.spawn = [
+            wpctl
+            "set-volume"
+            "@DEFAULT_AUDIO_SINK@"
+            "5%-"
+          ];
 
-          "Mod+Shift+Space".action.toggle-window-floating = [];
+          "Mod+Shift+Space".action.toggle-window-floating = [ ];
 
-          "Mod+P".action.spawn = [playerctl "play-pause"];
-          "Mod+Left".action.spawn = [playerctl "previous"];
-          "Mod+Right".action.spawn = [playerctl "next"];
+          "Mod+P".action.spawn = [
+            playerctl
+            "play-pause"
+          ];
+          "Mod+Left".action.spawn = [
+            playerctl
+            "previous"
+          ];
+          "Mod+Right".action.spawn = [
+            playerctl
+            "next"
+          ];
 
-          "XF86MonBrightnessUp".action.spawn = [blmgr "+5%"];
-          "XF86MonBrightnessDown".action.spawn = [blmgr "-5%"];
+          "XF86MonBrightnessUp".action.spawn = [
+            blmgr
+            "+5%"
+          ];
+          "XF86MonBrightnessDown".action.spawn = [
+            blmgr
+            "-5%"
+          ];
 
-          "Mod+Return".action.spawn = ["${pkgs.alacritty}/bin/alacritty"];
-          "Mod+W".action.spawn = ["${pkgs.firefox}/bin/firefox"];
+          "Mod+Return".action.spawn = [ "${pkgs.alacritty}/bin/alacritty" ];
+          "Mod+W".action.spawn = [ "${pkgs.firefox}/bin/firefox" ];
 
-          "Print".action.screenshot-screen = [];
-          "Mod+Shift+Alt+S".action.screenshot-window = [];
-          "Mod+Shift+S".action.screenshot = [];
-          "Mod+D".action.spawn = ["${pkgs.fuzzel}/bin/fuzzel"];
-          "Mod+Alt+L".action.spawn = ["${pkgs.swaylock}/bin/swaylock"];
-          "Mod+Shift+E".action.quit = [];
+          "Print".action.screenshot-screen = [ ];
+          "Mod+Shift+Alt+S".action.screenshot-window = [ ];
+          "Mod+Shift+S".action.screenshot = [ ];
+          "Mod+D".action.spawn = [ "${pkgs.fuzzel}/bin/fuzzel" ];
+          "Mod+Alt+L".action.spawn = [ "${pkgs.swaylock}/bin/swaylock" ];
+          "Mod+Shift+E".action.quit = [ ];
 
-          "Mod+Q".action.close-window = [];
-          "Mod+S".action.switch-preset-column-width = [];
-          "Mod+F".action.maximize-column = [];
-          "Mod+Shift+F".action.fullscreen-window = [];
+          "Mod+Q".action.close-window = [ ];
+          "Mod+S".action.switch-preset-column-width = [ ];
+          "Mod+F".action.maximize-column = [ ];
+          "Mod+Shift+F".action.fullscreen-window = [ ];
 
-          "Mod+Comma".action.consume-window-into-column = [];
-          "Mod+Period".action.expel-window-from-column = [];
-          "Mod+C".action.center-column = [];
+          "Mod+Comma".action.consume-window-into-column = [ ];
+          "Mod+Period".action.expel-window-from-column = [ ];
+          "Mod+C".action.center-column = [ ];
 
           "Mod+Minus".action.set-column-width = "-10%";
           "Mod+Plus".action.set-column-width = "+10%";
           "Mod+Shift+Minus".action.set-window-height = "-10%";
           "Mod+Shift+Plus".action.set-window-height = "+10%";
 
-          "Mod+H".action.focus-column-left = [];
-          "Mod+L".action.focus-column-right = [];
-          "Mod+J".action.focus-window-or-workspace-down = [];
-          "Mod+K".action.focus-window-or-workspace-up = [];
+          "Mod+H".action.focus-column-left = [ ];
+          "Mod+L".action.focus-column-right = [ ];
+          "Mod+J".action.focus-window-or-workspace-down = [ ];
+          "Mod+K".action.focus-window-or-workspace-up = [ ];
 
-          "Mod+Shift+H".action.move-column-left = [];
-          "Mod+Shift+L".action.move-column-right = [];
-          "Mod+Shift+J".action.move-window-down-or-to-workspace-down = [];
-          "Mod+Shift+K".action.move-window-up-or-to-workspace-up = [];
-          "Mod+Tab".action.focus-workspace-previous = [];
+          "Mod+Shift+H".action.move-column-left = [ ];
+          "Mod+Shift+L".action.move-column-right = [ ];
+          "Mod+Shift+J".action.move-window-down-or-to-workspace-down = [ ];
+          "Mod+Shift+K".action.move-window-up-or-to-workspace-up = [ ];
+          "Mod+Tab".action.focus-workspace-previous = [ ];
 
-          "Mod+Shift+N".action.move-column-to-monitor-up = [];
-          "Mod+N".action.focus-monitor-up = [];
-          "Mod+Shift+M".action.move-column-to-monitor-down = [];
-          "Mod+M".action.focus-monitor-down = [];
+          "Mod+Shift+N".action.move-column-to-monitor-up = [ ];
+          "Mod+N".action.focus-monitor-up = [ ];
+          "Mod+Shift+M".action.move-column-to-monitor-down = [ ];
+          "Mod+M".action.focus-monitor-down = [ ];
 
-          "Mod+Shift+odiaeresis".action.show-hotkey-overlay = [];
+          "Mod+Shift+odiaeresis".action.show-hotkey-overlay = [ ];
         }
         // (lib.attrsets.mergeAttrsList (
           map (x: {
             "Mod+${toString x}".action.focus-workspace = x;
             "Mod+Shift+${toString x}".action.move-column-to-workspace = x;
-          })
-          (builtins.genList (x: x + 1) 9)
+          }) (builtins.genList (x: x + 1) 9)
         ));
     };
   };

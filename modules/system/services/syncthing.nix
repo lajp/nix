@@ -2,10 +2,12 @@
   lib,
   config,
   ...
-}: let
+}:
+let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.lajp.services.syncthing;
-in {
+in
+{
   options.lajp.services.syncthing.enable = mkEnableOption "Enable syncthing";
   config = mkIf cfg.enable {
     services.syncthing = {
@@ -15,7 +17,13 @@ in {
       guiAddress = "0.0.0.0:8384";
     };
 
-    networking.firewall.allowedTCPPorts = [8384 22000];
-    networking.firewall.allowedUDPPorts = [22000 21027];
+    networking.firewall.allowedTCPPorts = [
+      8384
+      22000
+    ];
+    networking.firewall.allowedUDPPorts = [
+      22000
+      21027
+    ];
   };
 }

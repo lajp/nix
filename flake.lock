@@ -95,11 +95,11 @@
         "systems": "systems_2"
       },
       "locked": {
-        "lastModified": 1724612364,
-        "narHash": "sha256-X17gLy7dk0UZln7BVGzo3XF3o//hAumtGIJB3tKOE8U=",
+        "lastModified": 1739695918,
+        "narHash": "sha256-T66C03iP+xnnrq2JSuLwIEN8tQ94oOaLvHzeuulzxyQ=",
         "owner": "lajp",
         "repo": "blmgr",
-        "rev": "60b6f754585452f0aa310c59483fa05804fe8368",
+        "rev": "c9a0a3f6be5810e84625c76275b39b89ec589739",
         "type": "github"
       },
       "original": {

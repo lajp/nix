@@ -3,15 +3,22 @@
   config,
   pkgs,
   ...
-}: {
-  imports = [./boot.nix ./hardware-configuration.nix];
+}:
+{
+  imports = [
+    ./boot.nix
+    ./hardware-configuration.nix
+  ];
 
   networking.useDHCP = lib.mkDefault true;
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
   networking.hostName = config.lajp.core.hostname;
-  networking.nameservers = ["1.1.1.1" "9.9.9.9"];
+  networking.nameservers = [
+    "1.1.1.1"
+    "9.9.9.9"
+  ];
   networking.networkmanager.enable = true;
 
   virtualisation.docker.enable = true;
@@ -41,7 +48,9 @@
 
   services.hardware.bolt.enable = true;
 
-  environment.sessionVariables = {LIBVA_DRIVER_NAME = "iHD";};
+  environment.sessionVariables = {
+    LIBVA_DRIVER_NAME = "iHD";
+  };
 
   system.stateVersion = "24.05";
 }

@@ -1,11 +1,19 @@
 {
   boot = {
     initrd = {
-      availableKernelModules = ["ehci_pci" "ahci" "uhci_hcd" "xhci_pci" "usbhid" "usb_storage" "sd_mod"];
-      kernelModules = [];
+      availableKernelModules = [
+        "ehci_pci"
+        "ahci"
+        "uhci_hcd"
+        "xhci_pci"
+        "usbhid"
+        "usb_storage"
+        "sd_mod"
+      ];
+      kernelModules = [ ];
     };
-    kernelModules = ["kvm-intel"];
-    extraModulePackages = [];
+    kernelModules = [ "kvm-intel" ];
+    extraModulePackages = [ ];
 
     loader.grub = {
       enable = true;

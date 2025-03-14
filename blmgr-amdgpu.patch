@@ -1,0 +1,13 @@
+diff --git a/blmgr.c b/blmgr.c
+index d81dba9..baaac0d 100644
+--- a/blmgr.c
++++ b/blmgr.c
+@@ -3,7 +3,7 @@
+ #include <string.h>
+ #include <math.h>
+ 
+-#define BACKLIGHT_PATH_BASE "/sys/class/backlight/intel_backlight/"
++#define BACKLIGHT_PATH_BASE "/sys/class/backlight/amdgpu_bl1/"
+ 
+ void
+ usage()
