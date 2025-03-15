@@ -67,10 +67,12 @@
     lajp-fi = {
       url = "github:lajp/lajp.fi";
     };
+
+    deploy-rs.url = "github:serokell/deploy-rs";
   };
 
   outputs =
-    { ... }@inputs:
+    { self, deploy-rs, ... }@inputs:
     let
       user = import ./lib/user.nix { inherit inputs; };
       utils = import ./lib/system.nix { inherit user inputs; };
@@ -96,6 +98,7 @@
             services.jellyfin.enable = true;
             services.tvheadend.enable = false;
             services.transmission.enable = true;
+            services.sonarr.enable = true;
             services.jackett.enable = true;
             services.cross-seed.enable = true;
             services.testaustime-backup.enable = true;
@@ -177,7 +180,7 @@
 
           userConfig.editors.nvim.enable = true;
         };
-        pi = mkHost {
+        proxy-pi = mkHost {
           system = "aarch64-linux";
 
           extraModules = with inputs.raspberry-pi-nix.nixosModules; [
@@ -187,7 +190,7 @@
 
           systemConfig = {
             core = {
-              hostname = "pi";
+              hostname = "proxy-pi";
               server = true;
             };
 
@@ -196,6 +199,28 @@
         };
       };
 
-      pi-img = nixosConfigurations.pi.config.system.build.sdImage;
+      deploy.nodes = {
+        proxy-pi = {
+          hostname = "proxy-pi";
+          profiles.system = {
+            user = "root";
+            path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.proxy-pi;
+          };
+        };
+
+        nas = {
+          hostname = "nas";
+          profiles.system = {
+            user = "root";
+            interactiveSudo = true;
+            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.nas;
+          };
+        };
+      };
+
+      # This is highly advised, and will prevent many possible mistakes
+      checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
+
+      pi-img = nixosConfigurations.proxy-pi.config.system.build.sdImage;
     };
 }

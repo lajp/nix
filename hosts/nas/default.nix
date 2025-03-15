@@ -29,4 +29,6 @@
 
   hardware.nvidia.prime.offload.enable = false;
   hardware.nvidia.open = true;
+
+  services.apcupsd.enable = true;
 }

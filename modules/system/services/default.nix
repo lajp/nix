@@ -19,6 +19,7 @@
     ./niri.nix
     ./pia.nix
     ./website.nix
+    ./sonarr.nix
   ];
 
   services.tailscale.enable = true;
