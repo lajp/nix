@@ -61,6 +61,12 @@
       url = "github:vim-scripts/Vimchant";
       flake = false;
     };
+
+    raspberry-pi-nix.url = "github:nix-community/raspberry-pi-nix";
+
+    lajp-fi = {
+      url = "github:lajp/lajp.fi";
+    };
   };
 
   outputs =
@@ -70,7 +76,7 @@
       utils = import ./lib/system.nix { inherit user inputs; };
       inherit (utils) mkHost;
     in
-    {
+    rec {
       nixosConfigurations = {
         nas = mkHost {
           extraModules = with inputs.nixos-hardware.nixosModules; [
@@ -171,6 +177,25 @@
 
           userConfig.editors.nvim.enable = true;
         };
+        pi = mkHost {
+          system = "aarch64-linux";
+
+          extraModules = with inputs.raspberry-pi-nix.nixosModules; [
+            raspberry-pi
+            sd-image
+          ];
+
+          systemConfig = {
+            core = {
+              hostname = "pi";
+              server = true;
+            };
+
+            services.ssh.enable = true;
+          };
+        };
       };
+
+      pi-img = nixosConfigurations.pi.config.system.build.sdImage;
     };
 }

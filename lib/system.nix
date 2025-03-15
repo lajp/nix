@@ -9,13 +9,13 @@ in
 {
   mkHost =
     {
+      system ? "x86_64-linux",
       systemConfig,
       userConfig ? { },
       extraModules ? [ ],
     }:
     let
       inherit (systemConfig.core) hostname;
-      system = "x86_64-linux";
       pkgs-unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
     in
     nixosSystem {

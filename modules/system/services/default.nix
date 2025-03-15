@@ -18,6 +18,7 @@
     ./restic.nix
     ./niri.nix
     ./pia.nix
+    ./website.nix
   ];
 
   services.tailscale.enable = true;
