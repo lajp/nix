@@ -49,12 +49,14 @@ in
   imports = [
     inputs.nixvim.homeManagerModules.nixvim
     inputs.agenix.homeManagerModules.default
+    inputs.agenix-rekey.homeManagerModules.default
   ];
 
   options.lajp.editors.nvim.enable = mkEnableOption "Enable Neovim";
 
   config = mkIf cfg.enable {
-    age.secrets.testaustime.file = ../../../secrets/testaustime.age;
+    age.secrets.testaustime.rekeyFile = ../../../secrets/testaustime.age;
+
     programs.ripgrep.enable = true;
 
     xdg.configFile."enchant/voikko".source = voikko-fi;

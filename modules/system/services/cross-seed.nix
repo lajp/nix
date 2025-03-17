@@ -20,7 +20,7 @@ in
   config = mkIf cfg.enable {
     lajp.virtualisation.podman.enable = true;
 
-    age.secrets.cross-seed.file = ../../../secrets/cross-seed.age;
+    age.secrets.cross-seed.rekeyFile = ../../../secrets/cross-seed.age;
 
     system.activationScripts.symlinkCrossSeedConfig = ''
       mkdir -p ${cfg.dataDir}

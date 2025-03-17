@@ -57,7 +57,19 @@ in
 
         inputs.home-manager.nixosModule
         inputs.agenix.nixosModules.default
+        inputs.agenix-rekey.nixosModules.default
         inputs.stylix.nixosModules.stylix
+
+        (
+          { config, ... }:
+          {
+            age.rekey = {
+              masterIdentities = [ ../yubikey.pub ];
+              storageMode = "local";
+              localStorageDir = ../. + "/secrets/rekeyed/${config.networking.hostName}";
+            };
+          }
+        )
       ] ++ extraModules;
     };
 }

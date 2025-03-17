@@ -17,7 +17,7 @@ in
   options.lajp.services.transmission.enable = mkEnableOption "Enable transmission";
 
   config = mkIf cfg.enable {
-    age.secrets.pia.file = ../../../secrets/pia.age;
+    age.secrets.pia.rekeyFile = ../../../secrets/pia.age;
 
     services.pia-wg = {
       enable = true;

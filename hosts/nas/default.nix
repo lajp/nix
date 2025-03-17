@@ -31,4 +31,6 @@
   hardware.nvidia.open = true;
 
   services.apcupsd.enable = true;
+
+  age.rekey.hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBm2ee8Vjge69x3M5FHYkMNp2MZ95Z8MizURjbdPrIYe";
 }

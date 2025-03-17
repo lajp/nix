@@ -19,6 +19,11 @@
 
     agenix.url = "github:ryantm/agenix";
 
+    agenix-rekey = {
+      url = "github:oddlama/agenix-rekey";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nur.url = "github:nix-community/NUR";
 
     home-manager = {
@@ -72,13 +77,18 @@
   };
 
   outputs =
-    { self, deploy-rs, ... }@inputs:
+    {
+      self,
+      deploy-rs,
+      agenix-rekey,
+      ...
+    }@inputs:
     let
       user = import ./lib/user.nix { inherit inputs; };
       utils = import ./lib/system.nix { inherit user inputs; };
       inherit (utils) mkHost;
     in
-    rec {
+    {
       nixosConfigurations = {
         nas = mkHost {
           extraModules = with inputs.nixos-hardware.nixosModules; [
@@ -199,6 +209,11 @@
         };
       };
 
+      agenix-rekey = agenix-rekey.configure {
+        userFlake = self;
+        nixosConfigurations = self.nixosConfigurations;
+      };
+
       deploy.nodes = {
         proxy-pi = {
           hostname = "proxy-pi";
@@ -221,6 +236,6 @@
       # This is highly advised, and will prevent many possible mistakes
       checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
 
-      pi-img = nixosConfigurations.proxy-pi.config.system.build.sdImage;
+      pi-img = self.nixosConfigurations.proxy-pi.config.system.build.sdImage;
     };
 }

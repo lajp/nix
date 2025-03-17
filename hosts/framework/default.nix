@@ -33,4 +33,6 @@
   services.fprintd.enable = true;
 
   system.stateVersion = "24.11";
+
+  age.rekey.hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPX0OQ3iAjKZBLlk/RoY8pd7k393XOLXD082ODfjmb2q";
 }

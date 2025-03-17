@@ -16,7 +16,7 @@ in
   ];
 
   config = mkIf cfg.enable {
-    age.secrets.pia2.file = ../../../secrets/pia2.age;
+    age.secrets.pia2.rekeyFile = ../../../secrets/pia2.age;
 
     services.pia = {
       enable = true;
