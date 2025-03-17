@@ -14,7 +14,6 @@
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
-  networking.hostName = config.lajp.core.hostname;
   networking.nameservers = [
     "1.1.1.1"
     "9.9.9.9"

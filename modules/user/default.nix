@@ -21,6 +21,7 @@ in
     masterIdentities = [ ../../yubikey.pub ];
     storageMode = "local";
     localStorageDir = ../../. + "/secrets/rekeyed/${hostname}-${username}";
+    hostPubkey = osConfig.age.rekey.hostPubkey;
   };
 
   home = {

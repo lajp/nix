@@ -6,8 +6,6 @@
     serial-console.enable = false;
   };
 
-  networking.hostName = config.lajp.core.hostname;
-
   sdImage.compressImage = false;
 
   security.sudo.wheelNeedsPassword = false;

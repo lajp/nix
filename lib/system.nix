@@ -38,6 +38,8 @@ in
               ../modules/system
             ];
 
+            networking.hostName = hostname;
+
             lajp = systemConfig;
 
             home-manager =

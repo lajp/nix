@@ -1,6 +1,5 @@
 {
   lib,
-  config,
   ...
 }:
 {
@@ -13,7 +12,6 @@
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   networking = {
     useDHCP = lib.mkDefault true;
-    hostName = config.lajp.core.hostname;
     hostId = "57b42383";
   };
 }
