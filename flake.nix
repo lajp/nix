@@ -17,7 +17,11 @@
 
     pia.url = "github:Fuwn/pia.nix";
 
-    agenix.url = "github:ryantm/agenix";
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
 
     agenix-rekey = {
       url = "github:oddlama/agenix-rekey";
@@ -114,7 +118,7 @@
             services.testaustime-backup.enable = true;
             services.syncthing.enable = true;
             services.samba.enable = true;
-            services.vaultwarden.enable = false;
+            services.vaultwarden.enable = true;
             hardware.zfs.enable = true;
           };
         };

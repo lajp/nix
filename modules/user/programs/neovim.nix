@@ -4,10 +4,12 @@
   inputs,
   pkgs,
   pkgs-unstable,
+  osConfig,
   ...
 }:
 let
   inherit (lib) mkEnableOption mkIf;
+  inherit (osConfig.lajp.user) username;
   cfg = config.lajp.editors.nvim;
 
   voikko-fi = pkgs.stdenvNoCC.mkDerivation rec {
@@ -55,6 +57,14 @@ in
   options.lajp.editors.nvim.enable = mkEnableOption "Enable Neovim";
 
   config = mkIf cfg.enable {
+    age.rekey = {
+      masterIdentities = [ ../../../yubikey.pub ];
+      storageMode = "local";
+      localStorageDir = osConfig.age.rekey.localStorageDir + "-${username}";
+      hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF7gs/ba3jdX+kfCruDK0NluwnFqO4AB+BZV3+2r36gY";
+    };
+    age.identityPaths = [ "/home/lajp/.ssh/id_ed25519" ];
+
     age.secrets.testaustime.rekeyFile = ../../../secrets/testaustime.age;
 
     programs.ripgrep.enable = true;

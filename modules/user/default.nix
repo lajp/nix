@@ -6,7 +6,6 @@
 }:
 let
   inherit (osConfig.lajp.user) username homeDirectory;
-  inherit (osConfig.lajp.core) hostname;
 in
 {
   imports = [
@@ -16,13 +15,6 @@ in
   ];
 
   programs.home-manager.enable = true;
-
-  age.rekey = {
-    masterIdentities = [ ../../yubikey.pub ];
-    storageMode = "local";
-    localStorageDir = ../../. + "/secrets/rekeyed/${hostname}-${username}";
-    hostPubkey = osConfig.age.rekey.hostPubkey;
-  };
 
   home = {
     inherit username homeDirectory;

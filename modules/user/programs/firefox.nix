@@ -65,6 +65,7 @@
         sidebery
         web-eid
         darkreader
+        bitwarden
       ];
 
       search = {

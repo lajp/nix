@@ -58,6 +58,16 @@
         forceSSL = true;
         useACMEHost = "intra.lajp.fi";
       };
+
+      "vault.intra.lajp.fi" = {
+        locations."/" = {
+          proxyPass = "http://192.168.1.35:8222";
+          proxyWebsockets = true;
+        };
+
+        forceSSL = true;
+        useACMEHost = "intra.lajp.fi";
+      };
     };
   };
 }

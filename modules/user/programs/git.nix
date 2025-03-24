@@ -1,4 +1,12 @@
-{ osConfig, ... }:
+{
+  osConfig,
+  config,
+  pkgs,
+  ...
+}:
+let
+  nvim = if config.lajp.editors.nvim.enable then config.programs.nixvim.package else pkgs.neovim;
+in
 {
   programs.git = {
     enable = true;
@@ -25,6 +33,9 @@
     extraConfig = {
       rerere.enabled = true;
       init.defaultBranch = "main";
+
+      merge.tool = "nvimdiff";
+      "mergetool \"nvimdiff\"".cmd = "${nvim} -d $LOCAL $REMOTE";
     };
 
     signing = {
