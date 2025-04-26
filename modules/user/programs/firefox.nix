@@ -66,6 +66,7 @@
         web-eid
         darkreader
         bitwarden
+        youtube-nonstop
       ];
 
       search = {

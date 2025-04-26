@@ -45,6 +45,7 @@
     xclip
     mednaffe
     gimp
+    sxiv
 
     file
     github-cli

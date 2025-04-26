@@ -27,7 +27,7 @@ in
 
       modules = [
         (
-          { config, ... }:
+          { config, lib, ... }:
           let
             inherit (config.lajp.user) username;
             inherit (config.lajp.core) server;
@@ -37,6 +37,8 @@ in
               ../hosts/${hostname}
               ../modules/system
             ];
+
+            nixpkgs.hostPlatform = lib.mkDefault system;
 
             networking.hostName = hostname;
 

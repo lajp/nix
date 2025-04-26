@@ -36,7 +36,7 @@ in
       enable = true;
       repositories.password-store = {
         path = config.programs.password-store.settings.PASSWORD_STORE_DIR;
-        uri = "git@lajp.fi:/srv/git/pass.git";
+        uri = "git@mail.lajp.fi:/srv/git/pass.git";
       };
     };
   };

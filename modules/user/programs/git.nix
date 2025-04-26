@@ -4,9 +4,6 @@
   pkgs,
   ...
 }:
-let
-  nvim = if config.lajp.editors.nvim.enable then config.programs.nixvim.package else pkgs.neovim;
-in
 {
   programs.git = {
     enable = true;
@@ -35,7 +32,7 @@ in
       init.defaultBranch = "main";
 
       merge.tool = "nvimdiff";
-      "mergetool \"nvimdiff\"".cmd = "${nvim} -d $LOCAL $REMOTE";
+      "mergetool \"nvimdiff\"".cmd = "nvim -d $LOCAL $MERGED $REMOTE -c 'wincmd l'";
     };
 
     signing = {

@@ -78,6 +78,8 @@
     };
 
     deploy-rs.url = "github:serokell/deploy-rs";
+
+    simple-nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-24.11";
   };
 
   outputs =
@@ -119,6 +121,11 @@
             services.syncthing.enable = true;
             services.samba.enable = true;
             services.vaultwarden.enable = true;
+            services.smartd.enable = true;
+            services.dyndns = {
+              enable = true;
+              domains = [ "jellyfin.lajp.fi" ];
+            };
             hardware.zfs.enable = true;
           };
         };
@@ -135,6 +142,10 @@
             };
 
             services.ssh.enable = true;
+            services.dyndns = {
+              enable = true;
+              domains = [ "mc.portfo.rs" ];
+            };
             services.samba = {
               enable = true;
               users = [
@@ -211,6 +222,22 @@
             services.ssh.enable = true;
           };
         };
+        ankka = mkHost {
+          system = "aarch64-linux";
+
+          systemConfig = {
+            core = {
+              hostname = "ankka";
+              server = true;
+            };
+
+            services.ssh.enable = true;
+            services.uptime-kuma.enable = true;
+            services.mailserver.enable = true;
+            services.website.enable = true;
+            services.formicer-website.enable = false;
+          };
+        };
       };
 
       agenix-rekey = agenix-rekey.configure {
@@ -233,6 +260,25 @@
             user = "root";
             interactiveSudo = true;
             path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.nas;
+          };
+        };
+
+        vaasanas = {
+          hostname = "vaasanas";
+          profiles.system = {
+            user = "root";
+            sshUser = "lajp";
+            interactiveSudo = true;
+            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.vaasanas;
+          };
+        };
+
+        ankka = {
+          hostname = "ankka";
+          profiles.system = {
+            user = "root";
+            sshUser = "lajp";
+            path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.ankka;
           };
         };
       };

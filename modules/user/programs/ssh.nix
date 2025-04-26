@@ -16,7 +16,7 @@ let
     };
 
     tik = {
-      hostname = "old.tietokilta.fi";
+      hostname = "130.233.48.30";
       proxyJump = "kosh";
       extraOptions = {
         HostKeyAlgorithms = "ssh-rsa";

@@ -146,8 +146,11 @@ in
         msmtp.enable = true;
 
         inherit address realName;
-        aliases = [ "luukas@portfo.rs" ];
-        imap.host = "mail.lajp.fi";
+        aliases = [
+          "luukas@portfo.rs"
+          "lajp@portfo.rs"
+        ];
+        imap.host = "mail.portfo.rs";
 
         mbsync = {
           enable = true;
@@ -169,7 +172,6 @@ in
             "Junk"
             "Trash"
             "Sent"
-            "Archive"
           ];
           extraConfig = ''
             # This together with `set reverse_name` allows automatically
@@ -185,15 +187,14 @@ in
           neomutt.enable = true;
         };
 
-        passwordCommand = "${pkgs.pass}/bin/pass ${address}";
+        passwordCommand = "${pkgs.pass}/bin/pass lajp@portfo.rs";
 
         userName = address;
         primary = true;
 
         smtp = {
-          host = "mail.lajp.fi";
+          host = "mail.portfo.rs";
           port = 587;
-          tls.useStartTls = true;
         };
       };
 

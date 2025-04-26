@@ -20,6 +20,11 @@
     ./pia.nix
     ./website.nix
     ./sonarr.nix
+    ./uptime-kuma.nix
+    ./mailserver.nix
+    ./dyndns.nix
+    ./smartd.nix
+    ./formicer-website.nix
   ];
 
   services.tailscale.enable = true;

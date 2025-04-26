@@ -38,7 +38,7 @@ in
 
       outputs = {
         "eDP-1" = {
-          scale = if (osConfig.lajp.core.hostname == "framework") then 2.0 else 1.0;
+          scale = if (osConfig.lajp.core.hostname == "framework") then 1.75 else 1.0;
           position = {
             x = 0;
             y = 0;
