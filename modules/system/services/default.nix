@@ -25,6 +25,7 @@
     ./dyndns.nix
     ./smartd.nix
     ./formicer-website.nix
+    ./nixarr.nix
   ];
 
   services.tailscale.enable = true;

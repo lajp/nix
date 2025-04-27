@@ -32,6 +32,7 @@ in
         exclude = [
           "/home/*/.cache"
           "introcs_psql_data"
+          "ilmomasiina/data"
         ];
         pruneOpts = [
           "--keep-hourly 24"

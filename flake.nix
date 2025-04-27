@@ -80,6 +80,11 @@
     deploy-rs.url = "github:serokell/deploy-rs";
 
     simple-nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-24.11";
+
+    nixarr = {
+      url = "github:rasmus-kirk/nixarr/29b7be20d4871b0ebac2db7c1691ecd3e690283f";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -111,20 +116,15 @@
             };
 
             services.ssh.enable = true;
-            services.jellyfin.enable = true;
-            services.tvheadend.enable = false;
-            services.transmission.enable = true;
-            services.sonarr.enable = true;
-            services.jackett.enable = true;
-            services.cross-seed.enable = true;
             services.testaustime-backup.enable = true;
             services.syncthing.enable = true;
             services.samba.enable = true;
             services.vaultwarden.enable = true;
             services.smartd.enable = true;
+            services.nixarr.enable = true;
             services.dyndns = {
               enable = true;
-              domains = [ "jellyfin.lajp.fi" ];
+              domains = [ "jellyfin.lajp.fi" "jellyseerr.lajp.fi" ];
             };
             hardware.zfs.enable = true;
           };
