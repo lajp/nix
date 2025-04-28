@@ -69,6 +69,8 @@
     playerctl
 
     fastfetch
+
+    devenv
   ];
 
   # TODO: figure out why this breaks
