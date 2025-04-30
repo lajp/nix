@@ -17,6 +17,7 @@
     ./zsh.nix
     ./fish.nix
     ./git.nix
+    ./jujutsu.nix
     ./mpv.nix
     ./mail.nix
 
