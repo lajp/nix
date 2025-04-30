@@ -102,6 +102,12 @@ in
 
     # TODO: migrate library under nixarr.mediaDir
     systemd.services.transmission.serviceConfig.BindPaths = [ "/media/luukas/Torrents" ];
+    systemd.services.jellyfin.serviceConfig.BindPaths = [
+      "/media/luukas/Films"
+      "/media/luukas/TV"
+    ];
+
+    hardware.graphics.enable = true;
 
     # TODO: change to jellyserr.expose.https when available
     services.nginx = {

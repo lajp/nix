@@ -232,7 +232,7 @@
             };
 
             services.ssh.enable = true;
-            services.uptime-kuma.enable = true;
+            services.gatus.enable = true;
             services.mailserver.enable = true;
             services.website.enable = true;
             services.formicer-website.enable = false;

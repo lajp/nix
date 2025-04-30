@@ -26,6 +26,7 @@
     ./smartd.nix
     ./formicer-website.nix
     ./nixarr.nix
+    ./gatus.nix
   ];
 
   services.tailscale.enable = true;
