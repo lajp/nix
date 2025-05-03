@@ -42,7 +42,7 @@ in
               "[STATUS] == 200"
               "[CERTIFICATE_EXPIRATION] > 48h"
             ];
-            alerts = [{ type = "email"; }];
+            alerts = [ { type = "email"; } ];
           }
           {
             name = "Jellyfin";
@@ -52,30 +52,30 @@ in
               "[STATUS] == 200"
               "[CERTIFICATE_EXPIRATION] > 48h"
             ];
-            alerts = [{ type = "email"; }];
+            alerts = [ { type = "email"; } ];
           }
           {
             name = "Jellyseerr";
             group = "public";
-            url = "https://jellyseerr.lajp.fi";
+            url = "https://jellyseerr.lajp.fi/api/v1/status";
             client.timeout = "20s";
             conditions = [
               "[STATUS] == 200"
               "[CERTIFICATE_EXPIRATION] > 48h"
             ];
-            alerts = [{ type = "email"; }];
+            alerts = [ { type = "email"; } ];
           }
           {
             name = "mailserver";
             group = "public";
             url = "starttls://mail.portfo.rs:587";
-            interval =  "3m";
+            interval = "3m";
             client.timeout = "5s";
             conditions = [
               "[CONNECTED] == true"
               "[CERTIFICATE_EXPIRATION] > 48h"
             ];
-            alerts = [{ type = "email"; }];
+            alerts = [ { type = "email"; } ];
           }
           {
             name = "Vaultwarden";
@@ -85,7 +85,7 @@ in
               "[STATUS] == 200"
               "[CERTIFICATE_EXPIRATION] > 48h"
             ];
-            alerts = [{ type = "email"; }];
+            alerts = [ { type = "email"; } ];
           }
           {
             name = "iLO";
@@ -95,7 +95,7 @@ in
               "[STATUS] == 200"
               "[CERTIFICATE_EXPIRATION] > 48h"
             ];
-            alerts = [{ type = "email"; }];
+            alerts = [ { type = "email"; } ];
           }
           {
             name = "router";
@@ -105,7 +105,7 @@ in
               "[STATUS] == 200"
               "[CERTIFICATE_EXPIRATION] > 48h"
             ];
-            alerts = [{ type = "email"; }];
+            alerts = [ { type = "email"; } ];
           }
           # TODO: add nixarr services
           {
@@ -115,7 +115,7 @@ in
             conditions = [
               "[STATUS] == 200"
             ];
-            alerts = [{ type = "email"; }];
+            alerts = [ { type = "email"; } ];
           }
           {
             name = "prowlarr";
@@ -124,7 +124,7 @@ in
             conditions = [
               "[STATUS] == 200"
             ];
-            alerts = [{ type = "email"; }];
+            alerts = [ { type = "email"; } ];
           }
           {
             name = "radarr";
@@ -133,7 +133,7 @@ in
             conditions = [
               "[STATUS] == 200"
             ];
-            alerts = [{ type = "email"; }];
+            alerts = [ { type = "email"; } ];
           }
           {
             name = "bazarr";
@@ -142,7 +142,7 @@ in
             conditions = [
               "[STATUS] == 200"
             ];
-            alerts = [{ type = "email"; }];
+            alerts = [ { type = "email"; } ];
           }
         ];
       };
