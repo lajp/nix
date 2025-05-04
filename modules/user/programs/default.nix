@@ -47,6 +47,7 @@
     mednaffe
     gimp
     sxiv
+    jellyfin-media-player
 
     file
     github-cli
