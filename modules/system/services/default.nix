@@ -27,7 +27,7 @@
     ./formicer-website.nix
     ./nixarr.nix
     ./gatus.nix
+    ./headscale.nix
+    ./tailscale.nix
   ];
-
-  services.tailscale.enable = true;
 }

@@ -6,6 +6,8 @@
 
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+    flake-utils.url = "github:numtide/flake-utils";
+
     nixos-hardware.url = "github:NixOS/nixos-hardware";
 
     nix-index-database = {
@@ -92,6 +94,8 @@
       self,
       deploy-rs,
       agenix-rekey,
+      flake-utils,
+      nixpkgs,
       ...
     }@inputs:
     let
@@ -120,11 +124,15 @@
             services.syncthing.enable = true;
             services.samba.enable = true;
             services.vaultwarden.enable = true;
+            services.tailscale.enable = true;
             services.smartd.enable = true;
             services.nixarr.enable = true;
             services.dyndns = {
               enable = true;
-              domains = [ "jellyfin.lajp.fi" "jellyseerr.lajp.fi" ];
+              domains = [
+                "jellyfin.lajp.fi"
+                "jellyseerr.lajp.fi"
+              ];
             };
             hardware.zfs.enable = true;
           };
@@ -154,6 +162,7 @@
               ];
             };
             hardware.zfs.enable = true;
+            services.tailscale.enable = true;
           };
         };
         t480 = mkHost {
@@ -193,6 +202,7 @@
             services.niri.enable = true;
             services.ssh.enable = true;
             services.pia.enable = true;
+            services.tailscale.enable = true;
             hardware.sound.enable = true;
             hardware.bluetooth.enable = true;
             hardware.rtl-sdr.enable = true;
@@ -220,6 +230,7 @@
             };
 
             services.ssh.enable = true;
+            services.tailscale.enable = true;
           };
         };
         ankka = mkHost {
@@ -234,6 +245,8 @@
             services.ssh.enable = true;
             services.gatus.enable = true;
             services.mailserver.enable = true;
+            services.headscale.enable = true;
+            services.tailscale.enable = true;
             services.website.enable = true;
             services.formicer-website.enable = false;
           };
@@ -287,5 +300,14 @@
       checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
 
       pi-img = self.nixosConfigurations.proxy-pi.config.system.build.sdImage;
-    };
+    }
+    // flake-utils.lib.eachDefaultSystem (system: rec {
+      pkgs = import nixpkgs {
+        inherit system;
+        overlays = [ agenix-rekey.overlays.default ];
+      };
+      devShells.default = pkgs.mkShell {
+        packages = [ pkgs.agenix-rekey ];
+      };
+    });
 }

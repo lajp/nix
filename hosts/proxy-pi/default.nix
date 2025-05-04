@@ -9,7 +9,6 @@
   sdImage.compressImage = false;
 
   security.sudo.wheelNeedsPassword = false;
-  services.tailscale.enable = true;
 
   age.rekey.hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKmHiYwlEQEFvgn1RYWaFhQroCjPUwKKHrahR9UhrgCB";
 

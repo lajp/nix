@@ -111,7 +111,7 @@ in
           {
             name = "sonarr";
             group = "internal";
-            url = "http://100.116.226.16:8989/ping";
+            url = "http://100.64.0.2:8989/ping";
             conditions = [
               "[STATUS] == 200"
             ];
@@ -120,7 +120,7 @@ in
           {
             name = "prowlarr";
             group = "internal";
-            url = "http://100.116.226.16:9696/ping";
+            url = "http://100.64.0.2:9696/ping";
             conditions = [
               "[STATUS] == 200"
             ];
@@ -129,7 +129,7 @@ in
           {
             name = "radarr";
             group = "internal";
-            url = "http://100.116.226.16:7878/ping";
+            url = "http://100.64.0.2:7878/ping";
             conditions = [
               "[STATUS] == 200"
             ];
@@ -138,7 +138,7 @@ in
           {
             name = "bazarr";
             group = "internal";
-            url = "http://100.116.226.16:6767";
+            url = "http://100.64.0.2:6767";
             conditions = [
               "[STATUS] == 200"
             ];
