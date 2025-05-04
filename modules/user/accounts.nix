@@ -172,6 +172,8 @@ in
             "Junk"
             "Trash"
             "Sent"
+            "tik"
+            "tsry"
           ];
           extraConfig = ''
             # This together with `set reverse_name` allows automatically
