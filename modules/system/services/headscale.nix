@@ -7,6 +7,8 @@ in
   options.lajp.services.headscale.enable = mkEnableOption "Enable headscale";
 
   config = mkIf cfg.enable {
+    lajp.services.nginx.enable = true;
+
     services = {
       headscale = {
         enable = true;
@@ -20,29 +22,16 @@ in
         };
       };
 
-      nginx = {
-        enable = true;
-        virtualHosts."headscale.lajp.fi" = {
-          forceSSL = true;
-          enableACME = true;
-          locations."/" = {
-            proxyPass = "http://localhost:${toString config.services.headscale.port}";
-            proxyWebsockets = true;
-          };
+      nginx.virtualHosts."headscale.lajp.fi" = {
+        forceSSL = true;
+        enableACME = true;
+        locations."/" = {
+          proxyPass = "http://localhost:${toString config.services.headscale.port}";
+          proxyWebsockets = true;
         };
       };
     };
 
     environment.systemPackages = [ config.services.headscale.package ];
-
-    security.acme = {
-      acceptTerms = true;
-      defaults.email = "lajp@iki.fi";
-    };
-
-    networking.firewall.allowedTCPPorts = [
-      80
-      443
-    ];
   };
 }

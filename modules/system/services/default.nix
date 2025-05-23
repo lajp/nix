@@ -29,5 +29,8 @@
     ./gatus.nix
     ./headscale.nix
     ./tailscale.nix
+    ./nginx.nix
+    ./zfs-backup
+    ./vpn.nix
   ];
 }

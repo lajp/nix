@@ -31,7 +31,7 @@
     helvum
     discord
     (flameshot.override { enableWlrSupport = true; })
-    signal-desktop
+    pkgs-unstable.signal-desktop
     gnuradio
     quickemu
     (octaveFull.withPackages (
@@ -48,10 +48,21 @@
     gimp
     sxiv
     jellyfin-media-player
+    steam
+    libreoffice-fresh
 
     file
     github-cli
-    libqalculate
+    (libqalculate.overrideAttrs (prev: {
+      nativeBuildInputs = prev.nativeBuildInputs ++ [
+        pkgs.makeWrapper
+      ];
+
+      postInstall = ''
+        wrapProgram $out/bin/qalc \
+          --set LC_MONETARY en_FI.UTF-8
+      '';
+    }))
     unzip
 
     fd
@@ -104,6 +115,11 @@
     direnv = {
       enable = true;
       nix-direnv.enable = true;
+    };
+
+    tealdeer = {
+      enable = true;
+      settings.updates.auto_update = true;
     };
 
     alacritty = {

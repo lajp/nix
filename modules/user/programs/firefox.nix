@@ -1,5 +1,6 @@
 {
   pkgs,
+  pkgs-unstable,
   inputs,
   ...
 }:
@@ -23,7 +24,7 @@
 
   programs.firefox = {
     enable = true;
-    nativeMessagingHosts = [ pkgs.web-eid-app ];
+    package = pkgs-unstable.firefox;
 
     profiles.default = {
       name = "default";

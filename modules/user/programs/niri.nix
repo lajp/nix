@@ -76,6 +76,13 @@ in
             y = -1080;
           };
         };
+
+        "Dell Inc. DELL U2412M YPPY078E33JU" = {
+          position = {
+            x = 0;
+            y = -1200;
+          };
+        };
       };
 
       layout = {

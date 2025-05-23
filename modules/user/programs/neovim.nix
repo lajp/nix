@@ -182,8 +182,16 @@ in
             terraformls = {
               enable = true;
               settings.formatting.command = [
-                "${pkgs.terraform}"
+                "${pkgs.terraform}/bin/terraform"
                 "fmt"
+              ];
+            };
+            ts_ls = {
+              enable = true;
+              settings.formatting.command = [
+                "${pkgs.biome}/bin/biome"
+                "format"
+                "--write"
               ];
             };
           };

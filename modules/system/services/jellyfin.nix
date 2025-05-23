@@ -9,19 +9,16 @@ let
 in
 {
   options.lajp.services.jellyfin.enable = mkEnableOption "Enable jellyfin";
+
   config = mkIf cfg.enable {
+    lajp.services.nginx.enable = true;
+
     hardware.graphics.enable = true;
 
-    services.jellyfin = {
-      enable = true;
-    };
+    services = {
+      jellyfin.enable = true;
 
-    services.nginx = {
-      enable = true;
-      recommendedProxySettings = true;
-      recommendedTlsSettings = true;
-
-      virtualHosts."jellyfin.lajp.fi" = {
+      nginx.virtualHosts."jellyfin.lajp.fi" = {
         forceSSL = true;
         enableACME = true;
 
@@ -31,15 +28,5 @@ in
         };
       };
     };
-
-    security.acme = {
-      acceptTerms = true;
-      defaults.email = "lajp@iki.fi";
-    };
-
-    networking.firewall.allowedTCPPorts = [
-      80
-      443
-    ];
   };
 }

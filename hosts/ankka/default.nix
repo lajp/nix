@@ -21,4 +21,10 @@
 
   age.rekey.hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHDmWaaKvkMOth52GJF89viwjTpWQRH+agoJ6MLajh8H
 ";
+
+  services.nginx.virtualHosts."mombasa.lajp.fi" = {
+    locations."/".proxyPass = "http://localhost:3000";
+    forceSSL = true;
+    enableACME = true;
+  };
 }

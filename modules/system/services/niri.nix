@@ -18,7 +18,7 @@ in
   config = mkIf cfg.enable {
     programs.niri.enable = true;
 
-    programs.niri.package = pkgs.niri-stable;
+    programs.niri.package = pkgs.niri-unstable;
 
     services.greetd =
       let

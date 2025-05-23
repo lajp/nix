@@ -135,6 +135,10 @@
               ];
             };
             hardware.zfs.enable = true;
+            services.zfs-backup = {
+              enable = false;
+              pool = "naspool";
+            };
           };
         };
         vaasanas = mkHost {
@@ -203,6 +207,10 @@
             services.ssh.enable = true;
             services.pia.enable = true;
             services.tailscale.enable = true;
+            services.vpn = {
+              braiins.enable = true;
+              airvpn.enable = true;
+            };
             hardware.sound.enable = true;
             hardware.bluetooth.enable = true;
             hardware.rtl-sdr.enable = true;
@@ -272,6 +280,7 @@
           profiles.system = {
             user = "root";
             interactiveSudo = true;
+            remoteBuild = true;
             path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.nas;
           };
         };
@@ -307,7 +316,10 @@
         overlays = [ agenix-rekey.overlays.default ];
       };
       devShells.default = pkgs.mkShell {
-        packages = [ pkgs.agenix-rekey ];
+        packages = [
+          pkgs.agenix-rekey
+          deploy-rs.packages.${system}.default
+        ];
       };
     });
 }

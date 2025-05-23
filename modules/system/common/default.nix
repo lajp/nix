@@ -66,7 +66,7 @@ in
 
   networking.firewall.enable = true;
 
-  time.timeZone = "Europe/Helsinki";
+  time.timeZone = lib.mkDefault "Europe/Helsinki";
 
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
@@ -81,7 +81,7 @@ in
     wget
     git
     rsync
-    htop
+    htop-vim
     killall
     fd
     gnupg

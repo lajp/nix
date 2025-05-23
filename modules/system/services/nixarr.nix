@@ -18,6 +18,8 @@ in
   options.lajp.services.nixarr.enable = mkEnableOption "Enable nixarr";
 
   config = mkIf cfg.enable {
+    lajp.services.nginx.enable = true;
+
     age.secrets.nixarr-vpn.rekeyFile = ../../../secrets/nixarr-vpn.age;
 
     environment = {
@@ -47,7 +49,7 @@ in
         expose.https = {
           enable = true;
           domainName = "jellyfin.lajp.fi";
-          acmeMail = "lajp@iki.fi";
+          acmeMail = "lajp" + "@iki.fi";
         };
       };
 
@@ -98,6 +100,7 @@ in
       # recyclarr.enable = true;
       radarr.enable = true;
       sonarr.enable = true;
+      lidarr.enable = true;
     };
 
     # TODO: migrate library under nixarr.mediaDir
@@ -110,30 +113,14 @@ in
     hardware.graphics.enable = true;
 
     # TODO: change to jellyserr.expose.https when available
-    services.nginx = {
-      enable = true;
-      recommendedProxySettings = true;
-      recommendedTlsSettings = true;
+    services.nginx.virtualHosts."jellyseerr.lajp.fi" = {
+      forceSSL = true;
+      enableACME = true;
 
-      virtualHosts."jellyseerr.lajp.fi" = {
-        forceSSL = true;
-        enableACME = true;
-
-        locations."/" = {
-          proxyPass = "http://localhost:5055";
-          proxyWebsockets = true;
-        };
+      locations."/" = {
+        proxyPass = "http://localhost:5055";
+        proxyWebsockets = true;
       };
     };
-
-    security.acme = {
-      acceptTerms = true;
-      defaults.email = "lajp@iki.fi";
-    };
-
-    networking.firewall.allowedTCPPorts = [
-      80
-      443
-    ];
   };
 }

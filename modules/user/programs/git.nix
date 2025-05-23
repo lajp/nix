@@ -23,6 +23,10 @@
         contents.user.email = "luukas.portfors@aalto.fi";
         condition = "gitdir:~/git/aalto/**";
       }
+      {
+        contents.user.email = "luukas.portfors@braiins.cz";
+        condition = "gitdir:~/git/braiins/**";
+      }
     ];
 
     extraConfig = {
@@ -34,7 +38,7 @@
     };
 
     signing = {
-      signByDefault = true;
+      #signByDefault = true;
       key = null;
     };
   };
