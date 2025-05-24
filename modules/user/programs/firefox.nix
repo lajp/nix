@@ -1,14 +1,10 @@
 {
   pkgs,
+  pkgs-nur,
   pkgs-unstable,
-  inputs,
   ...
 }:
 {
-  imports = [
-    inputs.nur.hmModules.nur
-  ];
-
   xdg.mimeApps.defaultApplications = {
     "application/x-extension-htm" = "firefox.desktop";
     "application/x-extension-html" = "firefox.desktop";
@@ -21,6 +17,8 @@
     "x-scheme-handler/http" = "firefox.desktop";
     "x-scheme-handler/https" = "firefox.desktop";
   };
+
+  stylix.targets.firefox.profileNames = [ "default" ];
 
   programs.firefox = {
     enable = true;
@@ -59,7 +57,7 @@
         };
       };
 
-      extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+      extensions.packages = with pkgs-nur.repos.rycee.firefox-addons; [
         ublock-origin
         sponsorblock
         vimium
@@ -72,7 +70,7 @@
 
       search = {
         force = true;
-        default = "DuckDuckGo";
+        default = "ddg";
       };
 
       userChrome = ''

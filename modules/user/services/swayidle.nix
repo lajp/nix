@@ -11,7 +11,7 @@ let
 in
 {
   systemd.user.services = mkIf (!xserver) {
-    swayidle.Unit.After = "niri.service";
+    swayidle.Unit.After = lib.mkForce "niri.service";
   };
 
   services.swayidle = mkIf (!xserver) {

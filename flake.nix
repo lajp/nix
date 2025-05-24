@@ -2,7 +2,7 @@
   description = "lajp NixOS flake";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
 
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
@@ -33,18 +33,18 @@
     nur.url = "github:nix-community/NUR";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     stylix = {
-      url = "github:danth/stylix/release-24.11";
+      url = "github:danth/stylix/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
 
     nixvim = {
-      url = "github:nix-community/nixvim/nixos-24.11";
+      url = "github:nix-community/nixvim/nixos-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -81,10 +81,11 @@
 
     deploy-rs.url = "github:serokell/deploy-rs";
 
-    simple-nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-24.11";
+    simple-nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-25.05";
 
     nixarr = {
-      url = "github:rasmus-kirk/nixarr/29b7be20d4871b0ebac2db7c1691ecd3e690283f";
+      #url = "github:rasmus-kirk/nixarr/main";
+      url = "github:lajp/nixarr/cross-seed-fix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -300,6 +301,7 @@
           profiles.system = {
             user = "root";
             sshUser = "lajp";
+            remoteBuild = true;
             path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.ankka;
           };
         };

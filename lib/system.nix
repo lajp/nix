@@ -17,12 +17,13 @@ in
     let
       inherit (systemConfig.core) hostname;
       pkgs-unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
+      pkgs-nur = inputs.nur.legacyPackages.${system};
     in
     nixosSystem {
       inherit system;
 
       specialArgs = {
-        inherit inputs pkgs-unstable;
+        inherit inputs pkgs-unstable pkgs-nur;
       };
 
       modules = [
@@ -50,7 +51,7 @@ in
                   useGlobalPkgs = true;
                   useUserPackages = true;
                   extraSpecialArgs = {
-                    inherit inputs pkgs-unstable;
+                    inherit inputs pkgs-unstable pkgs-nur;
                   };
                   users.${username} = user.mkConfig { inherit userConfig; };
                 }
@@ -59,7 +60,7 @@ in
           }
         )
 
-        inputs.home-manager.nixosModule
+        inputs.home-manager.nixosModules.home-manager
         inputs.agenix.nixosModules.default
         inputs.agenix-rekey.nixosModules.default
         inputs.stylix.nixosModules.stylix

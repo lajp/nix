@@ -2,7 +2,6 @@
   pkgs,
   pkgs-unstable,
   inputs,
-  config,
   ...
 }:
 {
@@ -90,7 +89,7 @@
   # Parsing this https://github.com/tinted-theming/tinted-tmux/blob/main/templates/config.yaml
   # fails for some reason
   # Related: https://github.com/SenchoPens/base16.nix/issues/20
-  stylix.targets.tmux.enable = false;
+  #stylix.targets.tmux.enable = false;
 
   programs = {
     starship = {
@@ -134,19 +133,9 @@
       baseIndex = 1;
       clock24 = true;
       terminal = "screen-256color";
-      # NOTE: See line 69
-      extraConfig =
-        let
-          theme = config.lib.stylix.colors {
-            templateRepo = config.lib.stylix.templates.tinted-tmux;
-            target = "base16";
-            use-ifd = "always";
-          };
-        in
-        ''
-          set-option -g update-environment 'DBUS_SESSION_BUS_ADDRESS'
-          source-file ${theme}
-        '';
+      extraConfig = ''
+        set-option -g update-environment 'DBUS_SESSION_BUS_ADDRESS'
+      '';
     };
   };
 }

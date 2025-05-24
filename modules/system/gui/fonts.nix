@@ -12,7 +12,7 @@
     source-sans
     source-sans-pro
     roboto
-    (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
+    nerd-fonts.symbols-only
   ];
 
   fonts.enableDefaultPackages = true;

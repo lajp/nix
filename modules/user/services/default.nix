@@ -21,7 +21,7 @@ in
       enable = true;
       enableExtraSocket = true;
       enableSshSupport = true;
-      pinentryPackage = pkgs.pinentry-curses;
+      pinentry.package = pkgs.pinentry-curses;
     };
 
     dunst.enable = true;

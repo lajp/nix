@@ -52,4 +52,6 @@
   };
 
   system.stateVersion = "24.05";
+
+  age.identityPaths = [ "/home/lajp/.ssh/id_ed25519" ];
 }

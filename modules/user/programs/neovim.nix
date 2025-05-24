@@ -120,6 +120,11 @@ in
         };
       };
 
+      dependencies.lean = {
+        enable = true;
+        package = pkgs.elan;
+      };
+
       plugins = {
         telescope = {
           enable = true;
@@ -132,12 +137,6 @@ in
         web-devicons.enable = true;
 
         idris2.enable = true;
-
-        lean = {
-          enable = true;
-          leanPackage = pkgs.elan;
-        };
-
         treesitter = {
           enable = true;
           settings = {
@@ -247,6 +246,7 @@ in
       extraPlugins = [
         (pkgs.vimUtils.buildVimPlugin {
           name = "testaustime";
+          doCheck = false;
           src = inputs.testaustime-nvim;
         })
 

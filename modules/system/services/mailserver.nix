@@ -95,11 +95,13 @@ in
       };
 
       certificateScheme = "acme-nginx";
-
-      policydSPFExtraConfig = ''
-        Mail_From_reject = false
-      '';
     };
+
+    services.rspamd.extraConfig = ''
+      actions {
+        reject = null;
+      }
+    '';
 
     security.acme = {
       acceptTerms = true;
