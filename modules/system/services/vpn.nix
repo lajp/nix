@@ -1,4 +1,8 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  ...
+}:
 let
   inherit (lib) mkIf mkEnableOption;
   cfg = config.lajp.services.vpn;
@@ -38,10 +42,44 @@ in
     {
       config = mkIf cfg.airvpn.enable {
         age.secrets.airvpn.rekeyFile = ../../../secrets/airvpn.age;
+        age.secrets.airvpn-preshared.rekeyFile = ../../../secrets/airvpn-preshared.age;
+
+        systemd.network.config.networkConfig = {
+          ManageForeignRoutes = false;
+          ManageForeignRoutesPolicyRules = false;
+        };
 
         networking.wg-quick.interfaces.wg0 = {
-          configFile = "${config.age.secrets.airvpn.path}";
           autostart = cfg.airvpn.autostart;
+
+          address = [
+            "10.166.47.0/32"
+            "fd7d:76ee:e68f:a993:7026:6108:9cd4:1db8/128"
+          ];
+
+          mtu = 1320;
+
+          privateKeyFile = config.age.secrets.airvpn.path;
+
+          peers = [
+            {
+              publicKey = "PyLCXAQT8KkM4T+dUsOQfn+Ub3pGxfGlxkIApuig+hk=";
+              presharedKeyFile = config.age.secrets.airvpn-preshared.path;
+              endpoint = "europe3.vpn.airdns.org:1637";
+              allowedIPs = [
+                "0.0.0.0/0"
+                "::/0"
+              ];
+              persistentKeepalive = 15;
+            }
+          ];
+
+          postUp = ''
+            ip route add 100.64.0.0/10 dev tailscale0
+          '';
+          postDown = ''
+            ip route del 100.64.0.0/10 dev tailscale0
+          '';
         };
       };
     }

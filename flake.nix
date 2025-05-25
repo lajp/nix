@@ -206,7 +206,6 @@
             services.restic.enable = true;
             services.niri.enable = true;
             services.ssh.enable = true;
-            services.pia.enable = true;
             services.tailscale.enable = true;
             services.vpn = {
               braiins.enable = true;
