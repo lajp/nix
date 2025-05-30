@@ -20,6 +20,15 @@
   ];
   networking.networkmanager.enable = true;
 
+  networking.hosts = {
+    "127.0.0.1" = [ "miners.dev.ii.zone" ];
+  };
+
+  services.nginx = {
+    enable = true;
+    virtualHosts."miners.dev.ii.zone".locations."/".proxyPass = "http://localhost:5173";
+  };
+
   virtualisation.docker.enable = true;
 
   hardware.graphics = {

@@ -32,5 +32,6 @@
     ./nginx.nix
     ./zfs-backup
     ./vpn.nix
+    ./adguardhome.nix
   ];
 }

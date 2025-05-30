@@ -11,7 +11,10 @@ in
 {
   config = mkIf cfg.enable {
     programs.swaylock.enable = true;
-    programs.fuzzel.enable = true;
+    programs.fuzzel = {
+      enable = true;
+      settings.main.list-executables-in-path = true;
+    };
     programs.niri.settings = {
       prefer-no-csd = true;
 
@@ -81,6 +84,14 @@ in
           position = {
             x = 0;
             y = -1200;
+          };
+        };
+
+        "Iiyama North America PL2797U 12381JQ701083" = {
+          scale = 1.5;
+          position = {
+            x = -640;
+            y = -1440;
           };
         };
       };

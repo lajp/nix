@@ -24,7 +24,10 @@ in
       pinentry.package = pkgs.pinentry-curses;
     };
 
-    dunst.enable = true;
+    dunst = {
+      enable = true;
+      settings.global.monitor = "eDP-1";
+    };
     picom = mkIf xserver {
       enable = true;
       vSync = true;

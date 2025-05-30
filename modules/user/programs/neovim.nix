@@ -248,6 +248,10 @@ in
           name = "testaustime";
           doCheck = false;
           src = inputs.testaustime-nvim;
+
+          buildInputs = [
+            pkgs.curl
+          ];
         })
 
         (pkgs.vimUtils.buildVimPlugin {

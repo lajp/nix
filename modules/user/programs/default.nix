@@ -49,9 +49,11 @@
     jellyfin-media-player
     steam
     libreoffice-fresh
+    minecraft
 
     file
     github-cli
+    glab
     (libqalculate.overrideAttrs (prev: {
       nativeBuildInputs = prev.nativeBuildInputs ++ [
         pkgs.makeWrapper

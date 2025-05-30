@@ -18,7 +18,9 @@ in
         settings = {
           server_url = "https://headscale.lajp.fi";
           logtail.enabled = false;
-          dns.base_domain = "tailnet.lajp.fi";
+          dns = {
+            base_domain = "tailnet.lajp.fi";
+          };
         };
       };
 

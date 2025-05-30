@@ -13,6 +13,10 @@ in
       enable = mkEnableOption "Enable braiins vpn";
       autostart = mkEnableOption "Autostart vpn";
     };
+    vaasa = {
+      enable = mkEnableOption "Enable vaasa vpn";
+      autostart = mkEnableOption "Autostart vpn";
+    };
     airvpn = {
       enable = mkEnableOption "Enable airvpn";
       autostart = mkEnableOption "Autostart vpn";
@@ -49,7 +53,7 @@ in
           ManageForeignRoutesPolicyRules = false;
         };
 
-        networking.wg-quick.interfaces.wg0 = {
+        networking.wg-quick.interfaces.airvpn = {
           autostart = cfg.airvpn.autostart;
 
           address = [
@@ -76,10 +80,37 @@ in
 
           postUp = ''
             ip route add 100.64.0.0/10 dev tailscale0
+            ip route add 192.168.178.0/24 dev vaasa
           '';
           postDown = ''
             ip route del 100.64.0.0/10 dev tailscale0
+            ip route del 192.168.178.0/24 dev vaasa
           '';
+        };
+      };
+    }
+    {
+      config = mkIf cfg.vaasa.enable {
+        age.secrets.vaasa-private.rekeyFile = ../../../secrets/vaasa-private.age;
+        age.secrets.vaasa-preshared.rekeyFile = ../../../secrets/vaasa-preshared.age;
+
+        networking.wg-quick.interfaces.vaasa = {
+          privateKeyFile = config.age.secrets.vaasa-private.path;
+          address = [ "192.168.178.203/24" ];
+
+          peers = [
+            {
+              publicKey = "pA6QEmdv3nAl0fanR+69ooIUCx8cejP2qyAofzcGqUc=";
+              presharedKeyFile = config.age.secrets.vaasa-preshared.path;
+              endpoint = "h9xhgbanix8j1ees.myfritz.net:50850";
+              allowedIPs = [
+                "192.168.178.0/24"
+              ];
+              persistentKeepalive = 25;
+            }
+          ];
+
+          autostart = cfg.vaasa.autostart;
         };
       };
     }

@@ -210,6 +210,10 @@
             services.vpn = {
               braiins.enable = true;
               airvpn.enable = true;
+              vaasa = {
+                enable = true;
+                autostart = true;
+              };
             };
             hardware.sound.enable = true;
             hardware.bluetooth.enable = true;
@@ -239,6 +243,7 @@
 
             services.ssh.enable = true;
             services.tailscale.enable = true;
+            services.adguardhome.enable = true;
           };
         };
         ankka = mkHost {

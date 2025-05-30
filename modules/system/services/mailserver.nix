@@ -70,14 +70,12 @@ in
         };
       };
 
-      extraVirtualAliases = {
-        "postmaster@lajp.fi" = admin;
-        "abuse@lajp.fi" = admin;
-        "postmaster@portfo.rs" = admin;
-        "abuse@portfo.rs" = admin;
-        "postmaster@formicer.com" = admin;
-        "abuse@formicer.com" = admin;
-      };
+      extraVirtualAliases = lib.mergeAttrsList (
+        lib.map (domain: {
+          "postmaster@${domain}" = admin;
+          "abuse@${domain}" = admin;
+        }) config.mailserver.domains
+      );
 
       forwards = {
         ${"miia" + "@portfo.rs"} = "mpor" + "tfors" + "@gmail.com";
