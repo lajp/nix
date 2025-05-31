@@ -79,12 +79,12 @@ in
           ];
 
           postUp = ''
-            ip route add 100.64.0.0/10 dev tailscale0
-            ip route add 192.168.178.0/24 dev vaasa
+            ip -force route add 100.64.0.0/10 dev tailscale0 || true
+            ip -force route add 192.168.178.0/24 dev vaasa || true
           '';
           postDown = ''
-            ip route del 100.64.0.0/10 dev tailscale0
-            ip route del 192.168.178.0/24 dev vaasa
+            ip -force route del 100.64.0.0/10 dev tailscale0 || true
+            ip -force route del 192.168.178.0/24 dev vaasa || true
           '';
         };
       };

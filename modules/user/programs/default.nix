@@ -49,7 +49,6 @@
     jellyfin-media-player
     steam
     libreoffice-fresh
-    minecraft
 
     file
     github-cli
