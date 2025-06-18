@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -37,8 +38,10 @@ in
             ca ${config.age.secrets.braiins-ca.path}
             cert ${config.age.secrets.braiins-cert.path}
             key ${config.age.secrets.braiins-key.path}
+            script-security 2
+            up ${pkgs.update-systemd-resolved}/libexec/openvpn/update-systemd-resolved
+            down ${pkgs.update-systemd-resolved}/libexec/openvpn/update-systemd-resolved
           '';
-          updateResolvConf = true;
           autoStart = cfg.braiins.autostart;
         };
       };

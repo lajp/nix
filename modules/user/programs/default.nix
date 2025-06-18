@@ -103,7 +103,13 @@
 
     chromium = {
       enable = true;
-      package = pkgs.ungoogled-chromium;
+      #package = pkgs.ungoogled-chromium;
+      extensions = [
+        # tampermonkey
+        { id = "dhdgffkkebhmkfjojejmpbldmpobfkfo"; }
+        # ublock origin
+        { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; }
+      ];
     };
 
     nix-index = {

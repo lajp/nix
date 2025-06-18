@@ -19,14 +19,14 @@
     "9.9.9.9"
   ];
   networking.networkmanager.enable = true;
+  services.resolved.enable = true;
+  networking.useHostResolvConf = false;
 
-  networking.hosts = {
-    "127.0.0.1" = [ "miners.dev.ii.zone" ];
-  };
-
-  services.nginx = {
+  services.printing.enable = true;
+  services.avahi = {
     enable = true;
-    virtualHosts."miners.dev.ii.zone".locations."/".proxyPass = "http://localhost:5173";
+    nssmdns4 = true;
+    openFirewall = true;
   };
 
   virtualisation.docker.enable = true;

@@ -39,6 +39,12 @@ let
         RemoteForward = "/run/user/1000/gnupg/S.gpg-agent /run/user/1000/gnupg/S.gpg-agent.extra";
       };
     };
+
+    nix1 = {
+      hostname = "nix1.dev.hq.ii.zone";
+      user = "luukas.portfors";
+      forwardAgent = true;
+    };
   };
 in
 {

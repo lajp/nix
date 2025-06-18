@@ -9,6 +9,18 @@
 let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.lajp.services.nixarr;
+
+  # NOTE: Some trackers disallow 4.0.6, change this once 4.1.0 reaches nixos-unstable
+  transmission = pkgs.transmission_4.overrideAttrs rec {
+    version = "4.0.5";
+    src = pkgs.fetchFromGitHub {
+      owner = "transmission";
+      repo = "transmission";
+      rev = version;
+      hash = "sha256-gd1LGAhMuSyC/19wxkoE2mqVozjGPfupIPGojKY0Hn4=";
+      fetchSubmodules = true;
+    };
+  };
 in
 {
   imports = [
@@ -23,8 +35,8 @@ in
     age.secrets.nixarr-vpn.rekeyFile = ../../../secrets/nixarr-vpn.age;
 
     environment = {
-      systemPackages = with pkgs; [
-        transmission_4
+      systemPackages = [
+        transmission
       ];
 
       shellAliases.t = "transmission-remote";
@@ -58,17 +70,7 @@ in
         vpn.enable = true;
         peerPort = 52361;
 
-        # NOTE: Some trackers disallow 4.0.6, change this once 4.1.0 reaches nixos-unstable
-        package = pkgs.transmission_4.overrideAttrs rec {
-          version = "4.0.5";
-          src = pkgs.fetchFromGitHub {
-            owner = "transmission";
-            repo = "transmission";
-            rev = version;
-            hash = "sha256-gd1LGAhMuSyC/19wxkoE2mqVozjGPfupIPGojKY0Hn4=";
-            fetchSubmodules = true;
-          };
-        };
+        package = transmission;
 
         privateTrackers = {
           cross-seed = {

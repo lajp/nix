@@ -24,8 +24,10 @@ in
           repeat-rate = 20;
 
           xkb = {
-            layout = "fi";
-            options = "caps:escape";
+            layout = "fi,us";
+            #layout = "fi";
+            variant = ",colemak_dh_iso";
+            options = "caps:escape,grp:alt_shift_toggle";
           };
         };
 
@@ -126,6 +128,15 @@ in
           command = [
             "${lib.getExe pkgs.xwayland-satellite-unstable}"
             ":25"
+          ];
+        }
+        {
+          command = [
+            "${lib.getExe pkgs.swaybg}"
+            "-m"
+            "fit"
+            "-i"
+            "${../../../images/colemak_dh_iso.png}"
           ];
         }
       ];

@@ -305,7 +305,7 @@
           profiles.system = {
             user = "root";
             sshUser = "lajp";
-            remoteBuild = true;
+            #remoteBuild = true;
             path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.ankka;
           };
         };

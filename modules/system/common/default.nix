@@ -36,20 +36,23 @@ in
       ];
     };
 
-    #distributedBuilds = true;
+    distributedBuilds = true;
 
-    #buildMachines = [
-    #  {
-    #    hostName = "pve";
-    #    system = "x86_64-linux";
-    #    protocol = "ssh-ng";
-    #    maxJobs = 48;
-    #    speedFactor = 10;
-    #    supportedFeatures = ["benchmark" "big-parallel"];
-    #    sshUser = "root";
-    #    sshKey = "/home/lajp/.ssh/id_ed25519";
-    #  }
-    #];
+    buildMachines = [
+      {
+        hostName = "192.168.178.114";
+        system = "x86_64-linux";
+        protocol = "ssh-ng";
+        maxJobs = 48;
+        speedFactor = 2;
+        supportedFeatures = [
+          "benchmark"
+          "big-parallel"
+        ];
+        sshUser = "luukas";
+        sshKey = "/home/lajp/.ssh/id_ed25519";
+      }
+    ];
 
     extraOptions = ''
       builders-use-substitutes = true
