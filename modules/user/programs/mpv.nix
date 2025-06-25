@@ -14,6 +14,7 @@
     profiles.audio = {
       ytdl-format = "bestaudio/best";
       video = false;
+      af = "dynaudnorm";
     };
   };
 }

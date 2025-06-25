@@ -24,10 +24,11 @@ in
           repeat-rate = 20;
 
           xkb = {
-            layout = "fi,us";
+            layout = "fi,us(colemak_dh_iso)";
             #layout = "fi";
-            variant = ",colemak_dh_iso";
-            options = "caps:escape,grp:alt_shift_toggle";
+            #variant = ",colemak_dh_iso";
+            #options = "caps:escape,grp:alt_shift_toggle";
+            options = "caps:swapescape,caps:swapescape,grp:alt_shift_toggle";
           };
         };
 
@@ -94,6 +95,17 @@ in
           position = {
             x = -640;
             y = -1440;
+          };
+        };
+
+        "Eizo Nanao Corporation S2231W 32374028" = {
+          mode = {
+            width = 1680;
+            height = 1050;
+          };
+          position = {
+            x = 0;
+            y = -1050;
           };
         };
       };

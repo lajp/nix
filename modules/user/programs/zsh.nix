@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, lib, ... }:
 {
   programs.zsh = {
     enable = true;
@@ -8,6 +8,10 @@
 
     envExtra = ''
       export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+    '';
+
+    initContent = lib.mkOrder 1500 ''
+      bindkey "^R" history-incremental-pattern-search-backward
     '';
 
     history = {
