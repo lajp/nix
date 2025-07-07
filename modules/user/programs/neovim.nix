@@ -4,12 +4,10 @@
   inputs,
   pkgs,
   pkgs-unstable,
-  osConfig,
   ...
 }:
 let
   inherit (lib) mkEnableOption mkIf;
-  inherit (osConfig.lajp.user) username;
   cfg = config.lajp.editors.nvim;
 
   voikko-fi = pkgs.stdenvNoCC.mkDerivation rec {
@@ -50,23 +48,11 @@ in
 {
   imports = [
     inputs.nixvim.homeManagerModules.nixvim
-    inputs.agenix.homeManagerModules.default
-    inputs.agenix-rekey.homeManagerModules.default
   ];
 
   options.lajp.editors.nvim.enable = mkEnableOption "Enable Neovim";
 
   config = mkIf cfg.enable {
-    age.rekey = {
-      masterIdentities = [ ../../../yubikey.pub ];
-      storageMode = "local";
-      localStorageDir = osConfig.age.rekey.localStorageDir + "-${username}";
-      hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF7gs/ba3jdX+kfCruDK0NluwnFqO4AB+BZV3+2r36gY";
-    };
-    age.identityPaths = [ "/home/lajp/.ssh/id_ed25519" ];
-
-    age.secrets.testaustime.rekeyFile = ../../../secrets/testaustime.age;
-
     programs.ripgrep.enable = true;
 
     xdg.configFile."enchant/voikko".source = voikko-fi;
@@ -135,6 +121,8 @@ in
           };
         };
         web-devicons.enable = true;
+
+        rainbow-delimiters.enable = true;
 
         idris2.enable = true;
         treesitter = {
@@ -245,16 +233,6 @@ in
 
       extraPlugins = [
         (pkgs.vimUtils.buildVimPlugin {
-          name = "testaustime";
-          doCheck = false;
-          src = inputs.testaustime-nvim;
-
-          buildInputs = [
-            pkgs.curl
-          ];
-        })
-
-        (pkgs.vimUtils.buildVimPlugin {
           name = "vimchant";
           src = inputs.vimchant;
 
@@ -264,20 +242,6 @@ in
           '';
         })
       ];
-
-      extraConfigLua = ''
-        function os.capture(cmd)
-          local f = assert(io.popen(cmd, 'r'))
-          local s = assert(f:read('*l'))
-          f:close()
-          return s
-        end
-
-
-        require('testaustime').setup({
-          token = os.capture('cat ${config.age.secrets.testaustime.path}')
-        })
-      '';
 
       extraConfigVim = ''
         vnoremap K :m '<-2<CR>gv=gv

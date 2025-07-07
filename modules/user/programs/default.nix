@@ -2,54 +2,43 @@
   pkgs,
   pkgs-unstable,
   inputs,
+  osConfig,
   ...
 }:
+let
+  inherit (osConfig.lajp.user) username;
+in
 {
   imports = [
+    ./gui
+
+    # TODO: move into ./neovim
     ./neovim.nix
+    ./testaustime.nix
+
     ./pass.nix
     ./gpg.nix
-    ./firefox.nix
     ./ssh.nix
     ./neomutt
-    ./niri.nix
     ./zsh.nix
     ./fish.nix
     ./git.nix
     ./jujutsu.nix
-    ./mpv.nix
     ./mail.nix
 
     inputs.nix-index-database.hmModules.nix-index
+    inputs.agenix.homeManagerModules.default
+    inputs.agenix-rekey.homeManagerModules.default
   ];
 
-  xdg.mimeApps.defaultApplications."application/pdf" = "zathura.desktop";
+  # TODO: This is a hack to pass flake check, fix later
+  age.rekey = {
+    storageMode = "local";
+    localStorageDir = osConfig.age.rekey.localStorageDir + "-${username}";
+    masterIdentities = [ ../../../yubikey.pub ];
+  };
 
   home.packages = with pkgs; [
-    pavucontrol
-    helvum
-    discord
-    (flameshot.override { enableWlrSupport = true; })
-    pkgs-unstable.signal-desktop
-    gnuradio
-    quickemu
-    (octaveFull.withPackages (
-      opkgs: with opkgs; [
-        communications
-        signal
-        statistics
-        symbolic
-      ]
-    ))
-    pkgs-unstable.musescore
-    xclip
-    mednaffe
-    gimp
-    sxiv
-    jellyfin-media-player
-    steam
-    libreoffice-fresh
-
     file
     github-cli
     glab
@@ -83,7 +72,8 @@
 
     fastfetch
 
-    devenv
+    # https://github.com/NixOS/nixpkgs/issues/420134
+    pkgs-unstable.devenv
   ];
 
   # TODO: figure out why this breaks
@@ -96,20 +86,6 @@
     starship = {
       enable = true;
       settings.add_newline = false;
-    };
-
-    imv.enable = true;
-    zathura.enable = true;
-
-    chromium = {
-      enable = true;
-      #package = pkgs.ungoogled-chromium;
-      extensions = [
-        # tampermonkey
-        { id = "dhdgffkkebhmkfjojejmpbldmpobfkfo"; }
-        # ublock origin
-        { id = "cjpalhdlnbpafiamejdnhcphjbkeiagm"; }
-      ];
     };
 
     nix-index = {
@@ -126,11 +102,6 @@
     tealdeer = {
       enable = true;
       settings.updates.auto_update = true;
-    };
-
-    alacritty = {
-      enable = true;
-      settings.env.TERM = "xterm-256color";
     };
 
     tmux = {

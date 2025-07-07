@@ -8,6 +8,8 @@
 let
   inherit (lib) mkIf;
   xserver = osConfig.lajp.services.xserver.enable;
+
+  gui = config.lajp.gui.enable;
 in
 {
   imports = [
@@ -24,7 +26,7 @@ in
       pinentry.package = pkgs.pinentry-curses;
     };
 
-    dunst = {
+    dunst = mkIf gui {
       enable = true;
       settings.global.monitor = "eDP-1";
     };

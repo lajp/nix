@@ -148,7 +148,7 @@ in
             "-m"
             "fit"
             "-i"
-            "${../../../images/colemak_dh_iso.png}"
+            "${../../../../images/colemak_dh_iso.png}"
           ];
         }
       ];

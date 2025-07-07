@@ -24,7 +24,11 @@
         condition = "gitdir:~/git/aalto/**";
       }
       {
-        contents.user.email = "luukas.portfors@braiins.cz";
+        contents = {
+          user.email = "luukas.portfors@braiins.cz";
+          commit.gpgsign = false;
+          tag.gpgsign = false;
+        };
         condition = "gitdir:~/git/braiins/**";
       }
     ];
@@ -38,7 +42,7 @@
     };
 
     signing = {
-      #signByDefault = true;
+      signByDefault = true;
       key = null;
     };
   };

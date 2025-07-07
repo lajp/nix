@@ -168,6 +168,22 @@
             };
             hardware.zfs.enable = true;
             services.tailscale.enable = true;
+            services.smartd.enable = true;
+          };
+        };
+        nixos-dev = mkHost {
+          extraModules = with inputs.nixos-hardware.nixosModules; [
+            common-pc
+            common-cpu-intel
+          ];
+
+          systemConfig = {
+            core.hostname = "nixos-dev";
+            services.ssh.enable = true;
+          };
+
+          userConfig = {
+            editors.nvim.enable = true;
           };
         };
         t480 = mkHost {
@@ -192,7 +208,11 @@
           };
 
           userConfig = {
-            editors.nvim.enable = true;
+            editors.nvim = {
+              enable = true;
+              testaustime.enable = true;
+            };
+            gui.enable = true;
           };
         };
         framework = mkHost {
@@ -225,7 +245,13 @@
             rickroll.enable = true;
           };
 
-          userConfig.editors.nvim.enable = true;
+          userConfig = {
+            editors.nvim = {
+              enable = true;
+              testaustime.enable = true;
+            };
+            gui.enable = true;
+          };
         };
         proxy-pi = mkHost {
           system = "aarch64-linux";
@@ -296,6 +322,7 @@
             user = "root";
             sshUser = "lajp";
             interactiveSudo = true;
+            remoteBuild = true;
             path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.vaasanas;
           };
         };
