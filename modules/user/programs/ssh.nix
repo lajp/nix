@@ -40,6 +40,10 @@ let
       };
     };
 
+    nixos-dev = {
+      forwardAgent = true;
+    };
+
     nix1 = {
       hostname = "nix1.dev.hq.ii.zone";
       user = "luukas.portfors";

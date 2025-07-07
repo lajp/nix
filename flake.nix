@@ -180,6 +180,7 @@
           systemConfig = {
             core.hostname = "nixos-dev";
             services.ssh.enable = true;
+            services.tailscale.enable = true;
           };
 
           userConfig = {
@@ -324,6 +325,17 @@
             interactiveSudo = true;
             remoteBuild = true;
             path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.vaasanas;
+          };
+        };
+
+        nixos-dev = {
+          hostname = "192.168.178.104";
+          profiles.system = {
+            user = "root";
+            sshUser = "lajp";
+            interactiveSudo = true;
+            remoteBuild = true;
+            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.nixos-dev;
           };
         };
 
