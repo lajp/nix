@@ -39,23 +39,23 @@ in
     distributedBuilds = true;
 
     buildMachines = [
-      {
-        hostName = "192.168.178.114";
-        #system = "x86_64-linux";
-        systems = [
-          "x86_64-linux"
-          "aarch64-linux"
-        ];
-        protocol = "ssh-ng";
-        maxJobs = 48;
-        speedFactor = 2;
-        supportedFeatures = [
-          "benchmark"
-          "big-parallel"
-        ];
-        sshUser = "luukas";
-        sshKey = "/home/lajp/.ssh/id_ed25519";
-      }
+      #{
+      #  hostName = "192.168.178.114";
+      #  #system = "x86_64-linux";
+      #  systems = [
+      #    "x86_64-linux"
+      #    "aarch64-linux"
+      #  ];
+      #  protocol = "ssh-ng";
+      #  maxJobs = 48;
+      #  speedFactor = 2;
+      #  supportedFeatures = [
+      #    "benchmark"
+      #    "big-parallel"
+      #  ];
+      #  sshUser = "luukas";
+      #  sshKey = "/home/lajp/.ssh/id_ed25519";
+      #}
     ];
 
     extraOptions = ''

@@ -329,7 +329,7 @@
         };
 
         nixos-dev = {
-          hostname = "192.168.178.104";
+          hostname = "nixos-dev";
           profiles.system = {
             user = "root";
             sshUser = "lajp";

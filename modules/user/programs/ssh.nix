@@ -42,6 +42,10 @@ let
 
     nixos-dev = {
       forwardAgent = true;
+      extraOptions = {
+        StreamLocalBindUnlink = "yes";
+        RemoteForward = "/run/user/1000/gnupg/S.gpg-agent /run/user/1000/gnupg/S.gpg-agent.extra";
+      };
     };
 
     nix1 = {
