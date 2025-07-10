@@ -33,5 +33,6 @@
     ./zfs-backup
     ./vpn.nix
     ./adguardhome.nix
+    ./nextcloud.nix
   ];
 }

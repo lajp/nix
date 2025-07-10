@@ -128,11 +128,13 @@
             services.tailscale.enable = true;
             services.smartd.enable = true;
             services.nixarr.enable = true;
+            services.nextcloud.enable = true;
             services.dyndns = {
               enable = true;
               domains = [
                 "jellyfin.lajp.fi"
                 "jellyseerr.lajp.fi"
+                "pilvi.lajp.fi"
               ];
             };
             hardware.zfs.enable = true;
@@ -171,22 +173,22 @@
             services.smartd.enable = true;
           };
         };
-        nixos-dev = mkHost {
-          extraModules = with inputs.nixos-hardware.nixosModules; [
-            common-pc
-            common-cpu-intel
-          ];
+        #nixos-dev = mkHost {
+        #  extraModules = with inputs.nixos-hardware.nixosModules; [
+        #    common-pc
+        #    common-cpu-intel
+        #  ];
 
-          systemConfig = {
-            core.hostname = "nixos-dev";
-            services.ssh.enable = true;
-            services.tailscale.enable = true;
-          };
+        #  systemConfig = {
+        #    core.hostname = "nixos-dev";
+        #    services.ssh.enable = true;
+        #    services.tailscale.enable = true;
+        #  };
 
-          userConfig = {
-            editors.nvim.enable = true;
-          };
-        };
+        #  userConfig = {
+        #    editors.nvim.enable = true;
+        #  };
+        #};
         t480 = mkHost {
           extraModules = with inputs.nixos-hardware.nixosModules; [
             lenovo-thinkpad-t480
@@ -344,7 +346,7 @@
           profiles.system = {
             user = "root";
             sshUser = "lajp";
-            #remoteBuild = true;
+            remoteBuild = true;
             path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.ankka;
           };
         };

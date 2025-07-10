@@ -19,6 +19,7 @@ in
   config = mkIf cfg.enable {
     age.secrets.email-password.rekeyFile = ../../../secrets/email-password.age;
     age.secrets.alerts-email-hashed.rekeyFile = ../../../secrets/alerts-email-hashed.age;
+    age.secrets.nextcloud-email-hashed.rekeyFile = ../../../secrets/nextcloud-email-hashed.age;
 
     mailserver = {
       enable = true;
@@ -44,6 +45,11 @@ in
 
         "alerts@lajp.fi" = {
           hashedPasswordFile = config.age.secrets.alerts-email-hashed.path;
+          sendOnly = true;
+        };
+
+        "nextcloud@lajp.fi" = {
+          hashedPasswordFile = config.age.secrets.nextcloud-email-hashed.path;
           sendOnly = true;
         };
       };

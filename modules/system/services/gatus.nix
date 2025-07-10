@@ -69,6 +69,16 @@ in
               alerts = [ { type = "email"; } ];
             }
             {
+              name = "Nextcloud";
+              group = "public";
+              url = "https://pilvi.lajp.fi/status.php";
+              conditions = [
+                "[STATUS] == 200"
+                "[CERTIFICATE_EXPIRATION] > 48h"
+              ];
+              alerts = [ { type = "email"; } ];
+            }
+            {
               name = "mailserver";
               group = "public";
               url = "starttls://mail.portfo.rs:587";
