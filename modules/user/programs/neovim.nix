@@ -139,6 +139,8 @@ in
           settings.current_line_blame = true;
         };
 
+        hunk.enable = true;
+
         nix.enable = true;
 
         typst-vim.enable = true;
@@ -157,10 +159,10 @@ in
             pylsp.enable = true;
             rust_analyzer = {
               enable = true;
-              installCargo = true;
-              installRustc = true;
-              cargoPackage = pkgs.rustup;
-              rustcPackage = pkgs.rustup;
+              installCargo = false;
+              installRustc = false;
+              #cargoPackage = null;
+              #rustcPackage = null;
               settings.check.command = "clippy";
             };
             tinymist.enable = true;
@@ -240,6 +242,11 @@ in
             substituteInPlace autoload/vimchant.vim --replace enchant ${enchant-voikko}/bin/enchant-2
             substituteInPlace plugin/vimchant.vim --replace enchant ${enchant-voikko}/bin/enchant-2
           '';
+        })
+
+        (pkgs.vimUtils.buildVimPlugin {
+          name = "golf";
+          src = inputs.golf;
         })
       ];
 

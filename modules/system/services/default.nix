@@ -34,5 +34,6 @@
     ./vpn.nix
     ./adguardhome.nix
     ./nextcloud.nix
+    ./memegenerator.nix
   ];
 }

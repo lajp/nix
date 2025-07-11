@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }:
 let
@@ -16,9 +17,25 @@ in
       };
 
       ui = {
+        diff-editor = ":builtin";
         pager = ":builtin";
         default-command = "log";
         show-cryptographic-signatures = true;
+      };
+
+      merge-tools.nvim = {
+        edit-args = [
+          "-d"
+          "$left"
+          "$right"
+        ];
+      };
+      merge-tools.nvim-hunk = {
+        program = "nvim";
+        edit-args = [
+          "-c"
+          "DiffEditor $left $right $output"
+        ];
       };
 
       signing = {

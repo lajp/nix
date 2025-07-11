@@ -79,6 +79,11 @@
       url = "github:lajp/lajp.fi";
     };
 
+    memegenerator = {
+      url = "github:lajp/memegenerator";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     deploy-rs.url = "github:serokell/deploy-rs";
 
     simple-nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-25.05";
@@ -87,6 +92,11 @@
       #url = "github:rasmus-kirk/nixarr/main";
       url = "github:lajp/nixarr/cross-seed-fix";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    golf = {
+      url = "github:vuciv/golf";
+      flake = false;
     };
   };
 
@@ -173,22 +183,22 @@
             services.smartd.enable = true;
           };
         };
-        #nixos-dev = mkHost {
-        #  extraModules = with inputs.nixos-hardware.nixosModules; [
-        #    common-pc
-        #    common-cpu-intel
-        #  ];
+        nixos-dev = mkHost {
+          extraModules = with inputs.nixos-hardware.nixosModules; [
+            common-pc
+            common-cpu-intel
+          ];
 
-        #  systemConfig = {
-        #    core.hostname = "nixos-dev";
-        #    services.ssh.enable = true;
-        #    services.tailscale.enable = true;
-        #  };
+          systemConfig = {
+            core.hostname = "nixos-dev";
+            services.ssh.enable = true;
+            services.tailscale.enable = true;
+          };
 
-        #  userConfig = {
-        #    editors.nvim.enable = true;
-        #  };
-        #};
+          userConfig = {
+            editors.nvim.enable = true;
+          };
+        };
         t480 = mkHost {
           extraModules = with inputs.nixos-hardware.nixosModules; [
             lenovo-thinkpad-t480
@@ -290,6 +300,7 @@
             services.headscale.enable = true;
             services.tailscale.enable = true;
             services.website.enable = true;
+            #services.memegenerator.enable = true;
             services.formicer-website.enable = false;
           };
         };
@@ -346,7 +357,7 @@
           profiles.system = {
             user = "root";
             sshUser = "lajp";
-            remoteBuild = true;
+            #remoteBuild = true;
             path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.ankka;
           };
         };

@@ -24,11 +24,11 @@ in
           repeat-rate = 20;
 
           xkb = {
-            layout = "fi,us(colemak_dh_iso)";
-            #layout = "fi";
+            #layout = "fi,us(colemak_dh_iso)";
+            layout = "fi";
             #variant = ",colemak_dh_iso";
-            #options = "caps:escape,grp:alt_shift_toggle";
-            options = "caps:swapescape,caps:swapescape,grp:alt_shift_toggle";
+            options = "caps:escape";
+            #options = "caps:swapescape,caps:swapescape,grp:alt_shift_toggle";
           };
         };
 
