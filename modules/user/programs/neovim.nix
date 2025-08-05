@@ -152,7 +152,8 @@ in
             nixd = {
               enable = true;
               settings = {
-                formatting.command = [ "${pkgs.nixfmt-rfc-style}/bin/nixfmt" ];
+                #formatting.command = [ "${pkgs.nixfmt-rfc-style}/bin/nixfmt" ];
+                formatting.command = [ "${lib.getExe pkgs.nixpkgs-fmt}" ];
               };
             };
             gleam.enable = true;

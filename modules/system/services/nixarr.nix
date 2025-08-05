@@ -89,6 +89,8 @@ in
         extraSettings = {
           incomplete-dir-enable = false;
           start-added-torrents = false;
+          peer-limit-global = 100;
+          peer-limit-per-torrent = 25;
         };
       };
 
