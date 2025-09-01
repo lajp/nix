@@ -1,0 +1,32 @@
+@use "sass:color";
+
+// CHEESE theme overrides (readable version)
+
+$primary: #d4a017 !default; // Toasted cheese / amber, readable on white
+$secondary: #4b2e1e !default; // Dark beer / rye bread brown
+$red: #c62828 !default; // Strong paprika red
+$green: #388e3c !default; // Fresh herb green
+$text-muted: #7a5c3a !default; // Muted brown-beige, subtle but readable
+
+// Keep links visible
+$force-link-underline: true !default;
+
+// Hover logic – works with this lighter primary
+$lighter-primary-hover: true !default;
+$lighter-secondary-hover: true !default;
+
+// Backgrounds and text
+$secondary-background: #faf3e0 !default; // Warm cream, not stark white
+$secondary-text-color: #5a3d28 !default; // Toasty brown for contrast
+
+$header-logo: true !default;
+
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
+// Signup states
+$signup-state-not-opened: $body-color !default;
+$signup-state-opened: $green !default;
+$signup-state-closed: $red !default;
+$signup-state-disabled: color.change($body-color, $alpha: 0.45) !default;

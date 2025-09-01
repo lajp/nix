@@ -14,8 +14,8 @@
 
   boot.binfmt.emulatedSystems = [
     "aarch64-linux"
-    #"armv7l-linux"
-    #"armv6l-linux"
+    "armv7l-linux"
+    "armv6l-linux"
   ];
 
   boot.loader.systemd-boot.enable = true;

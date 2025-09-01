@@ -43,6 +43,7 @@ in
       gimp
       sxiv
       jellyfin-media-player
+      telegram-desktop
       steam
       libreoffice-fresh
     ];

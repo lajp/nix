@@ -1,8 +1,7 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
+{ config
+, lib
+, pkgs
+, ...
 }:
 let
   cfg = config.lajp.services.nextcloud;
@@ -24,7 +23,7 @@ in
       enable = true;
       package = pkgs.nextcloud31;
       extraApps = {
-        inherit (pkgs.nextcloud31Packages.apps) forms;
+        inherit (pkgs.nextcloud31Packages.apps) forms onlyoffice;
       };
       hostName = "pilvi.lajp.fi";
       https = true;

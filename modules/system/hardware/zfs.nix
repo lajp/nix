@@ -43,9 +43,20 @@ in
     boot = {
       supportedFilesystems = [ "zfs" ];
       zfs.forceImportRoot = false;
-      kernelParams = [ "zfs.zfs_arc_max=12884901888" ];
+      kernelParams = [ "zfs.zfs_arc_max=2147483648" ]; # 2 GB
       extraModprobeConfig = ''
-        options zfs l2arc_noprefetch=0 l2arc_write_boost=33554432 l2arc_write_max=16777216 zfs_arc_max=2147483648
+        # Disable prefetching (saves memory at cost of sequential read speed)
+        options zfs zfs_prefetch_disable=1
+
+        # Make sure no ARC inflation happens via module options
+        options zfs zfs_arc_min=16777216   # 16 MB min ARC
+        options zfs zfs_arc_meta_limit=268435456  # 256 MB metadata limit
+
+        # Disable any L2ARC overhead unless you actually add an SSD cache
+        options zfs l2arc_noprefetch=1
+        options zfs l2arc_feed_again=0
+        options zfs l2arc_write_max=0
+        options zfs l2arc_write_boost=0
       '';
     };
 

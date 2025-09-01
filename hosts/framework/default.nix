@@ -7,6 +7,7 @@
   imports = [
     ./boot.nix
     ./hardware-configuration.nix
+    ../../nixos/ilmomasiina.nix
   ];
 
   networking.useDHCP = lib.mkDefault true;

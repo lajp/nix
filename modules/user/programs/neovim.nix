@@ -1,10 +1,9 @@
-{
-  lib,
-  config,
-  inputs,
-  pkgs,
-  pkgs-unstable,
-  ...
+{ lib
+, config
+, inputs
+, pkgs
+, pkgs-unstable
+, ...
 }:
 let
   inherit (lib) mkEnableOption mkIf;
@@ -152,8 +151,8 @@ in
             nixd = {
               enable = true;
               settings = {
-                #formatting.command = [ "${pkgs.nixfmt-rfc-style}/bin/nixfmt" ];
-                formatting.command = [ "${lib.getExe pkgs.nixpkgs-fmt}" ];
+                formatting.command = [ "${pkgs.nixfmt-rfc-style}/bin/nixfmt" ];
+                #formatting.command = [ "${lib.getExe pkgs.nixpkgs-fmt}" ];
               };
             };
             gleam.enable = true;

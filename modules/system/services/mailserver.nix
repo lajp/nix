@@ -20,6 +20,7 @@ in
     age.secrets.email-password.rekeyFile = ../../../secrets/email-password.age;
     age.secrets.alerts-email-hashed.rekeyFile = ../../../secrets/alerts-email-hashed.age;
     age.secrets.nextcloud-email-hashed.rekeyFile = ../../../secrets/nextcloud-email-hashed.age;
+    age.secrets.no-reply-email-hashed.rekeyFile = ../../../secrets/no-reply-email-hashed.age;
 
     mailserver = {
       enable = true;
@@ -50,6 +51,11 @@ in
 
         "nextcloud@lajp.fi" = {
           hashedPasswordFile = config.age.secrets.nextcloud-email-hashed.path;
+          sendOnly = true;
+        };
+
+        "no-reply@lajp.fi" = {
+          hashedPasswordFile = config.age.secrets.no-reply-email-hashed.path;
           sendOnly = true;
         };
       };

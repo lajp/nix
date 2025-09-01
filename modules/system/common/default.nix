@@ -65,6 +65,7 @@ in
 
   nixpkgs = {
     overlays = [
+      (import ../../../pkgs/default.nix)
       inputs.nur.overlays.default
       inputs.niri.overlays.niri
     ];

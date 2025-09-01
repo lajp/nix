@@ -115,6 +115,8 @@
       inherit (utils) mkHost;
     in
     {
+      overlays.default = import ./pkgs/default.nix;
+
       nixosConfigurations = {
         nas = mkHost {
           extraModules = with inputs.nixos-hardware.nixosModules; [
@@ -183,22 +185,22 @@
             services.smartd.enable = true;
           };
         };
-        nixos-dev = mkHost {
-          extraModules = with inputs.nixos-hardware.nixosModules; [
-            common-pc
-            common-cpu-intel
-          ];
+        #nixos-dev = mkHost {
+        #  extraModules = with inputs.nixos-hardware.nixosModules; [
+        #    common-pc
+        #    common-cpu-intel
+        #  ];
 
-          systemConfig = {
-            core.hostname = "nixos-dev";
-            services.ssh.enable = true;
-            services.tailscale.enable = true;
-          };
+        #  systemConfig = {
+        #    core.hostname = "nixos-dev";
+        #    services.ssh.enable = true;
+        #    services.tailscale.enable = true;
+        #  };
 
-          userConfig = {
-            editors.nvim.enable = true;
-          };
-        };
+        #  userConfig = {
+        #    editors.nvim.enable = true;
+        #  };
+        #};
         t480 = mkHost {
           extraModules = with inputs.nixos-hardware.nixosModules; [
             lenovo-thinkpad-t480
@@ -302,6 +304,7 @@
             services.website.enable = true;
             #services.memegenerator.enable = true;
             services.formicer-website.enable = false;
+            services.cheese.enable = true;
           };
         };
       };
@@ -325,7 +328,7 @@
           profiles.system = {
             user = "root";
             interactiveSudo = true;
-            remoteBuild = true;
+            remoteBuild = false;
             path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.nas;
           };
         };
@@ -371,7 +374,10 @@
     // flake-utils.lib.eachDefaultSystem (system: rec {
       pkgs = import nixpkgs {
         inherit system;
-        overlays = [ agenix-rekey.overlays.default ];
+        overlays = [
+          agenix-rekey.overlays.default
+          self.overlays.default
+        ];
       };
       devShells.default = pkgs.mkShell {
         packages = [
