@@ -3,6 +3,7 @@
   nodejs,
   python3,
   pnpm,
+  brotli,
   makeWrapper,
   fetchFromGitHub,
   lib,
@@ -35,6 +36,7 @@ stdenv.mkDerivation (finalAttrs: {
     pnpm
     pnpm.configHook
     makeWrapper
+    brotli
     python3
   ];
 
@@ -80,6 +82,11 @@ stdenv.mkDerivation (finalAttrs: {
     npm run build
 
     runHook postBuild
+  '';
+
+  postBuild = ''
+    find packages/ilmomasiina-frontend/build -type f\
+      -regex ".*\.\(js\|json\|html\|map\|css\|svg\|ico\|txt\)" -exec gzip -k "{}" \; -exec brotli "{}" \;
   '';
 
   installPhase = ''
