@@ -1,9 +1,9 @@
-{ ... }:
+{ inputs, ... }:
 {
   imports = [
     ./hardware-configuration.nix
     ./networking.nix # generated at runtime by nixos-infect
-
+    inputs.esn-ical.nixosModules.default
   ];
 
   nixpkgs.hostPlatform = "aarch64-linux";
@@ -21,4 +21,15 @@
 
   age.rekey.hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHDmWaaKvkMOth52GJF89viwjTpWQRH+agoJ6MLajh8H
 ";
+
+  services.esn-ical = {
+    enable = true;
+    port = 3002;
+  };
+
+  services.nginx.virtualHosts."esn-ical.lajp.fi" = {
+    forceSSL = true;
+    enableACME = true;
+    locations."/".proxyPass = "http://localhost:3002";
+  };
 }

@@ -79,6 +79,8 @@
       url = "github:lajp/lajp.fi";
     };
 
+    esn-ical.url = "github:lajp/esn-ical";
+
     memegenerator = {
       url = "github:lajp/memegenerator";
       inputs.nixpkgs.follows = "nixpkgs";
