@@ -258,6 +258,7 @@
               gpu = "amd";
             };
             rickroll.enable = true;
+            virt-manager.enable = true;
           };
 
           userConfig = {

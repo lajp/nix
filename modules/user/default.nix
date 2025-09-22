@@ -21,6 +21,12 @@ in
 
     packages = [ pkgs.xdg-utils ];
     stateVersion = "24.05";
+
+    pointerCursor = {
+      gtk.enable = true;
+      package = pkgs.vanilla-dmz;
+      name = "Vanilla-DMZ";
+    };
   };
 
   xdg = {

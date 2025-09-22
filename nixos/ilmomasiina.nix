@@ -16,13 +16,20 @@ let
 in
 {
   options.services.ilmomasiina = {
-    enable = mkEnableOption "enable ilmomasiina";
+    enable = mkEnableOption "Enable ilmomasiina";
 
     user = mkOption {
       default = "ilmomasiina";
       example = "signups";
       description = "The user that runs the service";
       type = types.str;
+    };
+
+    createDatabase = mkOption {
+      default = true;
+      example = false;
+      description = "Create the database locally";
+      type = types.bool;
     };
 
     package = mkPackageOption pkgs "ilmomasiina" { };
@@ -59,7 +66,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    services.postgresql = {
+    services.postgresql = mkIf cfg.createDatabase {
       enable = true;
 
       ensureUsers = [
