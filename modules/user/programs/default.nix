@@ -82,6 +82,7 @@ in
   # fails for some reason
   # Related: https://github.com/SenchoPens/base16.nix/issues/20
   #stylix.targets.tmux.enable = false;
+  stylix.polarity = "dark";
 
   programs = {
     starship = {
