@@ -36,5 +36,6 @@
     ./nextcloud.nix
     ./memegenerator.nix
     ./cheese.nix
+    ./crabfit.nix
   ];
 }

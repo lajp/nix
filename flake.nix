@@ -306,6 +306,7 @@
             #services.memegenerator.enable = true;
             services.formicer-website.enable = false;
             services.cheese.enable = true;
+            services.crabfit.enable = true;
           };
         };
       };
