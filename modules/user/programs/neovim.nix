@@ -1,9 +1,10 @@
-{ lib
-, config
-, inputs
-, pkgs
-, pkgs-unstable
-, ...
+{
+  lib,
+  config,
+  inputs,
+  pkgs,
+  pkgs-unstable,
+  ...
 }:
 let
   inherit (lib) mkEnableOption mkIf;
@@ -36,11 +37,13 @@ let
     _final: prev: {
       buildInputs = [
         pkgs.libvoikko
-      ] ++ prev.buildInputs;
+      ]
+      ++ prev.buildInputs;
 
       configureFlags = [
         "--enable-voikko"
-      ] ++ prev.configureFlags;
+      ]
+      ++ prev.configureFlags;
     }
   );
 in
@@ -151,8 +154,18 @@ in
             nixd = {
               enable = true;
               settings = {
-                formatting.command = [ "${pkgs.nixfmt-rfc-style}/bin/nixfmt" ];
-                #formatting.command = [ "${lib.getExe pkgs.nixpkgs-fmt}" ];
+                # Use old formatter for work
+                formatting.command =
+                  let
+                    conditionalFormatter = pkgs.writeShellScript "conditional-formatter" ''
+                      if [[ "$(pwd)" == "$HOME/git/braiins"* ]]; then
+                        exec ${lib.getExe pkgs.nixpkgs-fmt}
+                      else
+                        exec ${lib.getExe pkgs.nixfmt-rfc-style}
+                      fi
+                    '';
+                  in
+                  [ "${conditionalFormatter}" ];
               };
             };
             gleam.enable = true;
