@@ -35,7 +35,7 @@
     ./adguardhome.nix
     ./nextcloud.nix
     ./memegenerator.nix
-    ./cheese.nix
+    ./cheese
     ./crabfit.nix
   ];
 }

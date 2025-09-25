@@ -67,7 +67,7 @@ stdenv.mkDerivation (finalAttrs: {
     ''
     + lib.optionalString (favicon != null) ''
       rm -rf packages/ilmomasiina-frontend/public/*.png
-      cp -f ${favicon}/* packages/ilmomasiina-frontend/public
+      cp -f ${favicon} packages/ilmomasiina-frontend/public/favicon.ico
     ''
     + lib.optionalString (css != null) ''
       cp -f ${css} packages/ilmomasiina-components/src/styles/_definitions.scss
