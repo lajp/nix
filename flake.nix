@@ -387,6 +387,7 @@
         packages = [
           pkgs.agenix-rekey
           deploy-rs.packages.${system}.default
+          pkgs.nh
         ];
       };
     });

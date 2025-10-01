@@ -17,6 +17,7 @@ in
       enable = true;
       qemu.vhostUserPackages = with pkgs; [ virtiofsd ];
     };
+    virtualisation.spiceUSBRedirection.enable = true;
 
     users.users.${config.lajp.user.username}.extraGroups = [ "libvirtd" ];
 

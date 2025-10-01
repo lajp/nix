@@ -43,7 +43,7 @@ in
       gimp
       sxiv
       jellyfin-media-player
-      telegram-desktop
+      pkgs-unstable.telegram-desktop
       steam
       libreoffice-fresh
     ];

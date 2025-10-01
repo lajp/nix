@@ -178,7 +178,10 @@ in
               #rustcPackage = null;
               settings.check.command = "clippy";
             };
-            tinymist.enable = true;
+            tinymist = {
+              enable = true;
+              settings.formatterMode = "typstyle";
+            };
             idris2_lsp.enable = true;
             metals.enable = true;
             terraformls = {
