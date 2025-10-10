@@ -135,13 +135,6 @@ in
       animations.slowdown = 0.6;
 
       spawn-at-startup = [
-        # See https://github.com/YaLTeR/niri/wiki/Xwayland
-        {
-          command = [
-            "${lib.getExe pkgs.xwayland-satellite-unstable}"
-            ":25"
-          ];
-        }
         {
           command = [
             "${lib.getExe pkgs.swaybg}"
@@ -153,8 +146,9 @@ in
         }
       ];
 
-      environment = {
-        DISPLAY = ":25";
+      xwayland-satellite = {
+        enable = true;
+        path = lib.getExe pkgs.xwayland-satellite-unstable;
       };
 
       binds =
