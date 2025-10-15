@@ -1,5 +1,5 @@
 {
-  pkgs,
+  pkgs-unstable,
   config,
   lib,
   ...
@@ -14,7 +14,9 @@ in
       enable = true;
       config.hwdec = "auto-safe";
 
-      scripts = [ pkgs.mpvScripts.mpris ];
+      package = pkgs-unstable.mpv.override {
+        scripts = [ pkgs-unstable.mpvScripts.mpris ];
+      };
 
       extraInput = ''
         n playlist-next
