@@ -714,11 +714,11 @@
         "systems": "systems_6"
       },
       "locked": {
-        "lastModified": 1758894457,
-        "narHash": "sha256-jyMxRi2E0yRr3WYaRuVEJcHg4DaDaTNFUSjFLD2wfp0=",
+        "lastModified": 1760777718,
+        "narHash": "sha256-3iHfKqeYdv1FeVGVGx5F/ymiYCIMnCWzPCCpF/BRN/o=",
         "owner": "lajp",
         "repo": "lajp.fi",
-        "rev": "491186fee9a917c38c64a09099d4218e3df75757",
+        "rev": "dc7fa1ff7ef66f7b6f48d6f890dcb7f740d83202",
         "type": "github"
       },
       "original": {
