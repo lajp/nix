@@ -47,7 +47,7 @@ stdenv.mkDerivation (finalAttrs: {
       src
       ;
     fetcherVersion = 2;
-    hash = "sha256-u/7s4dzJV0csZXpz+61QKarCAvKelQDC9LRwE4J1BJU=";
+    hash = "sha256-ky6slMf64bPavmlRHfqF7tJNL3JRliHPAs7e+G9VjAg=";
   };
 
   inherit

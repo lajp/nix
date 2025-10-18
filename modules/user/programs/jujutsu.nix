@@ -41,8 +41,9 @@ in
       signing = {
         backend = "gpg";
         behaviour = "own";
-        #key = gitCfg.signing.key;
       };
+
+      git.sign-on-push = true;
 
       "--scope" = [
         {
