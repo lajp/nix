@@ -6,6 +6,10 @@ on:
   schedule:
     - cron: 0 0 * * 1
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -60,18 +64,10 @@ jobs:
           BRANCH_NAME: ${{ steps.branch.outputs.branch }}
         run: git push --force origin "$BRANCH_NAME"
 
-  build:
-    uses: ./.github/workflows/ci.yml
-    needs: update
-    if: needs.update.outputs.update_available == 'true'
-    with:
-      branch: ${{ needs.update.outputs.branch }}
-
   create-pr:
     runs-on: ubuntu-latest
     needs:
       - update
-      - build
     if: needs.update.outputs.update_available == 'true'
 
     steps:
