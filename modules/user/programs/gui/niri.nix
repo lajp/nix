@@ -37,7 +37,10 @@ in
           dwtp = true;
         };
 
-        focus-follows-mouse.enable = true;
+        focus-follows-mouse = {
+          enable = true;
+          max-scroll-amount = "1%";
+        };
       };
 
       screenshot-path = "~/Pictures/Screenshots/%Y-%m%dT%H:%M:%S.png";

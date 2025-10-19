@@ -46,6 +46,8 @@ in
       pkgs-unstable.telegram-desktop
       steam
       libreoffice-fresh
+
+      wifi-qr
     ];
 
     programs = {

@@ -100,6 +100,8 @@
       url = "github:vuciv/golf";
       flake = false;
     };
+
+    yensid.url = "github:garnix-io/yensid";
   };
 
   outputs =
@@ -242,7 +244,10 @@
 
             services.restic.enable = true;
             services.niri.enable = true;
-            services.ssh.enable = true;
+            services.ssh = {
+              enable = true;
+              port = 2222;
+            };
             services.tailscale.enable = true;
             services.vpn = {
               braiins.enable = true;
@@ -261,6 +266,7 @@
             };
             rickroll.enable = true;
             virt-manager.enable = true;
+            services.yensid.enable = true;
           };
 
           userConfig = {

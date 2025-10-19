@@ -37,5 +37,6 @@
     ./memegenerator.nix
     ./cheese
     ./crabfit.nix
+    ./yensid.nix
   ];
 }

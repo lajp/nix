@@ -151,6 +151,7 @@ in
           enable = true;
           servers = {
             clangd.enable = true;
+            jdtls.enable = true;
             nixd = {
               enable = true;
               settings = {

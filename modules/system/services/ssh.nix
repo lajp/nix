@@ -4,12 +4,24 @@
   ...
 }:
 let
-  inherit (lib) mkEnableOption mkIf;
+  inherit (lib)
+    mkEnableOption
+    mkIf
+    mkOption
+    types
+    ;
   inherit (config.lajp.user) username;
   cfg = config.lajp.services.ssh;
 in
 {
-  options.lajp.services.ssh.enable = mkEnableOption "Enable the OpenSSH server";
+  options.lajp.services.ssh = {
+    enable = mkEnableOption "Enable the OpenSSH server";
+    port = mkOption {
+      default = 22;
+      description = "ssh port";
+      type = types.port;
+    };
+  };
   config = mkIf cfg.enable {
     services.openssh = {
       enable = true;
@@ -20,6 +32,7 @@ in
         PermitRootLogin = "without-password";
         StreamLocalBindUnlink = "yes";
       };
+      ports = [ cfg.port ];
     };
 
     services.fail2ban.enable = true;

@@ -49,7 +49,7 @@ let
     };
 
     nix1 = {
-      hostname = "nix1.dev.hq.ii.zone";
+      hostname = "nix1.dev.ii.zone";
       user = "luukas.portfors";
       forwardAgent = true;
     };

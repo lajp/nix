@@ -30,6 +30,7 @@ in
   };
 
   xdg = {
+    enable = true;
     mimeApps.enable = true;
 
     userDirs = {
