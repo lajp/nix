@@ -31,6 +31,7 @@ in
         KbdInteractiveAuthentication = false;
         PermitRootLogin = "without-password";
         StreamLocalBindUnlink = "yes";
+        X11Forwarding = true;
       };
       ports = [ cfg.port ];
     };

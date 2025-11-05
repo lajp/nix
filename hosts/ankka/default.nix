@@ -34,4 +34,16 @@
     enableACME = true;
     locations."/".proxyPass = "http://localhost:3002";
   };
+
+  services.nginx.virtualHosts."luuk.as" = {
+    forceSSL = true;
+    enableACME = true;
+    locations."/" = {
+      return = "200 Luukas";
+      extraConfig = ''
+        default_type text/plain;
+      '';
+    };
+  };
+  #networking.firewall.allowedTCPPorts = [ 55555 ];
 }

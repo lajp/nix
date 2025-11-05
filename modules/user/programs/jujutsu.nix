@@ -1,6 +1,6 @@
 {
   config,
-  pkgs,
+  pkgs-unstable,
   lib,
   ...
 }:
@@ -10,6 +10,9 @@ in
 {
   programs.jujutsu = {
     enable = true;
+
+    package = pkgs-unstable.jujutsu;
+
     settings = {
       user = {
         name = gitCfg.userName;

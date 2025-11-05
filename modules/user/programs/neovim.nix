@@ -59,6 +59,39 @@ in
 
     xdg.configFile."enchant/voikko".source = voikko-fi;
 
+    xdg.configFile."logrotate/nvim-lsp.conf".text = ''
+      ${config.home.homeDirectory}/.local/state/nvim/lsp.log {
+        daily
+        rotate 7
+        size 10M
+        compress
+        missingok
+        notifempty
+        copytruncate
+      }
+    '';
+
+    systemd.user.services.neovim-log-rotate = {
+      Unit.Description = "Rotate Neovim LSP log";
+      Service = {
+        Type = "oneshot";
+        ExecStart = "${pkgs.logrotate}/bin/logrotate ${config.xdg.configHome}/logrotate/nvim-lsp.conf --state ${config.xdg.stateHome}/logrotate.status";
+      };
+    };
+
+    systemd.user.timers.neovim-log-rotate = {
+      Unit.Description = "Rotate Neovim LSP log daily";
+
+      Timer = {
+        Unit = "neovim-log-rotate.service";
+        OnCalendar = "daily";
+      };
+
+      Install.WantedBy = [ "timers.target" ];
+    };
+
+    #stylix.targets.nixvim.enable = false;
+
     programs.nixvim = {
       enable = true;
       enableMan = false;
@@ -71,6 +104,11 @@ in
       filetype.extension = {
         mdx = "markdown";
       };
+
+      #colorschemes.gruvbox = {
+      #  enable = true;
+      #  settings.contrast = "hard";
+      #};
 
       opts = {
         clipboard = "unnamed";
@@ -175,6 +213,7 @@ in
               enable = true;
               installCargo = false;
               installRustc = false;
+              package = null;
               #cargoPackage = null;
               #rustcPackage = null;
               settings.check.command = "clippy";
