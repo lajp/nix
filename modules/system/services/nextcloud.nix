@@ -1,7 +1,8 @@
-{ config
-, lib
-, pkgs
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  ...
 }:
 let
   cfg = config.lajp.services.nextcloud;
@@ -21,9 +22,9 @@ in
 
     services.nextcloud = {
       enable = true;
-      package = pkgs.nextcloud31;
+      package = pkgs.nextcloud32;
       extraApps = {
-        inherit (pkgs.nextcloud31Packages.apps) forms onlyoffice;
+        inherit (pkgs.nextcloud32Packages.apps) forms onlyoffice;
       };
       hostName = "pilvi.lajp.fi";
       https = true;
@@ -39,10 +40,10 @@ in
         mail_smtpmode = "smtp";
         mail_sendmailmode = "smtp";
         mail_smtpauthtype = "PLAIN";
-        mail_smtpauth = 1;
+        mail_smtpauth = true;
         mail_smtphost = "mail.portfo.rs";
-        mail_smtpport = "587";
-        mail_smtpsecure = "tls";
+        mail_smtpport = 465;
+        mail_smtpsecure = "ssl";
         mail_smtpname = "nextcloud@lajp.fi";
       };
 

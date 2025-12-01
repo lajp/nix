@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   pkgs-nur,
   pkgs-unstable,
   ...
@@ -8,6 +9,41 @@
 let
   cfg = config.lajp.gui;
   inherit (lib) mkIf;
+
+  buildFirefoxXpiAddon = lib.makeOverridable (
+    {
+      stdenv,
+      fetchurl,
+      pname,
+      version,
+      addonId,
+      url ? "",
+      urls ? [ ], # Alternative for 'url' a list of URLs to try in specified order.
+      sha256,
+      meta,
+      ...
+    }:
+    stdenv.mkDerivation {
+      name = "${pname}-${version}";
+
+      inherit meta;
+
+      src = fetchurl { inherit url urls sha256; };
+
+      preferLocalBuild = true;
+      allowSubstitutes = true;
+
+      passthru = {
+        inherit addonId;
+      };
+
+      buildCommand = ''
+        dst="$out/share/mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+        mkdir -p "$dst"
+        install -v -m644 "$src" "$dst/${addonId}.xpi"
+      '';
+    }
+  );
 in
 {
   config = mkIf cfg.enable {
@@ -72,6 +108,14 @@ in
           darkreader
           bitwarden
           youtube-nonstop
+          (pkgs.callPackage buildFirefoxXpiAddon {
+            pname = "advent-of-code-charts";
+            version = "7.0.1";
+            addonId = "{b285d6d2-4311-418a-b5b4-cc9953c7b833}";
+            url = "https://addons.mozilla.org/firefox/downloads/file/4401543/advent_of_code_charts-7.0.1.xpi";
+            sha256 = "sha256-bCoD+giqw+PENrBzid0LQN4jE6IoYu+o9MJhZeRaA4E=";
+            meta = { };
+          })
         ];
 
         search = {

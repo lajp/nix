@@ -3,6 +3,7 @@
   config,
   pkgs,
   pkgs-unstable,
+  pkgs-nur,
   ...
 }:
 let
@@ -42,10 +43,12 @@ in
       mednaffe
       gimp
       sxiv
-      jellyfin-media-player
+      pkgs-nur.repos.mio.jellyfin-media-player
       pkgs-unstable.telegram-desktop
       steam
       libreoffice-fresh
+      kitsas
+      eddie
 
       wifi-qr
     ];

@@ -14,7 +14,7 @@ in
 
     domains = mkOption {
       description = "Domains to enable dynamic dns for";
-      type = types.listOf types.string;
+      type = types.listOf types.str;
     };
   };
 

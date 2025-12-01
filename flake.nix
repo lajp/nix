@@ -2,7 +2,7 @@
   description = "lajp NixOS flake";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
 
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
@@ -33,18 +33,18 @@
     nur.url = "github:nix-community/NUR";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.05";
+      url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     stylix = {
-      url = "github:danth/stylix/release-25.05";
+      url = "github:danth/stylix/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
 
     nixvim = {
-      url = "github:nix-community/nixvim/nixos-25.05";
+      url = "github:nix-community/nixvim/nixos-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -88,7 +88,7 @@
 
     deploy-rs.url = "github:serokell/deploy-rs";
 
-    simple-nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-25.05";
+    simple-nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-25.11";
 
     nixarr = {
       #url = "github:rasmus-kirk/nixarr/main";
@@ -265,6 +265,7 @@
               gpu = "amd";
             };
             rickroll.enable = true;
+            dreamlauncher.enable = true;
             virt-manager.enable = true;
             services.yensid.enable = true;
           };
@@ -354,16 +355,16 @@
           };
         };
 
-        nixos-dev = {
-          hostname = "nixos-dev";
-          profiles.system = {
-            user = "root";
-            sshUser = "lajp";
-            interactiveSudo = true;
-            remoteBuild = true;
-            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.nixos-dev;
-          };
-        };
+        #nixos-dev = {
+        #  hostname = "nixos-dev";
+        #  profiles.system = {
+        #    user = "root";
+        #    sshUser = "lajp";
+        #    interactiveSudo = true;
+        #    remoteBuild = true;
+        #    path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.nixos-dev;
+        #  };
+        #};
 
         ankka = {
           hostname = "ankka";

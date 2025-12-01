@@ -1,0 +1,54 @@
+From 20c3555fa301799f32fa29171d5ba8b4d8871d43 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Luukas=20P=C3=B6rtfors?= <lajp@iki.fi>
+Date: Tue, 30 Dec 2025 13:00:22 +0200
+Subject: [PATCH] fix: build for modern kernel
+
+---
+ Makefile          | 9 +++++++--
+ launcher_driver.c | 2 +-
+ 2 files changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 11c324a..7ac3379 100644
+--- a/Makefile
++++ b/Makefile
+@@ -3,7 +3,8 @@
+ #
+ 
+ obj-m += launcher_driver.o
+-KDIR := /lib/modules/$(shell uname -r)/build
++KERNEL_DIR ?= /lib/modules/$(shell uname -r)/build
++KDIR := $(KERNEL_DIR)
+ PWD := $(shell pwd)
+ 
+ CC := $(CROSS_COMPILE)gcc
+@@ -11,8 +12,12 @@ BIN := launcher_control
+ OBJECTS += $(BIN).c
+ 
+ all:
+-	$(MAKE) -C $(KDIR) M=${shell pwd} modules
++	$(MAKE) -C $(KDIR) M=$(PWD) modules
+ 	$(CC) $(OBJECTS) -o $(BIN)
++
++install:
++	$(MAKE) -C $(KDIR) M=$(PWD) modules_install
++	install -D -m 755 $(BIN) $(INSTALL_MOD_PATH)/bin/$(BIN)
+ 	
+ clean:
+ 	-$(MAKE) -C $(KDIR) M=${shell pwd} clean || true
+diff --git a/launcher_driver.c b/launcher_driver.c
+index af6354f..63c3000 100644
+--- a/launcher_driver.c
++++ b/launcher_driver.c
+@@ -138,7 +138,7 @@ static void launcher_int_in_callback(struct urb *urb)
+         
+         pr_debug("actual_length: 0x%X - data was: ", urb->actual_length);
+         for (i = 0; i < urb->actual_length; ++i) {
+-                pr_debug("0x%X ", (const unsigned char)(urb->transfer_buffer) + i);
++                pr_debug("0x%X ", ((const unsigned char *)urb->transfer_buffer)[i]);
+         }
+ 
+         if (urb->status) {
+-- 
+2.51.2
+

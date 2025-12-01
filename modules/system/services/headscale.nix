@@ -20,6 +20,10 @@ in
           logtail.enabled = false;
           dns = {
             base_domain = "tailnet.lajp.fi";
+            nameservers.global = [
+              "1.1.1.1"
+              "8.8.8.8"
+            ];
           };
         };
       };

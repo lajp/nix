@@ -1,7 +1,6 @@
 {
   config,
   pkgs-unstable,
-  lib,
   ...
 }:
 let
@@ -14,10 +13,7 @@ in
     package = pkgs-unstable.jujutsu;
 
     settings = {
-      user = {
-        name = gitCfg.userName;
-        email = gitCfg.userEmail;
-      };
+      inherit (gitCfg.settings) user;
 
       ui = {
         diff-editor = ":builtin";

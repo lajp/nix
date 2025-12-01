@@ -8,5 +8,6 @@
     ./gui
     ./virtualisation
     ./rickroll.nix
+    ./dreamlauncher.nix
   ];
 }

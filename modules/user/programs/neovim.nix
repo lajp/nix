@@ -103,7 +103,10 @@ in
 
       filetype.extension = {
         mdx = "markdown";
+        stlc = "stlcpp";
       };
+
+      extraFiles."syntax/stlcpp.vim".source = ../../../stlcpp.vim;
 
       #colorschemes.gruvbox = {
       #  enable = true;

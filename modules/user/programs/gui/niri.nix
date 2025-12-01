@@ -54,6 +54,13 @@ in
           };
         };
 
+        "ASUSTek COMPUTER INC VG245 H4LMQS062535" = {
+          position = {
+            x = 0;
+            y = -1080;
+          };
+        };
+
         "HP Inc. HP Z27u G3 CN42233KPP" = {
           position = {
             x = 0;

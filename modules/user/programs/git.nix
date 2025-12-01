@@ -5,8 +5,10 @@
 {
   programs.git = {
     enable = true;
-    userName = osConfig.lajp.user.realName;
-    userEmail = "lajp@iki.fi";
+    settings.user = {
+      name = osConfig.lajp.user.realName;
+      email = "lajp@iki.fi";
+    };
 
     aliases = {
       br = "branch";

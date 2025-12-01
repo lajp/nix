@@ -21,6 +21,7 @@ in
     age.secrets.alerts-email-hashed.rekeyFile = ../../../secrets/alerts-email-hashed.age;
     age.secrets.nextcloud-email-hashed.rekeyFile = ../../../secrets/nextcloud-email-hashed.age;
     age.secrets.no-reply-email-hashed.rekeyFile = ../../../secrets/no-reply-email-hashed.age;
+    age.secrets.otanix-nextcloud-email-hashed.rekeyFile = ../../../secrets/otanix-nextcloud-email-hashed.age;
 
     mailserver = {
       enable = true;
@@ -29,7 +30,13 @@ in
         "lajp.fi"
         "portfo.rs"
         "formicer.com"
+        "nextcloud.otanix.fi"
       ];
+
+      stateVersion = 3;
+
+      # This was on by default but was changed in 25.11 without any notice which completely broke my email :|
+      enableSubmission = true;
 
       # A list of all login accounts. To create the password hashes, use
       # nix-shell -p mkpasswd --run 'mkpasswd -sm bcrypt'
@@ -56,6 +63,11 @@ in
 
         "no-reply@lajp.fi" = {
           hashedPasswordFile = config.age.secrets.no-reply-email-hashed.path;
+          sendOnly = true;
+        };
+
+        "system@nextcloud.otanix.fi" = {
+          hashedPasswordFile = config.age.secrets.otanix-nextcloud-email-hashed.path;
           sendOnly = true;
         };
       };
