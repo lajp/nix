@@ -1,0 +1,164 @@
+{
+  "uid": "nixos-nginx-analytics",
+  "title": "Nginx Analytics (Detailed)",
+  "tags": ["nixos", "prometheus", "nginx", "logs"],
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "30s",
+  "templating": {
+    "list": [
+      {
+        "name": "job",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": null },
+        "query": "label_values(nginx_http_response_count_total, job)",
+        "multi": true,
+        "includeAll": true,
+        "refresh": 1
+      },
+      {
+        "name": "instance",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": null },
+        "query": "label_values(nginx_http_response_count_total{job=~\"$job\"}, instance)",
+        "multi": true,
+        "includeAll": true,
+        "refresh": 1
+      },
+      {
+        "name": "vhost",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": null },
+        "query": "label_values(nginx_http_response_count_total{job=~\"$job\", instance=~\"$instance\"}, vhost)",
+        "multi": true,
+        "includeAll": true,
+        "refresh": 1
+      }
+    ]
+  },
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Total Requests (5m)",
+      "gridPos": { "x": 0, "y": 0, "w": 4, "h": 4 },
+      "targets": [
+        {
+          "expr": "sum(increase(nginx_http_response_count_total{job=~\"$job\",instance=~\"$instance\",vhost=~\"$vhost\"}[5m]))",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Error Rate (5xx)",
+      "gridPos": { "x": 4, "y": 0, "w": 4, "h": 4 },
+      "targets": [
+        {
+          "expr": "(sum(rate(nginx_http_response_count_total{job=~\"$job\",instance=~\"$instance\",vhost=~\"$vhost\",status=~\"5..\"}[5m])) or vector(0)) / sum(rate(nginx_http_response_count_total{job=~\"$job\",instance=~\"$instance\",vhost=~\"$vhost\"}[5m]))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "percent", "min": 0, "max": 1, "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null }, { "color": "red", "value": 0.01 } ] } }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Average Response Time",
+      "gridPos": { "x": 8, "y": 0, "w": 4, "h": 4 },
+      "targets": [
+        {
+          "expr": "sum(rate(nginx_http_response_time_seconds_hist_sum{job=~\"$job\",instance=~\"$instance\",vhost=~\"$vhost\",status!=\"101\",method!=\"\"}[5m])) / sum(rate(nginx_http_response_time_seconds_hist_count{job=~\"$job\",instance=~\"$instance\",vhost=~\"$vhost\",status!=\"101\",method!=\"\"}[5m]))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "s" }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "P95 Response Time",
+      "gridPos": { "x": 12, "y": 0, "w": 4, "h": 4 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(nginx_http_response_time_seconds_hist_bucket{job=~\"$job\",instance=~\"$instance\",vhost=~\"$vhost\",status!=\"101\",method!=\"\"}[5m])) by (le))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "s" }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Requests by VHost",
+      "gridPos": { "x": 0, "y": 4, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum by (vhost) (rate(nginx_http_response_count_total{job=~\"$job\",instance=~\"$instance\",vhost=~\"$vhost\"}[1m]))",
+          "refId": "A",
+          "legendFormat": "{{vhost}}"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Response Time by VHost (P95)",
+      "gridPos": { "x": 12, "y": 4, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(nginx_http_response_time_seconds_hist_bucket{job=~\"$job\",instance=~\"$instance\",vhost=~\"$vhost\",status!=\"101\",method!=\"\"}[5m])) by (le, vhost))",
+          "refId": "A",
+          "legendFormat": "{{vhost}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "s" }
+      }
+    },
+    {
+      "type": "heatmap",
+      "title": "Response Time Heatmap",
+      "gridPos": { "x": 0, "y": 12, "w": 24, "h": 10 },
+      "targets": [
+        {
+          "expr": "sum(rate(nginx_http_response_time_seconds_hist_bucket{job=~\"$job\",instance=~\"$instance\",vhost=~\"$vhost\",status!=\"101\",method!=\"\"}[5m])) by (le)",
+          "refId": "A",
+          "format": "heatmap"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "custom": { "scheme": "Spectral", "hideFrom": { "tooltip": false, "viz": false, "legend": false } } }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Response Codes",
+      "gridPos": { "x": 0, "y": 22, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum by (status) (rate(nginx_http_response_count_total{job=~\"$job\",instance=~\"$instance\",vhost=~\"$vhost\"}[1m]))",
+          "refId": "A",
+          "legendFormat": "{{status}}"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Bytes Sent",
+      "gridPos": { "x": 12, "y": 22, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "sum(rate(nginx_http_response_size_bytes{job=~\"$job\",instance=~\"$instance\",vhost=~\"$vhost\"}[1m]))",
+          "refId": "A",
+          "legendFormat": "Bytes/sec"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "bytes" }
+      }
+    }
+  ]
+}

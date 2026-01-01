@@ -49,5 +49,12 @@ in
 
       secretFile = config.age.secrets.nextcloud-secrets.path;
     };
+
+    # TODO: configure
+    #services.prometheus.exporters.nextcloud = {
+    #  enable = true;
+    #  user = "root";
+    #  passwordFile = config.services.nextcloud.config.adminpassFile;
+    #};
   };
 }

@@ -125,9 +125,30 @@ in
       }
     '';
 
+    services.rspamd.workers.controller = {
+      bindSockets = [{
+        socket = "127.0.0.1:11334";
+      }];
+    };
+
+    services.dovecot2.extraConfig = ''
+      service stats {
+        unix_listener stats {
+          mode = 0666
+        }
+      }
+    '';
+
     security.acme = {
       acceptTerms = true;
       defaults.email = "lajp@iki.fi";
+    };
+
+    services.prometheus.exporters.rspamd.enable = true;
+    services.prometheus.exporters.postfix.enable = true;
+    services.prometheus.exporters.dovecot = {
+      enable = true;
+      socketPath = "/run/dovecot2/stats";
     };
   };
 }

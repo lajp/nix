@@ -1,0 +1,133 @@
+{
+  "uid": "nixos-ups",
+  "title": "UPS Stats (APCUPSD)",
+  "tags": ["nixos", "prometheus", "ups", "apcupsd"],
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "30s",
+  "templating": {
+    "list": [
+      {
+        "name": "job",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": null },
+        "query": "label_values(apcupsd_info, job)",
+        "multi": true,
+        "includeAll": true,
+        "refresh": 1
+      },
+      {
+        "name": "instance",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": null },
+        "query": "label_values(apcupsd_info{job=~\"$job\"}, instance)",
+        "multi": true,
+        "includeAll": true,
+        "refresh": 1
+      }
+    ]
+  },
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Battery Charge",
+      "gridPos": { "x": 0, "y": 0, "w": 4, "h": 4 },
+      "targets": [
+        {
+          "expr": "apcupsd_battery_charge_percent{job=~\"$job\",instance=~\"$instance\"}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "percent", "min": 0, "max": 100, "thresholds": { "mode": "absolute", "steps": [ { "color": "red", "value": null }, { "color": "orange", "value": 20 }, { "color": "green", "value": 50 } ] } }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Load",
+      "gridPos": { "x": 4, "y": 0, "w": 4, "h": 4 },
+      "targets": [
+        {
+          "expr": "apcupsd_ups_load_percent{job=~\"$job\",instance=~\"$instance\"}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "percent", "min": 0, "max": 100 }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Power Usage",
+      "gridPos": { "x": 8, "y": 0, "w": 4, "h": 4 },
+      "targets": [
+        {
+          "expr": "apcupsd_ups_load_percent{job=~\"$job\",instance=~\"$instance\"} * apcupsd_nominal_power_watts{job=~\"$job\",instance=~\"$instance\"} / 100",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "watt" }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Time Left",
+      "gridPos": { "x": 12, "y": 0, "w": 4, "h": 4 },
+      "targets": [
+        {
+          "expr": "apcupsd_battery_time_left_seconds{job=~\"$job\",instance=~\"$instance\"}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "s" }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Status",
+      "gridPos": { "x": 16, "y": 0, "w": 4, "h": 4 },
+      "targets": [
+        {
+          "expr": "sum(apcupsd_info{job=~\"$job\",instance=~\"$instance\",status=\"ONLINE\"}) or vector(0)",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "mappings": [ { "type": "value", "options": { "0": { "text": "On Battery", "color": "red" }, "1": { "text": "Online", "color": "green" } } } ] }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Line Voltage",
+      "gridPos": { "x": 0, "y": 4, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "apcupsd_line_volts{job=~\"$job\",instance=~\"$instance\"}",
+          "refId": "A",
+          "legendFormat": "{{instance}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "volt" }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Battery Voltage",
+      "gridPos": { "x": 12, "y": 4, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "apcupsd_battery_volts{job=~\"$job\",instance=~\"$instance\"}",
+          "refId": "A",
+          "legendFormat": "{{instance}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "volt" }
+      }
+    }
+  ]
+}

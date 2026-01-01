@@ -1,0 +1,158 @@
+{
+  "uid": "nixos-zfs",
+  "title": "ZFS Stats",
+  "tags": ["nixos", "prometheus", "zfs"],
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 2,
+  "refresh": "30s",
+  "templating": {
+    "list": [
+      {
+        "name": "job",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": null },
+        "query": "label_values(node_zfs_arc_size, job)",
+        "multi": true,
+        "includeAll": true,
+        "refresh": 1
+      },
+      {
+        "name": "instance",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": null },
+        "query": "label_values(node_zfs_arc_size{job=~\"$job\"}, instance)",
+        "multi": true,
+        "includeAll": true,
+        "refresh": 1
+      },
+      {
+        "name": "zfs_job",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": null },
+        "query": "label_values(zfs_pool_health, job)",
+        "multi": true,
+        "includeAll": true,
+        "refresh": 1,
+        "label": "ZFS Job"
+      },
+      {
+        "name": "zfs_instance",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": null },
+        "query": "label_values(zfs_pool_health{job=~\"$zfs_job\"}, instance)",
+        "multi": true,
+        "includeAll": true,
+        "refresh": 1,
+        "label": "ZFS Instance"
+      },
+      {
+        "name": "pool",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": null },
+        "query": "label_values(zfs_pool_health{job=~\"$zfs_job\", instance=~\"$zfs_instance\"}, pool)",
+        "multi": true,
+        "includeAll": true,
+        "refresh": 1
+      }
+    ]
+  },
+  "panels": [
+    {
+      "type": "stat",
+      "title": "ARC Size",
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "node_zfs_arc_size{job=~\"$job\",instance=~\"$instance\"}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "bytes" }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "ARC Hit Ratio",
+      "gridPos": { "x": 6, "y": 0, "w": 18, "h": 8 },
+      "targets": [
+        {
+          "expr": "rate(node_zfs_arc_hits{job=~\"$job\",instance=~\"$instance\"}[5m]) / (rate(node_zfs_arc_hits{job=~\"$job\",instance=~\"$instance\"}[5m]) + rate(node_zfs_arc_misses{job=~\"$job\",instance=~\"$instance\"}[5m]))",
+          "refId": "A",
+          "legendFormat": "{{instance}} Hit Ratio"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "percent", "min": 0, "max": 1 }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "L2ARC Hit Ratio",
+      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "rate(node_zfs_l2arc_hits{job=~\"$job\",instance=~\"$instance\"}[5m]) / (rate(node_zfs_l2arc_hits{job=~\"$job\",instance=~\"$instance\"}[5m]) + rate(node_zfs_l2arc_misses{job=~\"$job\",instance=~\"$instance\"}[5m]))",
+          "refId": "A",
+          "legendFormat": "{{instance}} L2 Hit Ratio"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "percent", "min": 0, "max": 1 }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Pool Status (Online)",
+      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "node_zfs_zpool_state{state=\"online\", job=~\"$job\", instance=~\"$instance\"}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "mappings": [ { "type": "value", "options": { "0": { "text": "Degraded/Offline", "color": "red" }, "1": { "text": "Online", "color": "green" } } } ] }
+      }
+    },
+    {
+      "type": "row",
+      "title": "Pool & Dataset Details",
+      "collapsed": false,
+      "gridPos": { "x": 0, "y": 16, "w": 24, "h": 1 }
+    },
+    {
+      "type": "stat",
+      "title": "Pool Allocation",
+      "gridPos": { "x": 0, "y": 17, "w": 8, "h": 8 },
+      "targets": [
+        {
+          "expr": "zfs_pool_allocated_bytes{job=~\"$zfs_job\", instance=~\"$zfs_instance\", pool=~\"$pool\"}",
+          "legendFormat": "{{pool}} Allocated"
+        },
+        {
+          "expr": "zfs_pool_size_bytes{job=~\"$zfs_job\", instance=~\"$zfs_instance\", pool=~\"$pool\"}",
+          "legendFormat": "{{pool}} Total"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "bytes" }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Dataset Usage",
+      "gridPos": { "x": 8, "y": 17, "w": 16, "h": 8 },
+      "targets": [
+        {
+          "expr": "zfs_dataset_used_bytes{job=~\"$zfs_job\", instance=~\"$zfs_instance\", pool=~\"$pool\"}",
+          "legendFormat": "{{name}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "bytes" }
+      }
+    }
+  ]
+}

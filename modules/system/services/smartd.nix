@@ -25,6 +25,8 @@ in
       notifications.test = true;
     };
 
+    services.prometheus.exporters.smartctl.enable = true;
+
     programs.msmtp = {
       enable = true;
       defaults = {

@@ -1,0 +1,139 @@
+{
+  "uid": "nixos-nodes",
+  "title": "NixOS Nodes",
+  "tags": ["nixos", "prometheus", "node-exporter"],
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "30s",
+  "templating": {
+    "list": [
+      {
+        "name": "job",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": null },
+        "query": "label_values(node_uname_info, job)",
+        "multi": true,
+        "includeAll": true,
+        "refresh": 1
+      },
+      {
+        "name": "instance",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": null },
+        "query": "label_values(node_uname_info{job=~\"$job\"}, instance)",
+        "multi": true,
+        "includeAll": true,
+        "refresh": 1
+      },
+      {
+        "name": "location",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": null },
+        "query": "label_values(node_uname_info{job=~\"$job\"}, location)",
+        "multi": true,
+        "includeAll": true,
+        "refresh": 1
+      },
+      {
+        "name": "role",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": null },
+        "query": "label_values(node_uname_info{job=~\"$job\"}, role)",
+        "multi": true,
+        "includeAll": true,
+        "refresh": 1
+      }
+    ]
+  },
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Uptime",
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "time() - node_boot_time_seconds{job=~\"$job\",instance=~\"$instance\",location=~\"$location\",role=~\"$role\"}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "s" }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Load / Cores",
+      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "node_load1{job=~\"$job\",instance=~\"$instance\"} / count(node_cpu_seconds_total{mode=\"idle\",job=~\"$job\",instance=~\"$instance\"})",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Worst Disk Usage",
+      "gridPos": { "x": 12, "y": 0, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "max(1 - (node_filesystem_avail_bytes{job=~\"$job\",instance=~\"$instance\",fstype!~\"tmpfs|overlay\"} / node_filesystem_size_bytes{job=~\"$job\",instance=~\"$instance\",fstype!~\"tmpfs|overlay\"}))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "percent", "min": 0, "max": 1 }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "CPU Usage by Mode",
+      "gridPos": { "x": 0, "y": 4, "w": 12, "h": 6 },
+      "targets": [
+        {
+          "expr": "sum by (mode) (rate(node_cpu_seconds_total{job=~\"$job\",instance=~\"$instance\"}[5m]))",
+          "refId": "A"
+        }
+      ],
+      "options": { "stacking": { "mode": "normal" } }
+    },
+    {
+      "type": "timeseries",
+      "title": "CPU Pressure (PSI)",
+      "gridPos": { "x": 12, "y": 4, "w": 12, "h": 6 },
+      "targets": [
+        {
+          "expr": "rate(node_pressure_cpu_waiting_seconds_total{job=~\"$job\",instance=~\"$instance\"}[5m])",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Memory Usage",
+      "gridPos": { "x": 0, "y": 10, "w": 12, "h": 6 },
+      "targets": [
+        {
+          "expr": "1 - (node_memory_MemAvailable_bytes{job=~\"$job\",instance=~\"$instance\"} / node_memory_MemTotal_bytes{job=~\"$job\",instance=~\"$instance\"})",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "percent", "min": 0, "max": 1 }
+      }
+    },
+    {
+      "type": "table",
+      "title": "Failed systemd Units",
+      "gridPos": { "x": 0, "y": 16, "w": 24, "h": 6 },
+      "targets": [
+        {
+          "expr": "node_systemd_unit_state{job=~\"$job\",instance=~\"$instance\",state=\"failed\"} == 1",
+          "refId": "A"
+        }
+      ]
+    }
+  ]
+}
+

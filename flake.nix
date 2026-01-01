@@ -158,6 +158,7 @@
               enable = false;
               pool = "naspool";
             };
+            services.prometheus.enable = true;
           };
         };
         vaasanas = mkHost {
@@ -187,6 +188,7 @@
             hardware.zfs.enable = true;
             services.tailscale.enable = true;
             services.smartd.enable = true;
+            services.prometheus.enable = true;
           };
         };
         #nixos-dev = mkHost {
@@ -295,6 +297,10 @@
             services.ssh.enable = true;
             services.tailscale.enable = true;
             services.adguardhome.enable = true;
+            services.prometheus = {
+              enable = true;
+              role = "proxy";
+            };
           };
         };
         ankka = mkHost {
@@ -316,6 +322,11 @@
             services.formicer-website.enable = false;
             services.cheese.enable = true;
             services.crabfit.enable = true;
+            services.prometheus = {
+              enable = true;
+              central = true;
+              location = "hetzner";
+            };
           };
         };
       };

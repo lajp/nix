@@ -79,6 +79,9 @@ in
       ensureDatabases = [ "${cfg.user}" ];
     };
 
+    # TODO: configure
+    # services.prometheus.exporters.postgres.enable = cfg.createDatabase;
+
     systemd.services.ilmomasiina = {
       enable = true;
       description = "ilmomasiina";

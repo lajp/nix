@@ -12,5 +12,8 @@ in
       openFirewall = config.lajp.core.server;
     };
     networking.firewall.checkReversePath = "loose";
+
+    # TODO: figure out
+    # services.prometheus.exporters.tailscale.enable = true;
   };
 }

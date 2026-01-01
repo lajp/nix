@@ -38,5 +38,6 @@
     ./cheese
     ./crabfit.nix
     ./yensid.nix
+    ./prometheus.nix
   ];
 }

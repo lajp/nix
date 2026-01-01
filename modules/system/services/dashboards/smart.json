@@ -1,0 +1,129 @@
+{
+  "uid": "nixos-smart",
+  "title": "SMART Disk Health",
+  "tags": ["nixos", "prometheus", "smart", "disk"],
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "1m",
+  "templating": {
+    "list": [
+      {
+        "name": "job",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": null },
+        "query": "label_values(smartctl_device, job)",
+        "multi": true,
+        "includeAll": true,
+        "refresh": 1
+      },
+      {
+        "name": "instance",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": null },
+        "query": "label_values(smartctl_device{job=~\"$job\"}, instance)",
+        "multi": true,
+        "includeAll": true,
+        "refresh": 1
+      },
+       {
+        "name": "device",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": null },
+        "query": "label_values(smartctl_device{job=~\"$job\", instance=~\"$instance\"}, device)",
+        "multi": true,
+        "includeAll": true,
+        "refresh": 1
+      }
+    ]
+  },
+  "panels": [
+    {
+      "type": "table",
+      "title": "Device Info",
+      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 6 },
+      "targets": [
+        {
+          "expr": "smartctl_device{job=~\"$job\",instance=~\"$instance\",device=~\"$device\"}",
+          "format": "table",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Temperature",
+      "gridPos": { "x": 0, "y": 6, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "smartctl_device_temperature{job=~\"$job\",instance=~\"$instance\",device=~\"$device\",temperature_type=\"current\"}",
+          "refId": "A",
+          "legendFormat": "{{instance}} - {{device}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "celsius" }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Reallocated Sectors",
+      "gridPos": { "x": 12, "y": 6, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "smartctl_device_attribute{job=~\"$job\",instance=~\"$instance\",device=~\"$device\",attribute_name=\"Reallocated_Sector_Ct\",attribute_value_type=\"raw\"}",
+          "refId": "A",
+          "legendFormat": "{{device}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null }, { "color": "red", "value": 1 } ] } }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Pending Sectors",
+      "gridPos": { "x": 18, "y": 6, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "smartctl_device_attribute{job=~\"$job\",instance=~\"$instance\",device=~\"$device\",attribute_name=\"Current_Pending_Sector\",attribute_value_type=\"raw\"}",
+          "refId": "A",
+           "legendFormat": "{{device}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null }, { "color": "red", "value": 1 } ] } }
+      }
+    },
+     {
+      "type": "stat",
+      "title": "Offline Uncorrectable",
+      "gridPos": { "x": 12, "y": 10, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "smartctl_device_attribute{job=~\"$job\",instance=~\"$instance\",device=~\"$device\",attribute_name=\"Offline_Uncorrectable\",attribute_value_type=\"raw\"}",
+          "refId": "A",
+           "legendFormat": "{{device}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null }, { "color": "red", "value": 1 } ] } }
+      }
+    },
+     {
+      "type": "stat",
+      "title": "Power On Hours",
+      "gridPos": { "x": 18, "y": 10, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "smartctl_device_attribute{job=~\"$job\",instance=~\"$instance\",device=~\"$device\",attribute_name=\"Power_On_Hours\",attribute_value_type=\"raw\"}",
+          "refId": "A",
+           "legendFormat": "{{device}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "h" }
+      }
+    }
+  ]
+}

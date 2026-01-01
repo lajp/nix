@@ -24,6 +24,8 @@ in
       };
     };
 
+    services.prometheus.exporters.zfs.enable = true;
+
     programs.msmtp = {
       enable = true;
       defaults = {
