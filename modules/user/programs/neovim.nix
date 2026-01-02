@@ -229,8 +229,16 @@ in
             metals.enable = true;
             terraformls = {
               enable = true;
+              #settings.formatting.command = [
+              #  "${pkgs.terraform}/bin/terraform"
+              #  "fmt"
+              #];
+            };
+            tofu_ls = {
+              enable = true;
+              package = pkgs-unstable.tofu-ls;
               settings.formatting.command = [
-                "${pkgs.terraform}/bin/terraform"
+                "${pkgs.opentofu}/bin/tofu"
                 "fmt"
               ];
             };

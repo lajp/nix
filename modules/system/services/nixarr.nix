@@ -126,5 +126,10 @@ in
         proxyWebsockets = true;
       };
     };
+
+    # TODO: configure or migrate to newer nixarr version
+    # services.prometheus.exporters.exportarr-sonarr.enable = true;
+    # services.prometheus.exporters.exportarr-radarr.enable = true;
+    # services.prometheus.exporters.exportarr-prowlarr.enable = true;
   };
 }

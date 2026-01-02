@@ -56,6 +56,10 @@ in
     programs = {
       imv.enable = true;
       zathura.enable = true;
+      thunderbird = {
+        enable = true;
+        profiles."Default".isDefault = true;
+      };
 
       chromium = {
         enable = true;

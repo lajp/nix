@@ -161,6 +161,7 @@ in
         gpg = {
           encryptByDefault = true;
           signByDefault = true;
+          key = osConfig.lajp.user.key;
         };
 
         maildir.path = address;

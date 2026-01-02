@@ -182,6 +182,36 @@ in
           ];
         }
       ]
+      ++ lib.optionals config.services.prometheus.exporters.exportarr-sonarr.enable [
+        {
+          job_name = "exportarr-sonarr";
+          static_configs = [
+            {
+              targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.exportarr-sonarr.port}" ];
+            }
+          ];
+        }
+      ]
+      ++ lib.optionals config.services.prometheus.exporters.exportarr-radarr.enable [
+        {
+          job_name = "exportarr-radarr";
+          static_configs = [
+            {
+              targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.exportarr-radarr.port}" ];
+            }
+          ];
+        }
+      ]
+      ++ lib.optionals config.services.prometheus.exporters.exportarr-prowlarr.enable [
+        {
+          job_name = "exportarr-prowlarr";
+          static_configs = [
+            {
+              targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.exportarr-prowlarr.port}" ];
+            }
+          ];
+        }
+      ]
       ++ lib.optionals config.services.prometheus.exporters.dovecot.enable [
         {
           job_name = "dovecot";

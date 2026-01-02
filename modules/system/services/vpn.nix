@@ -18,6 +18,10 @@ in
       enable = mkEnableOption "Enable vaasa vpn";
       autostart = mkEnableOption "Autostart vpn";
     };
+    vaasa2 = {
+      enable = mkEnableOption "Enable vaasa2 vpn";
+      autostart = mkEnableOption "Autostart vpn";
+    };
     airvpn = {
       enable = mkEnableOption "Enable airvpn";
       autostart = mkEnableOption "Autostart vpn";
@@ -114,6 +118,32 @@ in
           ];
 
           autostart = cfg.vaasa.autostart;
+        };
+      };
+    }
+    {
+      config = mkIf cfg.vaasa2.enable {
+        age.secrets.vaasa2-private.rekeyFile = ../../../secrets/vaasa2-private.age;
+        #age.secrets.vaasa2-preshared.rekeyFile = ../../../secrets/vaasa2-preshared.age;
+
+        networking.wg-quick.interfaces.vaasa2 = {
+          privateKeyFile = config.age.secrets.vaasa2-private.path;
+          address = [ "10.10.10.3/32" ];
+
+          peers = [
+            {
+              publicKey = "4WbsRJXeOjPfIHXjMvmEroKwurXOY8vyoSl7GlK9Ww8=";
+              endpoint = "91.152.169.21:51820";
+              allowedIPs = [
+                # TODO: add other subnets
+                "10.10.10.3/32"
+                "192.168.2.0/24"
+              ];
+              persistentKeepalive = 25;
+            }
+          ];
+
+          autostart = cfg.vaasa2.autostart;
         };
       };
     }

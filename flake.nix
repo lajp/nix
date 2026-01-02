@@ -188,7 +188,11 @@
             hardware.zfs.enable = true;
             services.tailscale.enable = true;
             services.smartd.enable = true;
-            services.prometheus.enable = true;
+            services.prometheus = {
+              enable = true;
+              role = "nas";
+              location = "vaasa";
+            };
           };
         };
         #nixos-dev = mkHost {
@@ -255,6 +259,10 @@
               braiins.enable = true;
               airvpn.enable = true;
               vaasa = {
+                enable = true;
+                autostart = true;
+              };
+              vaasa2 = {
                 enable = true;
                 autostart = true;
               };
