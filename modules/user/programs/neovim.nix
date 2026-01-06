@@ -46,6 +46,12 @@ let
       ++ prev.configureFlags;
     }
   );
+
+  tree-sitter-stlcpp = pkgs.tree-sitter.buildGrammar {
+    language = "stlcpp";
+    version = inputs.tree-sitter-stlcpp.shortRev;
+    src = inputs.tree-sitter-stlcpp;
+  };
 in
 {
   imports = [
@@ -106,7 +112,6 @@ in
         stlc = "stlcpp";
       };
 
-      extraFiles."syntax/stlcpp.vim".source = ../../../stlcpp.vim;
 
       #colorschemes.gruvbox = {
       #  enable = true;
@@ -170,6 +175,7 @@ in
         idris2.enable = true;
         treesitter = {
           enable = true;
+          grammarPackages = pkgs.vimPlugins.nvim-treesitter.allGrammars ++ [ tree-sitter-stlcpp ];
           settings = {
             #auto_install = true;
             highlight.enable = true;
@@ -325,6 +331,10 @@ in
 
         let g:vimchant_spellcheck_lang = 'fi'
       '';
-    };
+
+      extraConfigLua = ''
+        vim.treesitter.language.register("stlcpp", "stlcpp")
+      '';
+};
   };
 }

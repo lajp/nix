@@ -1519,6 +1519,7 @@
         "simple-nixos-mailserver": "simple-nixos-mailserver",
         "stylix": "stylix",
         "testaustime-nvim": "testaustime-nvim",
+        "tree-sitter-stlcpp": "tree-sitter-stlcpp",
         "vimchant": "vimchant",
         "yensid": "yensid"
       }
@@ -2042,6 +2043,22 @@
       "original": {
         "owner": "tinted-theming",
         "repo": "base16-zed",
+        "type": "github"
+      }
+    },
+    "tree-sitter-stlcpp": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1767252083,
+        "narHash": "sha256-rEHcYw6t/UjjYGOpXBiQshUZV3whJ8FY0zwzIzFSLxk=",
+        "owner": "aalto-opencs",
+        "repo": "tree-sitter-stlcpp",
+        "rev": "c9fcbcc71bf1cf613fc326530b7a7e083ad66b52",
+        "type": "github"
+      },
+      "original": {
+        "owner": "aalto-opencs",
+        "repo": "tree-sitter-stlcpp",
         "type": "github"
       }
     },

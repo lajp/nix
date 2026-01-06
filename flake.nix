@@ -101,6 +101,11 @@
       flake = false;
     };
 
+    tree-sitter-stlcpp = {
+      url = "github:aalto-opencs/tree-sitter-stlcpp";
+      flake = false;
+    };
+
     yensid.url = "github:garnix-io/yensid";
   };
 
