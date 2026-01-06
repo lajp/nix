@@ -13,8 +13,8 @@
   networking.useDHCP = lib.mkDefault true;
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
-  time.timeZone = lib.mkForce "Europe/Prague";
-  #time.timeZone = lib.mkForce "Europe/Helsinki";
+  #time.timeZone = lib.mkForce "Europe/Prague";
+  time.timeZone = lib.mkForce "Europe/Helsinki";
 
   networking.nameservers = [
     "1.1.1.1"

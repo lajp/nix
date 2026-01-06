@@ -47,6 +47,7 @@ mkHost {
 
 - `modules/system/` - NixOS modules with `lajp.*` options
   - `services/` - Service configurations (ssh, tailscale, prometheus, nixarr, etc.)
+    - `dashboards/` - Grafana dashboard JSON files (nginx-analytics, etc.)
   - `hardware/` - Hardware-specific configs (zfs, sound, bluetooth, backlight)
   - `common/` - Base system configuration
 - `modules/user/` - Home-manager modules with `lajp.*` options

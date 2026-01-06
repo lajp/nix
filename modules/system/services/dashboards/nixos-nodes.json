@@ -87,6 +87,20 @@
       }
     },
     {
+      "type": "stat",
+      "title": "Memory Usage",
+      "gridPos": { "x": 18, "y": 0, "w": 6, "h": 4 },
+      "targets": [
+        {
+          "expr": "avg(1 - (node_memory_MemAvailable_bytes{job=~\"$job\",instance=~\"$instance\",location=~\"$location\",role=~\"$role\"} / node_memory_MemTotal_bytes{job=~\"$job\",instance=~\"$instance\",location=~\"$location\",role=~\"$role\"}))",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "percentunit", "min": 0, "max": 1 }
+      }
+    },
+    {
       "type": "timeseries",
       "title": "CPU Usage by Mode",
       "gridPos": { "x": 0, "y": 4, "w": 12, "h": 6 },
@@ -115,13 +129,24 @@
       "gridPos": { "x": 0, "y": 10, "w": 12, "h": 6 },
       "targets": [
         {
-          "expr": "1 - (node_memory_MemAvailable_bytes{job=~\"$job\",instance=~\"$instance\"} / node_memory_MemTotal_bytes{job=~\"$job\",instance=~\"$instance\"})",
+          "expr": "1 - (node_memory_MemAvailable_bytes{job=~\"$job\",instance=~\"$instance\",location=~\"$location\",role=~\"$role\"} / node_memory_MemTotal_bytes{job=~\"$job\",instance=~\"$instance\",location=~\"$location\",role=~\"$role\"})",
           "refId": "A"
         }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "percent", "min": 0, "max": 1 }
+        "defaults": { "unit": "percentunit", "min": 0, "max": 1 }
       }
+    },
+    {
+      "type": "timeseries",
+      "title": "Memory Pressure (PSI)",
+      "gridPos": { "x": 12, "y": 10, "w": 12, "h": 6 },
+      "targets": [
+        {
+          "expr": "rate(node_pressure_memory_waiting_seconds_total{job=~\"$job\",instance=~\"$instance\",location=~\"$location\",role=~\"$role\"}[5m])",
+          "refId": "A"
+        }
+      ]
     },
     {
       "type": "table",

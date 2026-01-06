@@ -54,9 +54,37 @@
       "gridPos": { "x": 0, "y": 4, "w": 24, "h": 1 }
     },
     {
+      "type": "stat",
+      "title": "Total Incoming Messages",
+      "gridPos": { "x": 0, "y": 5, "w": 12, "h": 4 },
+      "targets": [
+        {
+          "expr": "sum(postfix_smtpd_messages_processed_total{instance=~\"$instance\"})",
+          "legendFormat": "Total Incoming"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "short" }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Total Sent Messages",
+      "gridPos": { "x": 12, "y": 5, "w": 12, "h": 4 },
+      "targets": [
+        {
+          "expr": "sum(postfix_smtp_messages_processed_total{instance=~\"$instance\", status=\"sent\"})",
+          "legendFormat": "Total Sent"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "short" }
+      }
+    },
+    {
       "type": "timeseries",
       "title": "Postfix Queue Depth",
-      "gridPos": { "x": 0, "y": 5, "w": 12, "h": 8 },
+      "gridPos": { "x": 0, "y": 9, "w": 12, "h": 8 },
       "targets": [
         {
           "expr": "sum(postfix_showq_queue_depth{instance=~\"$instance\"}) by (queue)",
@@ -70,7 +98,7 @@
     {
       "type": "timeseries",
       "title": "Postfix Mail Activity",
-      "gridPos": { "x": 12, "y": 5, "w": 12, "h": 8 },
+      "gridPos": { "x": 12, "y": 9, "w": 12, "h": 8 },
       "targets": [
         {
           "expr": "rate(postfix_smtpd_messages_processed_total{instance=~\"$instance\"}[5m])",
@@ -89,12 +117,12 @@
       "type": "row",
       "title": "Dovecot",
       "collapsed": false,
-      "gridPos": { "x": 0, "y": 13, "w": 24, "h": 1 }
+      "gridPos": { "x": 0, "y": 17, "w": 24, "h": 1 }
     },
     {
       "type": "stat",
       "title": "Dovecot Status",
-      "gridPos": { "x": 0, "y": 14, "w": 6, "h": 4 },
+      "gridPos": { "x": 0, "y": 18, "w": 6, "h": 4 },
       "targets": [
         {
           "expr": "dovecot_up{instance=~\"$instance\"}",
@@ -113,12 +141,12 @@
       "type": "row",
       "title": "Rspamd",
       "collapsed": false,
-      "gridPos": { "x": 0, "y": 22, "w": 24, "h": 1 }
+      "gridPos": { "x": 0, "y": 26, "w": 24, "h": 1 }
     },
     {
       "type": "stat",
       "title": "Rspamd Scanned",
-      "gridPos": { "x": 0, "y": 23, "w": 6, "h": 4 },
+      "gridPos": { "x": 0, "y": 27, "w": 6, "h": 4 },
       "targets": [
         {
           "expr": "increase(rspamd_scanned{instance=~\"$instance\"}[1h])",
@@ -129,7 +157,7 @@
     {
       "type": "stat",
       "title": "Rspamd Ham",
-      "gridPos": { "x": 6, "y": 23, "w": 6, "h": 4 },
+      "gridPos": { "x": 6, "y": 27, "w": 6, "h": 4 },
       "targets": [
         {
           "expr": "increase(rspamd_ham_count{instance=~\"$instance\"}[1h])",
@@ -140,7 +168,7 @@
     {
       "type": "stat",
       "title": "Rspamd Spam",
-      "gridPos": { "x": 12, "y": 23, "w": 6, "h": 4 },
+      "gridPos": { "x": 12, "y": 27, "w": 6, "h": 4 },
       "targets": [
         {
           "expr": "increase(rspamd_spam_count{instance=~\"$instance\"}[1h])",

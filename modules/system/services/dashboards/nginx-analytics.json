@@ -92,6 +92,23 @@
       }
     },
     {
+      "type": "bargauge",
+      "title": "Total Requests by VHost",
+      "gridPos": { "x": 16, "y": 0, "w": 8, "h": 4 },
+      "targets": [
+        {
+          "expr": "sum by (vhost) (increase(nginx_http_response_count_total{job=~\"$job\",instance=~\"$instance\",vhost=~\"$vhost\"}[$__range]))",
+          "refId": "A",
+          "legendFormat": "{{vhost}}"
+        }
+      ],
+      "options": {
+        "orientation": "horizontal",
+        "displayMode": "gradient",
+        "showUnfilled": true
+      }
+    },
+    {
       "type": "timeseries",
       "title": "Requests by VHost",
       "gridPos": { "x": 0, "y": 4, "w": 12, "h": 8 },
