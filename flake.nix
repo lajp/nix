@@ -283,6 +283,14 @@
             dreamlauncher.enable = true;
             virt-manager.enable = true;
             services.yensid.enable = true;
+            services.typst-collab = {
+              enable = true;
+              sourcePath = "/home/lajp/git/work/mepl/mepl-typst";
+              authorizedKeys = [
+                "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC0xmxXd5K3pgTCrwMmKwILyOJb9KD9PWvQfbzncPUJLpb7XSoPS8Iwnrn9+VdXHFLKQvQBI33Bk+l7Yj0AQJX1/wOoMnNmfxq/fzKCCSvBocu/x8SJVyqRCksLtHTrf0xfcFM9YSpMouIrpWqXGEz1qDt7j8v4nYmp1NrS8Sw2IW99m7RMtzPjB49OzRe1sggqCpDfaqysAjm7VjnLuib8CdrhaGnQ3z7Jl8Dt2IWXyfk/SVZAqJzjcBF9aVnYfskn4Kes0D9bO/+dTHoWmVqYokjOYKMvx+o8s6Ydk3S2Ej+/RMEPTRoTez0cXvjXrpQG9Ke0PMPt3EjvvdpxmWbL6/+OZoQ1dxOpqtc5S6hQ9TLR1j6FrhvvJRf5mHPr8DV+a1Sg/ptiZ+8RK+WDN0RlIsLO+GnKS0gyzzqfrP41lDt1jSD2JTnAv2ACT25TANGIiYU9GNHsyuph1NEeTJICeyIOqkB8+ABKBKRH5JjdOROgwxcomEdBcuXGcgP8VbQaE6hWA30AVOGt5klRFA3bE4zhdLNnp7Hn26A43gBgbZp33xVhbqoNyW+qWb32A7Nd5KWMqa0p3ZllYsNRSOgOhqciNzQjsfolYXP8vUG3sCWkwtZBk4A5Cvm+Jhd0v+SFSm9rDyosbc7v0MN6rgBxZIYfYlMLvaMiyPWuxNZ6wQ=="
+                "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCiDxF/PZcYfX6N3CQOdQdW0PTPN7tgmwL6RPFDBlJURsxiTlmlRygjMVjrnxbIN9KGIP2p3hUKxensm0ftbl3fvdBG3nUnreGZAUQ7prSrli3tv+WITPFdONtDqcrMlYXbBy51/kFLUQMV7wBYurM/4bW/BOXtNZdk8/dLyCqAr1ynZmXFFHEB3APtlxaLlsyHEER5Nj7WDlxpFUxOqzasPg8MMGKQeN+d2TbUq1s0YDVwmk4F+Zqfj0H9AAYYt4zkiKbCkzTrJXk9snBPAyUot8jkAjZW5nu7quVoiHvWY3335iaa4o2JWDkm6/QEXYzKIbi865jOr3A5DRFytNFQJ7nmXfSNWAJmblSlatlszQLwmTLP5wkV+3zbRHv7WuvWivR76Xy0uyK331UvqrRbNha+EbVoWP5DyFnichBH7B/IgHkLHQJIuYiQBZ2ZwTuVpEoxyCUyl9acDtmUZvuomTAEjLRQElnhRo8iyDf92dl19Q9dG/1RWqLXUEDVBcLrlk89aEnIk7DuwvmVWzWM+On9S8ojH04TgRJM5ZkbQLAIqW5AkLqY6CP5Gzknsh7F4fl5Mq0FZlCOtFzxR+YgIn4IGndonm8/iqDQjJNOWVysFdNRPisPSR5AO5TiuxZSOcCuRkS56cZTHKjdqZS8CxiCfs2ZPlzMnzKJSNDXxQ=="
+              ];
+            };
           };
 
           userConfig = {

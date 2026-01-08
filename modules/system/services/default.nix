@@ -39,5 +39,6 @@
     ./crabfit.nix
     ./yensid.nix
     ./prometheus.nix
+    ./typst-collab.nix
   ];
 }
