@@ -73,8 +73,6 @@
       flake = false;
     };
 
-    raspberry-pi-nix.url = "github:nix-community/raspberry-pi-nix";
-
     lajp-fi = {
       url = "github:lajp/lajp.fi";
     };
@@ -304,9 +302,8 @@
         proxy-pi = mkHost {
           system = "aarch64-linux";
 
-          extraModules = with inputs.raspberry-pi-nix.nixosModules; [
-            raspberry-pi
-            sd-image
+          extraModules = [
+            inputs.nixos-hardware.nixosModules.raspberry-pi-4
           ];
 
           systemConfig = {
@@ -412,7 +409,6 @@
       # This is highly advised, and will prevent many possible mistakes
       checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
 
-      pi-img = self.nixosConfigurations.proxy-pi.config.system.build.sdImage;
     }
     // flake-utils.lib.eachDefaultSystem (system: rec {
       pkgs = import nixpkgs {

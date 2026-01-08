@@ -1,12 +1,32 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 {
-  raspberry-pi-nix = {
-    board = "bcm2711";
-    libcamera-overlay.enable = false;
-    serial-console.enable = false;
+  hardware = {
+    raspberry-pi."4".apply-overlays-dtmerge.enable = true;
+    deviceTree = {
+      enable = true;
+      filter = "*rpi-4-*.dtb";
+    };
   };
 
-  sdImage.compressImage = false;
+  boot.loader.grub.enable = false;
+  boot.loader.generic-extlinux-compatible.enable = true;
+
+  # Filesystem configuration for SD card
+  fileSystems."/" = {
+    device = "/dev/disk/by-label/NIXOS_SD";
+    fsType = "ext4";
+  };
+
+  fileSystems."/boot/firmware" = {
+    device = "/dev/disk/by-label/FIRMWARE";
+    fsType = "vfat";
+  };
+
+  # Useful Pi utilities
+  environment.systemPackages = with pkgs; [
+    libraspberrypi
+    raspberrypi-eeprom
+  ];
 
   security.sudo.wheelNeedsPassword = false;
 
@@ -69,4 +89,6 @@
       };
     };
   };
+
+  system.stateVersion = "25.11";
 }

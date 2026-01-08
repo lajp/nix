@@ -12,8 +12,9 @@ NixOS configuration flake for multiple machines with home-manager integration. U
 # Build a specific host configuration
 nix build .#nixosConfigurations.<hostname>.config.system.build.toplevel
 
-# Deploy to remote hosts using deploy-rs
-deploy .#<nodename>  # e.g., deploy .#nas, deploy .#ankka
+# Deploy to remote hosts
+nixos-rebuild switch --target-host <hostname> --sudo --flake .#<hostname>
+# e.g., nixos-rebuild switch --target-host nas --sudo --flake .#nas
 
 # Rekey secrets after adding new hosts or changing keys
 agenix-rekey
