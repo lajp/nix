@@ -26,6 +26,9 @@
 
     shellAliases = {
       tempdir = "cd $(mktemp -d)";
+      # Stolen from: https://jcmc.dev/posts/2025/10/multiple_claude_code_accounts/
+      claude-personal = "CLAUDE_CONFIG_DIR=~/.claude-personal claude";
+      claude-braiins = "CLAUDE_CONFIG_DIR=~/.claude-braiins claude";
     };
   };
 }

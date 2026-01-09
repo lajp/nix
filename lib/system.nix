@@ -16,7 +16,10 @@ in
     }:
     let
       inherit (systemConfig.core) hostname;
-      pkgs-unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
+      pkgs-unstable = import inputs.nixpkgs-unstable {
+        inherit system;
+        config.allowUnfree = true;
+      };
       pkgs-nur = inputs.nur.legacyPackages.${system};
     in
     nixosSystem {

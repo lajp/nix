@@ -75,6 +75,11 @@ in
     # https://github.com/NixOS/nixpkgs/issues/420134
     pkgs-unstable.devenv
     pkgs-unstable.meow
+
+    pkgs-unstable.claude-code
+    pkgs-unstable.opencode
+    pkgs-unstable.cursor-cli
+    pkgs-unstable.gemini-cli
   ];
 
   # TODO: figure out why this breaks
