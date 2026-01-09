@@ -37,13 +37,17 @@ in
 
     security.pam.services.greetd.enableGnomeKeyring = true;
 
-    # NOTE: force use of gtk portal.
-    # Niri seems to default to gnome portal, which doesn't work properly without the rest of the gnome-shell
+    # Use gtk portal as default, but gnome portal for ScreenCast (provides native niri picker)
     xdg.portal = {
-      extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+      extraPortals = [
+        pkgs.xdg-desktop-portal-gtk
+        pkgs.xdg-desktop-portal-gnome
+      ];
       config.niri = {
         default = [ "gtk" ];
         "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
+        "org.freedesktop.impl.portal.ScreenCast" = [ "gnome" ];
+        "org.freedesktop.impl.portal.Screenshot" = [ "gnome" ];
       };
     };
 
