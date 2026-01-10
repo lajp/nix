@@ -1852,11 +1852,11 @@
     "tree-sitter-stlcpp": {
       "flake": false,
       "locked": {
-        "lastModified": 1767252083,
-        "narHash": "sha256-rEHcYw6t/UjjYGOpXBiQshUZV3whJ8FY0zwzIzFSLxk=",
+        "lastModified": 1768041421,
+        "narHash": "sha256-BWw6+B1MBjCUO/CwG7e7nu+C3Np2aGmIPD6fHekZM8I=",
         "owner": "aalto-opencs",
         "repo": "tree-sitter-stlcpp",
-        "rev": "c9fcbcc71bf1cf613fc326530b7a7e083ad66b52",
+        "rev": "033c0a58f41b0abf63dd8f373de04f442468f693",
         "type": "github"
       },
       "original": {

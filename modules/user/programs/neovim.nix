@@ -112,7 +112,6 @@ in
         stlc = "stlcpp";
       };
 
-
       #colorschemes.gruvbox = {
       #  enable = true;
       #  settings.contrast = "hard";
@@ -334,7 +333,8 @@ in
 
       extraConfigLua = ''
         vim.treesitter.language.register("stlcpp", "stlcpp")
+        vim.api.nvim_set_hl(0, "Operator", { fg = "#fe8019" })
       '';
-};
+    };
   };
 }
