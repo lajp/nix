@@ -51,6 +51,8 @@ in
       eddie
 
       wifi-qr
+
+      pdfpc
     ];
 
     programs = {

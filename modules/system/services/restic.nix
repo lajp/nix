@@ -33,6 +33,7 @@ in
           "/home/*/.cache"
           "introcs_psql_data"
           "ilmomasiina/data"
+          "git/braiins/*"
         ];
         pruneOpts = [
           "--keep-hourly 24"

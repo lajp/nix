@@ -109,7 +109,8 @@ in
 
       filetype.extension = {
         mdx = "markdown";
-        stlc = "stlcpp";
+        stlc = "stlc";
+        stlcpp = "stlc";
       };
 
       #colorschemes.gruvbox = {
@@ -332,7 +333,7 @@ in
       '';
 
       extraConfigLua = ''
-        vim.treesitter.language.register("stlcpp", "stlcpp")
+        vim.treesitter.language.register("stlcpp", "stlc")
         vim.api.nvim_set_hl(0, "Operator", { fg = "#fe8019" })
       '';
     };

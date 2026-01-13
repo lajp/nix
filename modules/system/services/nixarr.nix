@@ -127,6 +127,27 @@ in
       };
     };
 
+    services.fail2ban = {
+      enable = true;
+      jails.jellyfin-auth = ''
+        enabled = true
+        filter = jellyfin-auth
+        port = http,https
+        logpath = /var/log/nginx/access.log
+        maxretry = 5
+        findtime = 600
+        bantime = 86400
+      '';
+    };
+
+    environment.etc."fail2ban/filter.d/jellyfin-auth.conf".text = ''
+      [Definition]
+      # Monitor nginx logs for failed Jellyfin authentication (401 on auth endpoint)
+      failregex = ^<HOST> .* "(POST|GET) /Users/authenticatebyname HTTP.*" 401 .*$
+                  ^<HOST> .* "(POST|GET) /Users/AuthenticateByName HTTP.*" 401 .*$
+      ignoreregex =
+    '';
+
     # TODO: configure or migrate to newer nixarr version
     # services.prometheus.exporters.exportarr-sonarr.enable = true;
     # services.prometheus.exporters.exportarr-radarr.enable = true;
