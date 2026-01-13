@@ -32,7 +32,7 @@ in
             password = "\${EMAIL_PASSWORD}";
             host = "mail.portfo.rs";
             port = 587;
-            to = "lajp" + "@lajp.fi";
+            to = "lajp+" + "alerts@lajp.fi";
             default-alert = {
               enabled = true;
               send-on-resolved = true;

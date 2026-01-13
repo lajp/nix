@@ -19,7 +19,7 @@ in
       zed = {
         enableMail = true;
         settings = {
-          ZED_EMAIL_ADDR = "lajp@lajp.fi";
+          ZED_EMAIL_ADDR = "lajp+" + "alerts@lajp.fi";
         };
       };
     };

@@ -20,7 +20,7 @@ in
       notifications.mail = {
         enable = true;
         sender = "alerts@lajp.fi";
-        recipient = "lajp@lajp.fi";
+        recipient = "lajp+" + "alerts@lajp.fi";
       };
       notifications.test = true;
     };

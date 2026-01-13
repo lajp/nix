@@ -42,5 +42,6 @@
     ./prometheus.nix
     ./typst-collab.nix
     ./resource-limits.nix
+    ./email-telegram-bridge.nix
   ];
 }

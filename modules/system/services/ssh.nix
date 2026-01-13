@@ -7,16 +7,24 @@ let
   inherit (lib)
     mkEnableOption
     mkIf
+    mkOption
     ;
   inherit (config.lajp.user) username;
   cfg = config.lajp.services.ssh;
   port = config.lajp.ports.ssh;
 in
 {
-  options.lajp.services.ssh.enable = mkEnableOption "Enable the OpenSSH server";
+  options.lajp.services.ssh = {
+    enable = mkEnableOption "Enable the OpenSSH server";
+    port = mkOption {
+      description = "ssh port";
+      type = lib.types.port;
+      default = 22;
+    };
+  };
 
   config = mkIf cfg.enable {
-    lajp.portRequests.ssh = 22;
+    lajp.portRequests.ssh = cfg.port;
 
     services.openssh = {
       enable = true;

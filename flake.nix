@@ -353,6 +353,7 @@
             services.ssh.enable = true;
             services.gatus.enable = true;
             services.mailserver.enable = true;
+            services.emailTelegramBridge.enable = true;
             services.headscale.enable = true;
             services.hedgedoc.enable = true;
             services.tailscale.enable = true;
