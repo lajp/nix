@@ -6,6 +6,7 @@
     ./sound.nix
     ./rtl-sdr.nix
     ./backlight.nix
+    ./memory.nix
   ];
 
   services.upower.enable = !config.lajp.core.server;

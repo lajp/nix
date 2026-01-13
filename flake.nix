@@ -162,6 +162,26 @@
               pool = "naspool";
             };
             services.prometheus.enable = true;
+            services.resourceLimits.enable = true;
+            hardware.memory = {
+              enable = true;
+              zramPercent = 50;
+              earlyoomPrefer = [
+                "jellyfin"
+                "radarr"
+                "sonarr"
+                "lidarr"
+                "prowlarr"
+                "bazarr"
+                "transmission"
+                "jellyseerr"
+              ];
+              earlyoomAvoid = [
+                "sshd"
+                "nginx"
+                "prometheus"
+              ];
+            };
           };
         };
         vaasanas = mkHost {

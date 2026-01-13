@@ -40,5 +40,6 @@
     ./yensid.nix
     ./prometheus.nix
     ./typst-collab.nix
+    ./resource-limits.nix
   ];
 }
