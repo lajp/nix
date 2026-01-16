@@ -6,11 +6,13 @@
 let
   inherit (lib) mkIf mkEnableOption;
   cfg = config.lajp.services.hedgedoc;
+  port = config.lajp.ports.hedgedoc;
 in
 {
   options.lajp.services.hedgedoc.enable = mkEnableOption "Enable hedgedoc";
 
   config = mkIf cfg.enable {
+    lajp.portRequests.hedgedoc = true;
     lajp.services.nginx.enable = true;
 
     services.postgresql = {
@@ -27,9 +29,10 @@ in
     services.hedgedoc = {
       enable = true;
       settings = {
+        inherit port;
+
         domain = "pad.lajp.fi";
         host = "localhost";
-        port = 3004;
         protocolUseSSL = true;
         db = {
           dialect = "postgres";
@@ -48,7 +51,7 @@ in
       forceSSL = true;
       enableACME = true;
       locations."/" = {
-        proxyPass = "http://localhost:3004";
+        proxyPass = "http://localhost:${toString port}";
         proxyWebsockets = true;
       };
     };

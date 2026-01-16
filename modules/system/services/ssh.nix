@@ -7,22 +7,17 @@ let
   inherit (lib)
     mkEnableOption
     mkIf
-    mkOption
-    types
     ;
   inherit (config.lajp.user) username;
   cfg = config.lajp.services.ssh;
+  port = config.lajp.ports.ssh;
 in
 {
-  options.lajp.services.ssh = {
-    enable = mkEnableOption "Enable the OpenSSH server";
-    port = mkOption {
-      default = 22;
-      description = "ssh port";
-      type = types.port;
-    };
-  };
+  options.lajp.services.ssh.enable = mkEnableOption "Enable the OpenSSH server";
+
   config = mkIf cfg.enable {
+    lajp.portRequests.ssh = 22;
+
     services.openssh = {
       enable = true;
       openFirewall = true;
@@ -33,7 +28,7 @@ in
         StreamLocalBindUnlink = "yes";
         X11Forwarding = true;
       };
-      ports = [ cfg.port ];
+      ports = [ port ];
     };
 
     services.fail2ban.enable = true;

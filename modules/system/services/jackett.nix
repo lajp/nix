@@ -7,10 +7,13 @@
 let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.lajp.services.jackett;
+  flaresolverrPort = config.lajp.ports.flaresolverr;
 in
 {
   options.lajp.services.jackett.enable = mkEnableOption "Enable jackett";
   config = mkIf cfg.enable {
+    lajp.portRequests.flaresolverr = true;
+
     services.jackett = {
       enable = true;
       # NOTE: https://github.com/NixOS/nixpkgs/issues/371837
@@ -23,7 +26,7 @@ in
       containers.flaresolverr = {
         image = "ghcr.io/flaresolverr/flaresolverr:latest";
         hostname = "flaresolverr";
-        ports = [ "8191:8191" ];
+        ports = [ "${toString flaresolverrPort}:8191" ];
         environment.LOG_LEVEL = "info";
       };
     };

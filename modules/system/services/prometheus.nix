@@ -7,6 +7,9 @@ let
     types
     ;
   cfg = config.lajp.services.prometheus;
+  cfgGrafana = config.lajp.services.grafana;
+  prometheusPort = config.lajp.ports.prometheus;
+  grafanaPort = config.lajp.ports.grafana;
 in
 {
   options.lajp.services.prometheus = {
@@ -28,13 +31,21 @@ in
     };
   };
 
+  options.lajp.services.grafana.enable = mkEnableOption "Enable grafana";
+
   config = mkIf cfg.enable {
-    services.grafana = mkIf cfg.central {
+    lajp.portRequests.prometheus = true;
+    lajp.portRequests.grafana = lib.mkIf cfgGrafana.enable true;
+
+    # Auto-enable grafana when prometheus is central
+    lajp.services.grafana.enable = lib.mkDefault cfg.central;
+
+    services.grafana = mkIf cfgGrafana.enable {
       enable = true;
       settings = {
         server = {
           http_addr = "127.0.0.1";
-          http_port = 3003;
+          http_port = grafanaPort;
           enforce_domain = true;
           enable_gzip = true;
           domain = "grafana.lajp.fi";
@@ -65,7 +76,7 @@ in
     };
 
     # TODO: change this to grafana.intra.lajp.fi
-    services.nginx = mkIf cfg.central {
+    services.nginx = mkIf cfgGrafana.enable {
       virtualHosts."grafana.lajp.fi" = {
         forceSSL = true;
         enableACME = true;
@@ -79,13 +90,13 @@ in
 
     # Open firewall for Prometheus only on VPN interface, only on central node
     networking.firewall.interfaces."tailscale0".allowedTCPPorts = mkIf cfg.central [
-      config.services.prometheus.port
+      prometheusPort
     ];
 
     services.prometheus = {
       enable = true;
       globalConfig.scrape_interval = "10s";
-      port = 9090;
+      port = prometheusPort;
       listenAddress = if cfg.central then "0.0.0.0" else "127.0.0.1";
       extraFlags = lib.optionals cfg.central [ "--web.enable-remote-write-receiver" ];
       enableAgentMode = !cfg.central;

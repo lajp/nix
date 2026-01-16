@@ -4,6 +4,7 @@
     ./common
     ./services
     ./core.nix
+    ./ports.nix
     ./hardware
     ./gui
     ./virtualisation

@@ -7,6 +7,7 @@ let
   inherit (lib) mkEnableOption mkIf mkOption;
   cfg = config.lajp.services.cross-seed;
   transmissionHome = config.services.transmission.home;
+  port = config.lajp.ports.cross-seed;
 in
 {
   options.lajp.services.cross-seed = {
@@ -18,6 +19,8 @@ in
   };
 
   config = mkIf cfg.enable {
+    lajp.portRequests.cross-seed = true;
+
     lajp.virtualisation.podman.enable = true;
 
     age.secrets.cross-seed.rekeyFile = ../../../secrets/cross-seed.age;
@@ -32,7 +35,8 @@ in
       containers.cross-seed = {
         image = "ghcr.io/cross-seed/cross-seed";
         autoStart = true;
-        ports = [ "2468:2468" ];
+        # Note: port mapping is redundant with --network=host but kept for documentation
+        ports = [ "${toString port}:${toString port}" ];
         volumes = [
           "${cfg.dataDir}:/config"
           "${transmissionHome}/.config/transmission-daemon/torrents:/torrents:ro"

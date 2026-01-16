@@ -6,11 +6,13 @@
 let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.lajp.services.jellyfin;
+  port = config.lajp.ports.jellyfin;
 in
 {
   options.lajp.services.jellyfin.enable = mkEnableOption "Enable jellyfin";
 
   config = mkIf cfg.enable {
+    lajp.portRequests.jellyfin = true;
     lajp.services.nginx.enable = true;
 
     hardware.graphics.enable = true;
@@ -23,7 +25,9 @@ in
         enableACME = true;
 
         locations."/" = {
-          proxyPass = "http://localhost:8096";
+          # Note: Jellyfin listens on the port specified in its settings,
+          # not configurable via NixOS module. Ensure port matches Jellyfin config.
+          proxyPass = "http://localhost:${toString port}";
           proxyWebsockets = true;
         };
       };

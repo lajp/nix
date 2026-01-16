@@ -2,11 +2,13 @@
 let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.lajp.services.gatus;
+  port = config.lajp.ports.gatus;
 in
 {
   options.lajp.services.gatus.enable = mkEnableOption "Enable gatus";
 
   config = mkIf cfg.enable {
+    lajp.portRequests.gatus = true;
     lajp.services.nginx.enable = true;
 
     age.secrets.gatus-env.rekeyFile = ../../../secrets/gatus-env.age;
@@ -17,6 +19,7 @@ in
         environmentFile = config.age.secrets.gatus-env.path;
 
         settings = {
+          web.port = port;
           ui = {
             logo = "https://lajp.fi/static/apple-touch-icon.png";
             title = "lajp | status";
@@ -162,7 +165,7 @@ in
       };
 
       nginx.virtualHosts."status.lajp.fi" = {
-        locations."/".proxyPass = "http://localhost:${toString config.services.gatus.settings.web.port}";
+        locations."/".proxyPass = "http://localhost:${toString port}";
         forceSSL = true;
         enableACME = true;
       };

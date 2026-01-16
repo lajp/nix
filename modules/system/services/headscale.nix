@@ -2,18 +2,20 @@
 let
   inherit (lib) mkIf mkEnableOption;
   cfg = config.lajp.services.headscale;
+  port = config.lajp.ports.headscale;
 in
 {
   options.lajp.services.headscale.enable = mkEnableOption "Enable headscale";
 
   config = mkIf cfg.enable {
+    lajp.portRequests.headscale = true;
     lajp.services.nginx.enable = true;
 
     services = {
       headscale = {
         enable = true;
         address = "0.0.0.0";
-        port = 8081;
+        port = port;
 
         settings = {
           server_url = "https://headscale.lajp.fi";

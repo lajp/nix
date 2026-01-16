@@ -117,6 +117,7 @@ in
     hardware.graphics.enable = true;
 
     # TODO: change to jellyserr.expose.https when available
+    # Note: Port 5055 is jellyseerr's upstream default, managed by nixarr
     services.nginx.virtualHosts."jellyseerr.lajp.fi" = {
       forceSSL = true;
       enableACME = true;

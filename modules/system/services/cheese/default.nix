@@ -7,6 +7,7 @@
 let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.lajp.services.cheese;
+  port = config.lajp.ports.cheese;
 
   privacy-policy = pkgs.runCommand "privacy-policy" { } ''
     ${pkgs.hxtools}/bin/rot13 ${./privacy-policy.txt} > $out
@@ -20,6 +21,7 @@ in
   options.lajp.services.cheese.enable = mkEnableOption "Enable CHEESE";
 
   config = mkIf cfg.enable {
+    lajp.portRequests.cheese = true;
     lajp.services.nginx.enable = true;
 
     age.secrets.cheese-env.rekeyFile = ../../../../secrets/cheese-env.age;
@@ -53,7 +55,7 @@ in
           });
 
       environment = {
-        PORT = "3000";
+        PORT = toString port;
         ENFORCE_HTTPS = "false";
         HOST = "127.0.0.1";
 
@@ -84,7 +86,7 @@ in
     };
 
     services.nginx.virtualHosts."cheese.lajp.fi" = {
-      locations."/".proxyPass = "http://localhost:3000";
+      locations."/".proxyPass = "http://localhost:${toString port}";
       forceSSL = true;
       enableACME = true;
     };

@@ -7,6 +7,8 @@ in
   options.lajp.services.nginx.enable = mkEnableOption "Enable nginx";
 
   config = mkIf cfg.enable {
+    lajp.portRequests.http = 80;
+    lajp.portRequests.https = 443;
     services.nginx = {
       enable = true;
       recommendedGzipSettings = true;
@@ -87,8 +89,8 @@ in
     ];
 
     networking.firewall.allowedTCPPorts = [
-      80
-      443
+      config.lajp.ports.http
+      config.lajp.ports.https
     ];
 
     security.acme = {
