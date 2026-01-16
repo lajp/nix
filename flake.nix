@@ -354,6 +354,7 @@
             services.gatus.enable = true;
             services.mailserver.enable = true;
             services.headscale.enable = true;
+            services.hedgedoc.enable = true;
             services.tailscale.enable = true;
             services.website.enable = true;
             #services.memegenerator.enable = true;

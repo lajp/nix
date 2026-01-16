@@ -28,6 +28,7 @@
     ./nixarr.nix
     ./gatus.nix
     ./headscale.nix
+    ./hedgedoc.nix
     ./tailscale.nix
     ./nginx.nix
     ./zfs-backup

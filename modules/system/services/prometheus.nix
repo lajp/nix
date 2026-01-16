@@ -245,6 +245,17 @@ in
             }
           ];
         }
+      ]
+      ++ lib.optionals config.services.hedgedoc.enable [
+        {
+          job_name = "hedgedoc";
+          static_configs = [
+            {
+              targets = [ "127.0.0.1:${toString config.services.hedgedoc.settings.port}" ];
+            }
+          ];
+          metrics_path = "/metrics";
+        }
       ];
 
       exporters = {

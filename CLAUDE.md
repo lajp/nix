@@ -70,3 +70,4 @@ Master identity: `yubikey.pub` (YubiKey-based)
 - `niri` - Wayland compositor
 - `deploy-rs` - remote deployment
 - `stylix` - system-wide theming
+- When creating a service, always check if it can be added to prometheus and grafana
