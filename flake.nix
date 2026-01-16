@@ -359,7 +359,8 @@
             #services.memegenerator.enable = true;
             services.formicer-website.enable = false;
             services.cheese.enable = true;
-            services.crabfit.enable = true;
+            # NOTE: vulnerable and dropped from nixpkgs
+            # services.crabfit.enable = true;
             services.prometheus = {
               enable = true;
               central = true;

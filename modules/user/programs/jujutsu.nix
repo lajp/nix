@@ -36,6 +36,18 @@ in
           "DiffEditor $left $right $output"
         ];
       };
+      merge-tools.mergiraf = {
+        program = "${pkgs-unstable.mergiraf}/bin/mergiraf";
+        merge-args = [
+          "merge"
+          "$base"
+          "$left"
+          "$right"
+          "-o"
+          "$output"
+        ];
+        merge-tool-edits-conflict-markers = true;
+      };
 
       signing = {
         backend = "gpg";
