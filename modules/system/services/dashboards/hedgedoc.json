@@ -9,25 +9,84 @@
   "panels": [
     {
       "type": "stat",
-      "title": "Version",
+      "title": "Total Notes",
       "gridPos": { "x": 0, "y": 0, "w": 4, "h": 4 },
       "targets": [
         {
-          "expr": "app_version{job=\"hedgedoc\"}",
-          "refId": "A",
-          "legendFormat": "{{version}}"
+          "expr": "hedgedoc_notes{job=\"hedgedoc\"}",
+          "refId": "A"
         }
       ],
       "fieldConfig": {
         "defaults": {
-          "mappings": [{ "type": "value", "options": { "1": { "text": "v${__field.labels.version}" } } }]
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "blue", "value": null }]
+          }
+        }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Online Notes",
+      "gridPos": { "x": 4, "y": 0, "w": 4, "h": 4 },
+      "targets": [
+        {
+          "expr": "hedgedoc_online_notes{job=\"hedgedoc\"}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": null }]
+          }
+        }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Online Users",
+      "gridPos": { "x": 8, "y": 0, "w": 4, "h": 4 },
+      "targets": [
+        {
+          "expr": "hedgedoc_online_users{job=\"hedgedoc\",type=\"all\"}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": null }]
+          }
+        }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Registered Users",
+      "gridPos": { "x": 12, "y": 0, "w": 4, "h": 4 },
+      "targets": [
+        {
+          "expr": "hedgedoc_registered_users{job=\"hedgedoc\"}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "purple", "value": null }]
+          }
         }
       }
     },
     {
       "type": "stat",
       "title": "Memory Usage",
-      "gridPos": { "x": 4, "y": 0, "w": 4, "h": 4 },
+      "gridPos": { "x": 16, "y": 0, "w": 4, "h": 4 },
       "targets": [
         {
           "expr": "process_resident_memory_bytes{job=\"hedgedoc\"}",
@@ -50,83 +109,67 @@
     },
     {
       "type": "stat",
-      "title": "Open FDs",
-      "gridPos": { "x": 8, "y": 0, "w": 4, "h": 4 },
+      "title": "Version",
+      "gridPos": { "x": 20, "y": 0, "w": 4, "h": 4 },
       "targets": [
         {
-          "expr": "process_open_fds{job=\"hedgedoc\"}",
-          "refId": "A"
+          "expr": "app_version{job=\"hedgedoc\"}",
+          "refId": "A",
+          "legendFormat": "{{version}}"
+        }
+      ],
+      "options": {
+        "textMode": "name"
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Online Activity",
+      "gridPos": { "x": 0, "y": 4, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "hedgedoc_online_notes{job=\"hedgedoc\"}",
+          "refId": "A",
+          "legendFormat": "Online Notes"
+        },
+        {
+          "expr": "hedgedoc_online_users{job=\"hedgedoc\",type=\"all\"}",
+          "refId": "B",
+          "legendFormat": "Online Users (All)"
+        },
+        {
+          "expr": "hedgedoc_online_users{job=\"hedgedoc\",type=\"signed-in\"}",
+          "refId": "C",
+          "legendFormat": "Online Users (Signed In)"
+        },
+        {
+          "expr": "hedgedoc_online_sessions{job=\"hedgedoc\",type=\"all\"}",
+          "refId": "D",
+          "legendFormat": "Sessions (All)"
         }
       ]
     },
     {
-      "type": "stat",
-      "title": "Event Loop Lag",
-      "gridPos": { "x": 12, "y": 0, "w": 4, "h": 4 },
+      "type": "timeseries",
+      "title": "Total Notes Over Time",
+      "gridPos": { "x": 12, "y": 4, "w": 12, "h": 8 },
       "targets": [
         {
-          "expr": "nodejs_eventloop_lag_seconds{job=\"hedgedoc\"}",
-          "refId": "A"
+          "expr": "hedgedoc_notes{job=\"hedgedoc\"}",
+          "refId": "A",
+          "legendFormat": "Total Notes"
         }
       ],
       "fieldConfig": {
         "defaults": {
-          "unit": "s",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              { "color": "green", "value": null },
-              { "color": "yellow", "value": 0.1 },
-              { "color": "red", "value": 0.5 }
-            ]
-          }
-        }
-      }
-    },
-    {
-      "type": "stat",
-      "title": "Request Rate",
-      "gridPos": { "x": 16, "y": 0, "w": 4, "h": 4 },
-      "targets": [
-        {
-          "expr": "sum(rate(http_request_duration_seconds_count{job=\"hedgedoc\"}[5m]))",
-          "refId": "A"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "reqps"
-        }
-      }
-    },
-    {
-      "type": "stat",
-      "title": "CPU Usage",
-      "gridPos": { "x": 20, "y": 0, "w": 4, "h": 4 },
-      "targets": [
-        {
-          "expr": "rate(process_cpu_seconds_total{job=\"hedgedoc\"}[5m])",
-          "refId": "A"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "percentunit",
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              { "color": "green", "value": null },
-              { "color": "yellow", "value": 0.5 },
-              { "color": "red", "value": 0.8 }
-            ]
-          }
+          "color": { "mode": "fixed", "fixedColor": "blue" }
         }
       }
     },
     {
       "type": "timeseries",
       "title": "HTTP Request Rate by Route",
-      "gridPos": { "x": 0, "y": 4, "w": 12, "h": 8 },
+      "gridPos": { "x": 0, "y": 12, "w": 12, "h": 8 },
       "targets": [
         {
           "expr": "sum by (route) (rate(http_request_duration_seconds_count{job=\"hedgedoc\"}[5m]))",
@@ -142,25 +185,25 @@
     },
     {
       "type": "timeseries",
-      "title": "HTTP Request Duration (p99)",
-      "gridPos": { "x": 12, "y": 4, "w": 12, "h": 8 },
+      "title": "HTTP Response Codes",
+      "gridPos": { "x": 12, "y": 12, "w": 12, "h": 8 },
       "targets": [
         {
-          "expr": "histogram_quantile(0.99, sum by (route, le) (rate(http_request_duration_seconds_bucket{job=\"hedgedoc\"}[5m])))",
+          "expr": "sum by (code) (rate(http_request_duration_seconds_count{job=\"hedgedoc\"}[5m]))",
           "refId": "A",
-          "legendFormat": "{{route}}"
+          "legendFormat": "{{code}}"
         }
       ],
       "fieldConfig": {
         "defaults": {
-          "unit": "s"
+          "unit": "reqps"
         }
       }
     },
     {
       "type": "timeseries",
       "title": "Memory Usage",
-      "gridPos": { "x": 0, "y": 12, "w": 12, "h": 8 },
+      "gridPos": { "x": 0, "y": 20, "w": 12, "h": 8 },
       "targets": [
         {
           "expr": "process_resident_memory_bytes{job=\"hedgedoc\"}",
@@ -186,8 +229,43 @@
     },
     {
       "type": "timeseries",
-      "title": "Event Loop Latency",
-      "gridPos": { "x": 12, "y": 12, "w": 12, "h": 8 },
+      "title": "CPU Usage",
+      "gridPos": { "x": 12, "y": 20, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "rate(process_cpu_seconds_total{job=\"hedgedoc\"}[5m])",
+          "refId": "A",
+          "legendFormat": "CPU"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0
+        }
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "Connection Status",
+      "gridPos": { "x": 0, "y": 28, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "hedgedoc_connection_busy{job=\"hedgedoc\"}",
+          "refId": "A",
+          "legendFormat": "Busy Connections"
+        },
+        {
+          "expr": "hedgedoc_connection_socket_queue_length{job=\"hedgedoc\"}",
+          "refId": "B",
+          "legendFormat": "Socket Queue"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Event Loop Lag",
+      "gridPos": { "x": 12, "y": 28, "w": 12, "h": 8 },
       "targets": [
         {
           "expr": "nodejs_eventloop_lag_mean_seconds{job=\"hedgedoc\"}",
@@ -198,45 +276,6 @@
           "expr": "nodejs_eventloop_lag_p99_seconds{job=\"hedgedoc\"}",
           "refId": "B",
           "legendFormat": "p99"
-        },
-        {
-          "expr": "nodejs_eventloop_lag_max_seconds{job=\"hedgedoc\"}",
-          "refId": "C",
-          "legendFormat": "Max"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "s"
-        }
-      }
-    },
-    {
-      "type": "timeseries",
-      "title": "HTTP Response Codes",
-      "gridPos": { "x": 0, "y": 20, "w": 12, "h": 8 },
-      "targets": [
-        {
-          "expr": "sum by (code) (rate(http_request_duration_seconds_count{job=\"hedgedoc\"}[5m]))",
-          "refId": "A",
-          "legendFormat": "{{code}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "reqps"
-        }
-      }
-    },
-    {
-      "type": "timeseries",
-      "title": "Garbage Collection",
-      "gridPos": { "x": 12, "y": 20, "w": 12, "h": 8 },
-      "targets": [
-        {
-          "expr": "rate(nodejs_gc_duration_seconds_sum{job=\"hedgedoc\"}[5m])",
-          "refId": "A",
-          "legendFormat": "{{kind}}"
         }
       ],
       "fieldConfig": {

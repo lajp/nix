@@ -32,7 +32,7 @@ in
         inherit port;
 
         domain = "pad.lajp.fi";
-        host = "localhost";
+        host = "127.0.0.1";
         protocolUseSSL = true;
         db = {
           dialect = "postgres";
@@ -53,6 +53,9 @@ in
       locations."/" = {
         proxyPass = "http://localhost:${toString port}";
         proxyWebsockets = true;
+      };
+      locations."/metrics" = {
+        return = "404";
       };
     };
   };
