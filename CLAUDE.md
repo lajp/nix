@@ -71,3 +71,4 @@ Master identity: `yubikey.pub` (YubiKey-based)
 - `deploy-rs` - remote deployment
 - `stylix` - system-wide theming
 - When creating a service, always check if it can be added to prometheus and grafana
+- Kernel upgrade on nas requires reboot, otherwise cuda in jellyfin fails
