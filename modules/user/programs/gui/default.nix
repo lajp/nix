@@ -43,8 +43,8 @@ in
       mednaffe
       gimp
       sxiv
-      pkgs-nur.repos.mio.jellyfin-media-player
       pkgs-unstable.telegram-desktop
+      pkgs-unstable.jellyfin-desktop
       steam
       libreoffice-fresh
       kitsas
