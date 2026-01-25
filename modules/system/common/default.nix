@@ -84,6 +84,10 @@ in
 
   boot.tmp.cleanOnBoot = true;
 
+  systemd.tmpfiles.rules = [
+    "L+ /bin/bash - - - - ${pkgs.bash}/bin/bash"
+  ];
+
   environment.systemPackages = with pkgs; [
     neovim
     wget
