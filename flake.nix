@@ -105,6 +105,11 @@
     };
 
     yensid.url = "github:garnix-io/yensid";
+
+    jj-nvim = {
+      url = "github:NicolasGB/jj.nvim";
+      flake = false;
+    };
   };
 
   outputs =

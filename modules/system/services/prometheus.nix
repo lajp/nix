@@ -34,7 +34,8 @@ in
   options.lajp.services.grafana.enable = mkEnableOption "Enable grafana";
 
   config = mkIf cfg.enable {
-    lajp.portRequests.prometheus = true;
+    # NOTE: this port is relied on by the agent exporters, it must be statically allocated
+    lajp.portRequests.prometheus = 9090;
     lajp.portRequests.grafana = lib.mkIf cfgGrafana.enable true;
 
     # Auto-enable grafana when prometheus is central

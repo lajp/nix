@@ -862,6 +862,22 @@
         "type": "github"
       }
     },
+    "jj-nvim": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1769675330,
+        "narHash": "sha256-Zere6x/mcV0zlsqp6RB7XWkeXRBmDhSl8rpEYA1x+Sg=",
+        "owner": "NicolasGB",
+        "repo": "jj.nvim",
+        "rev": "680d864e1165ac5d334eef6d69e301f2094ff4c3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NicolasGB",
+        "repo": "jj.nvim",
+        "type": "github"
+      }
+    },
     "lajp-fi": {
       "inputs": {
         "nixpkgs": "nixpkgs_3",
@@ -1426,6 +1442,7 @@
         "flake-utils": "flake-utils",
         "golf": "golf",
         "home-manager": "home-manager",
+        "jj-nvim": "jj-nvim",
         "lajp-fi": "lajp-fi",
         "memegenerator": "memegenerator",
         "niri": "niri",

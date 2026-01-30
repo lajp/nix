@@ -321,6 +321,11 @@ in
           name = "golf";
           src = inputs.golf;
         })
+
+        (pkgs.vimUtils.buildVimPlugin {
+          name = "jj.nvim";
+          src = inputs.jj-nvim;
+        })
       ];
 
       extraConfigVim = ''
@@ -335,6 +340,8 @@ in
       extraConfigLua = ''
         vim.treesitter.language.register("stlcpp", "stlc")
         vim.api.nvim_set_hl(0, "Operator", { fg = "#fe8019" })
+
+        require("jj").setup({});
       '';
     };
   };
