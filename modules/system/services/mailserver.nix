@@ -31,6 +31,7 @@ in
         "portfo.rs"
         "formicer.com"
         "nextcloud.otanix.fi"
+        "oy.lajp.fi"
       ];
 
       stateVersion = 3;
@@ -114,6 +115,7 @@ in
         ${"eveli" + "@formicer.com"} = ("ons" + "ku.eveli" + "@gmail.com");
         ${"eetu" + "@formicer.com"} = ("eet" + "u.mae" + "npaa" + "@outlook.com");
         ${"tammi" + "@formicer.com"} = ("osse" + ".tammi" + "@gmail.com");
+        ${"contact" + "@oy.lajp.fi"} = ("lajp" + "+oy" + "@lajp.fi");
       };
 
       certificateScheme = "acme-nginx";
@@ -126,9 +128,11 @@ in
     '';
 
     services.rspamd.workers.controller = {
-      bindSockets = [{
-        socket = "127.0.0.1:11334";
-      }];
+      bindSockets = [
+        {
+          socket = "127.0.0.1:11334";
+        }
+      ];
     };
 
     services.dovecot2.extraConfig = ''
