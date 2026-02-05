@@ -12,6 +12,7 @@
     source-sans-pro
     roboto
     nerd-fonts.symbols-only
+    nerd-fonts.iosevka
   ];
 
   fonts.enableDefaultPackages = true;

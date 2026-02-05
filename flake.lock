@@ -884,11 +884,11 @@
         "systems": "systems_6"
       },
       "locked": {
-        "lastModified": 1763128967,
-        "narHash": "sha256-wvKAiklXxUwcWktI6MCCFJCIEJvjJTFMWw5CSLwBtZU=",
+        "lastModified": 1769877095,
+        "narHash": "sha256-7NZ760Z9JDgeHfA7n8EPVWTnMRzjKAxMyxsXU3bo1Ac=",
         "owner": "lajp",
         "repo": "lajp.fi",
-        "rev": "17af0939105c5fae0f125b720ba9f397c40d94c2",
+        "rev": "8f1c9118c4d94186d48aef4777eb220b89421fa6",
         "type": "github"
       },
       "original": {
