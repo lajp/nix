@@ -51,6 +51,7 @@ in
       eddie
 
       wifi-qr
+      libnotify
 
       pdfpc
     ];

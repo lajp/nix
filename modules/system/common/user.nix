@@ -43,6 +43,7 @@ in
           "networkmanager"
           "video"
           "docker"
+          "dialout"
         ];
       };
 
