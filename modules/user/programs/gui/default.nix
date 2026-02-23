@@ -47,7 +47,9 @@ in
       pkgs-unstable.jellyfin-desktop
       steam
       libreoffice-fresh
-      kitsas
+      (kitsas.overrideAttrs (final: {
+        patches = final.patches ++ [ ./0001-Enable-yhteenvetoilmoitus-EU-sales-summary-for-local.patch ];
+      }))
       eddie
 
       wifi-qr

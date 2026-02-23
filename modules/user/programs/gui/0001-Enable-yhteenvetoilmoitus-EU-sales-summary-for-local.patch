@@ -1,0 +1,154 @@
+From de223ba9a93019d2280fad2752ab338f4f690727 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Luukas=20P=C3=B6rtfors?= <lajp@iki.fi>
+Date: Mon, 16 Feb 2026 00:33:18 +0100
+Subject: [PATCH] Enable yhteenvetoilmoitus (EU sales summary) for local SQLite
+ databases
+
+Previously the feature was gated behind a cloud connectivity check,
+preventing users with local databases from generating the declaration.
+
+- Add /alv/eu route handler to AlvRoute for local SQLite databases
+- Remove PilviModel guard in AlvSivu::pyydaYhteenvetoTiedot()
+- Use toimituspvm from invoice JSON for period filtering, matching
+  Vero's requirement that service delivery date determines the
+  reporting period (not the invoice date)
+- Handle NULL debit/credit values in the SQL query
+---
+ kitsas/alv/alvsivu.cpp            | 12 +++---
+ kitsas/sqlite/routes/alvroute.cpp | 62 ++++++++++++++++++++++++++++++-
+ kitsas/sqlite/routes/alvroute.h   |  3 ++
+ 3 files changed, 69 insertions(+), 8 deletions(-)
+
+diff --git a/kitsas/alv/alvsivu.cpp b/kitsas/alv/alvsivu.cpp
+index b5ad7bb9..f3336847 100644
+--- a/kitsas/alv/alvsivu.cpp
++++ b/kitsas/alv/alvsivu.cpp
+@@ -29,8 +29,8 @@
+ #include "naytin/naytinikkuna.h"
+ 
+ #include "db/kirjanpito.h"
+-#include "ilmoitintuottaja.h"
+ #include "pilvi/pilvimodel.h"
++#include "ilmoitintuottaja.h"
+ #include "kieli/kielet.h"
+ 
+ #include "alvilmoitustenmodel.h"
+@@ -261,12 +261,10 @@ void AlvSivu::kausiValittu()
+ 
+ void AlvSivu::pyydaYhteenvetoTiedot()
+ {
+-    if( qobject_cast<PilviModel*>(kp()->yhteysModel())) {
+-        KpKysely* kysely = kpk("/alv/eu");
+-        kysely->lisaaAttribuutti("pvm", kp()->paivamaara());
+-        connect( kysely, &KpKysely::vastaus, this, &AlvSivu::yhteenvetoTiedotSaapuu);
+-        kysely->kysy();
+-    }
++    KpKysely* kysely = kpk("/alv/eu");
++    kysely->lisaaAttribuutti("pvm", kp()->paivamaara());
++    connect( kysely, &KpKysely::vastaus, this, &AlvSivu::yhteenvetoTiedotSaapuu);
++    kysely->kysy();
+ }
+ 
+ void AlvSivu::yhteenvetoTiedotSaapuu(QVariant *data)
+diff --git a/kitsas/sqlite/routes/alvroute.cpp b/kitsas/sqlite/routes/alvroute.cpp
+index 2cc5bcf6..5f5bb1ea 100644
+--- a/kitsas/sqlite/routes/alvroute.cpp
++++ b/kitsas/sqlite/routes/alvroute.cpp
+@@ -16,6 +16,9 @@
+ */
+ #include "alvroute.h"
+ #include "db/tositetyyppimodel.h"
++#include "model/euro.h"
++
++#include <QDate>
+ 
+ AlvRoute::AlvRoute(SQLiteModel *model)
+     : SQLiteRoute(model, "/alv")
+@@ -23,8 +26,11 @@ AlvRoute::AlvRoute(SQLiteModel *model)
+ 
+ }
+ 
+-QVariant AlvRoute::get(const QString &/*polku*/, const QUrlQuery &/*urlquery*/)
++QVariant AlvRoute::get(const QString &polku, const QUrlQuery &urlquery)
+ {
++    if(polku == "eu")
++        return eu(urlquery);
++
+     QSqlQuery kysely(db());
+ 
+     kysely.exec( QString("SELECT id, json FROM Tosite WHERE tyyppi=%1 AND tila>=100 "
+@@ -42,3 +48,57 @@ QVariant AlvRoute::get(const QString &/*polku*/, const QUrlQuery &/*urlquery*/)
+     }
+     return vastaus;
+ }
++
++QVariant AlvRoute::eu(const QUrlQuery &urlquery)
++{
++    QDate pvm = QDate::fromString(urlquery.queryItemValue("pvm"), Qt::ISODate);
++    QDate alkupvm = QDate(pvm.year(), pvm.month(), 1).addMonths(-1);
++    QDate loppupvm = alkupvm.addMonths(1).addDays(-1);
++
++    QSqlQuery kysely(db());
++
++    // Check if a yhteenvetoilmoitus already exists for the period
++    kysely.prepare("SELECT id FROM Tosite WHERE tyyppi=9110 AND pvm>=:alkupvm AND pvm<=:loppupvm AND tila>=100");
++    kysely.bindValue(":alkupvm", alkupvm.toString(Qt::ISODate));
++    kysely.bindValue(":loppupvm", loppupvm.toString(Qt::ISODate));
++    kysely.exec();
++    if(kysely.next()) {
++        QVariantMap map;
++        map.insert("tosite", true);
++        return map;
++    }
++
++    // Get EU sales data grouped by customer
++    // Use toimituspvm from invoice JSON when available (determines the VAT period
++    // for accrual-based accounting), falling back to Vienti.pvm
++    kysely.prepare("SELECT k.nimi, k.alvtunnus, "
++                   "SUM(CASE WHEN v.alvkoodi=14 THEN COALESCE(v.kreditsnt,0) - COALESCE(v.debetsnt,0) ELSE 0 END) as tavarasnt, "
++                   "SUM(CASE WHEN v.alvkoodi=15 THEN COALESCE(v.kreditsnt,0) - COALESCE(v.debetsnt,0) ELSE 0 END) as palvelusnt "
++                   "FROM Vienti v "
++                   "JOIN Tosite t ON v.tosite=t.id "
++                   "JOIN Kumppani k ON v.kumppani=k.id "
++                   "WHERE v.alvkoodi IN (14,15) "
++                   "AND COALESCE(json_extract(t.json, '$.lasku.toimituspvm'), v.pvm) >= :alkupvm "
++                   "AND COALESCE(json_extract(t.json, '$.lasku.toimituspvm'), v.pvm) <= :loppupvm "
++                   "AND t.tila>=100 "
++                   "GROUP BY k.id "
++                   "ORDER BY k.alvtunnus");
++    kysely.bindValue(":alkupvm", alkupvm.toString(Qt::ISODate));
++    kysely.bindValue(":loppupvm", loppupvm.toString(Qt::ISODate));
++    kysely.exec();
++
++    QVariantList ilmoitus;
++    while(kysely.next()) {
++        QVariantMap rivi;
++        rivi.insert("nimi", kysely.value("nimi"));
++        rivi.insert("alvtunnus", kysely.value("alvtunnus"));
++        rivi.insert("tavara", Euro(kysely.value("tavarasnt").toLongLong()).toString());
++        rivi.insert("palvelu", Euro(kysely.value("palvelusnt").toLongLong()).toString());
++        ilmoitus.append(rivi);
++    }
++
++    QVariantMap vastaus;
++    vastaus.insert("pvm", loppupvm.toString(Qt::ISODate));
++    vastaus.insert("ilmoitus", ilmoitus);
++    return vastaus;
++}
+diff --git a/kitsas/sqlite/routes/alvroute.h b/kitsas/sqlite/routes/alvroute.h
+index 3dc4cbda..9fc60c78 100644
+--- a/kitsas/sqlite/routes/alvroute.h
++++ b/kitsas/sqlite/routes/alvroute.h
+@@ -25,6 +25,9 @@ public:
+     AlvRoute(SQLiteModel *model);
+ 
+     QVariant get(const QString &polku, const QUrlQuery &urlquery = QUrlQuery()) override;
++
++private:
++    QVariant eu(const QUrlQuery &urlquery);
+ };
+ 
+ #endif // ALVROUTE_H
+-- 
+2.51.2
+

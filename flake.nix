@@ -128,6 +128,7 @@
     in
     {
       overlays.default = import ./pkgs/default.nix;
+      nixosModules.k9mail-link = import ./nixos/k9mail-link.nix;
 
       nixosConfigurations = {
         nas = mkHost {

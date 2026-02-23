@@ -1,4 +1,6 @@
 _final: prev: {
+  k9mail-link = prev.callPackage ./k9mail-link.nix { };
+
   ilmomasiina =
     let
       nodejs = prev.nodejs_20;

@@ -8,6 +8,7 @@
     ./boot.nix
     ./hardware-configuration.nix
     ../../nixos/ilmomasiina.nix
+    ../../nixos/k9mail-link.nix
   ];
 
   networking.useDHCP = lib.mkDefault true;
@@ -72,4 +73,10 @@
   ];
 
   services.rpcbind.enable = true; # needed for NFS
+  # services.k9mail-link = {
+  #   enable = true;
+  #   envFile = "/run/agenix/k9mail-link.env";
+  #   newPrefix = "https://mail.lajp.fi/";
+  #   environment.RUST_LOG = "info";
+  # };
 }
