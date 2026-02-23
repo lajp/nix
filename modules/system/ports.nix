@@ -1,17 +1,116 @@
-{ lib, config, ... }:
+{ lib, config, options, ... }:
 let
   inherit (lib) mkOption types;
 
   basePort = 3000;
   requests = config.lajp.portRequests;
 
+  normalizePath = path:
+    let
+      storeMatch = builtins.match "^/nix/store/[^/]+-source/(.*)$" path;
+    in
+    if storeMatch == null then path else lib.head storeMatch;
+
+  formatPos = pos:
+    let
+      file =
+        if pos != null && pos ? file then
+          normalizePath pos.file
+        else
+          "<unknown>";
+      line = if pos != null && pos ? line then ":${toString pos.line}" else "";
+      column = if pos != null && pos ? column then ":${toString pos.column}" else "";
+    in
+    "${file}${line}${column}";
+
+  portRequestDefinitions =
+    if options ? lajp && options.lajp ? portRequests && options.lajp.portRequests ? definitionsWithLocations then
+      options.lajp.portRequests.definitionsWithLocations
+    else
+      [ ];
+
+  rawExplicitAllocations =
+    lib.concatMap
+      (definition:
+        let
+          value =
+            if definition ? value && builtins.isAttrs definition.value then
+              definition.value
+            else
+              { };
+          fallbackFile =
+            if definition ? file then
+              definition.file
+            else
+              "<unknown>";
+        in
+        lib.concatMap
+          (name:
+            let
+              port = value.${name};
+              pos = builtins.unsafeGetAttrPos name value;
+              resolvedPos =
+                if pos == null then
+                  { file = fallbackFile; }
+                else if pos ? file then
+                  pos
+                else
+                  pos // { file = fallbackFile; };
+            in
+            if builtins.isInt port then
+              [
+                {
+                  inherit name port;
+                  pos = resolvedPos;
+                }
+              ]
+            else
+              [ ])
+          (lib.attrNames value))
+      portRequestDefinitions;
+
+  explicitAllocations =
+    lib.filter
+      (allocation:
+        builtins.hasAttr allocation.name requests
+        && builtins.isInt requests.${allocation.name}
+        && requests.${allocation.name} == allocation.port)
+      rawExplicitAllocations;
+
+  sortByNameAndPos = a: b:
+    if a.name != b.name then
+      a.name < b.name
+    else
+      formatPos a.pos < formatPos b.pos;
+
+  groupedExplicitAllocationsByPort = lib.groupBy (allocation: toString allocation.port) explicitAllocations;
+
   # Separate explicit (number) from auto (true) requests
-  explicitPorts = lib.filterAttrs (n: v: builtins.isInt v) requests;
-  autoRequests = lib.attrNames (lib.filterAttrs (n: v: v == true) requests);
+  explicitPorts = lib.filterAttrs (_: v: builtins.isInt v) requests;
+  autoRequests = lib.attrNames (lib.filterAttrs (_: v: v == true) requests);
 
   # Check for duplicate explicit ports
   explicitValues = lib.attrValues explicitPorts;
-  duplicates = lib.filter (p: lib.count (x: x == p) explicitValues > 1) explicitValues;
+  duplicateExplicitPorts =
+    lib.sort (a: b: a < b) (lib.unique (lib.filter (port: lib.count (x: x == port) explicitValues > 1) explicitValues));
+
+  formatExplicitDuplicate = port:
+    let
+      key = toString port;
+      allocations =
+        if builtins.hasAttr key groupedExplicitAllocationsByPort then
+          lib.sort sortByNameAndPos groupedExplicitAllocationsByPort.${key}
+        else
+          [ ];
+      lines =
+        if allocations == [ ] then
+          [ "- no source locations available" ]
+        else
+          lib.unique (map (allocation: "- lajp.portRequests.${allocation.name} at ${formatPos allocation.pos}") allocations);
+    in
+    "port ${toString port}:\n${lib.concatStringsSep "\n" lines}";
+
+  duplicateExplicitDetails = lib.concatStringsSep "\n" (map formatExplicitDuplicate duplicateExplicitPorts);
 
   # Get all used explicit ports for collision check
   usedPorts = lib.unique explicitValues;
@@ -32,7 +131,48 @@ let
 
   # Check auto ports don't collide with explicit
   allPorts = lib.attrValues portMap;
-  allDuplicates = lib.filter (p: lib.count (x: x == p) allPorts > 1) allPorts;
+  allDuplicatePorts =
+    lib.sort (a: b: a < b) (lib.unique (lib.filter (port: lib.count (x: x == port) allPorts > 1) allPorts));
+
+  # Keep collision reporting focused on auto allocation conflicts so
+  # explicit duplicate requests are only reported once by the assertion above.
+  collisionPorts =
+    lib.filter
+      (
+        port:
+        let
+          explicitCount = lib.count (value: value == port) (lib.attrValues explicitPorts);
+          autoCount = lib.count (value: value == port) (lib.attrValues autoPorts);
+        in
+        autoCount > 1 || (explicitCount > 0 && autoCount > 0)
+      )
+      allDuplicatePorts;
+
+  formatCollision = port:
+    let
+      key = toString port;
+      explicitForPort =
+        if builtins.hasAttr key groupedExplicitAllocationsByPort then
+          lib.sort sortByNameAndPos groupedExplicitAllocationsByPort.${key}
+        else
+          [ ];
+      explicitLines =
+        lib.unique
+          (map
+            (allocation: "- lajp.portRequests.${allocation.name} (explicit) at ${formatPos allocation.pos}")
+            explicitForPort);
+      autoForPort = lib.sort (a: b: a < b) (lib.filter (name: autoPorts.${name} == port) (lib.attrNames autoPorts));
+      autoLines = map (name: "- lajp.portRequests.${name} (auto) allocated in modules/system/ports.nix") autoForPort;
+      allLines = explicitLines ++ autoLines;
+      lines =
+        if allLines == [ ] then
+          [ "- no allocation metadata available" ]
+        else
+          allLines;
+    in
+    "port ${toString port}:\n${lib.concatStringsSep "\n" lines}";
+
+  collisionDetails = lib.concatStringsSep "\n" (map formatCollision collisionPorts);
 in
 {
   options.lajp.portRequests = mkOption {
@@ -55,12 +195,12 @@ in
   config = {
     assertions = [
       {
-        assertion = duplicates == [ ];
-        message = "Duplicate explicit port requests: ${toString duplicates}";
+        assertion = duplicateExplicitPorts == [ ];
+        message = "Duplicate explicit port requests detected:\n${duplicateExplicitDetails}";
       }
       {
-        assertion = allDuplicates == [ ];
-        message = "Port collision detected: ${toString allDuplicates}";
+        assertion = collisionPorts == [ ];
+        message = "Port collision detected:\n${collisionDetails}";
       }
     ];
   };
