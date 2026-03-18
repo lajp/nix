@@ -1,3 +1,8 @@
+{ config, ... }:
+let
+  gpgConnectAgent = "${config.programs.gpg.package}/bin/gpg-connect-agent";
+  gpgConf = "${config.programs.gpg.package}/bin/gpgconf";
+in
 {
   programs.fish = {
     enable = true;
@@ -10,8 +15,15 @@
       set fish_cursor_replace_one underscore
       set fish_cursor_visual block
 
-      export SSH_AUTH_SOCK=(gpgconf --list-dirs agent-ssh-socket)
+      export SSH_AUTH_SOCK=(${gpgConf} --list-dirs agent-ssh-socket)
     '';
+
+    functions.lajp_update_gpg_startup_tty = {
+      body = ''
+        ${gpgConnectAgent} --quiet updatestartuptty /bye >/dev/null
+      '';
+      onEvent = "fish_preexec";
+    };
 
     shellAbbrs = {
       tempdir = "cd $(mktemp -d)";
