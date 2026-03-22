@@ -154,12 +154,14 @@
             services.smartd.enable = true;
             services.nixarr.enable = true;
             services.nextcloud.enable = true;
+            services.attic.enable = true;
             services.dyndns = {
               enable = true;
               domains = [
                 "jellyfin.lajp.fi"
                 "jellyseerr.lajp.fi"
                 "pilvi.lajp.fi"
+                "cache.lajp.fi"
               ];
             };
             hardware.zfs.enable = true;
