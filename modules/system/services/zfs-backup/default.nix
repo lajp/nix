@@ -18,7 +18,7 @@ in
     enable = mkEnableOption "Enable ZFS backups";
     pool = mkOption {
       description = "name of the zfs pool to backup";
-      type = types.string;
+      type = types.str;
     };
   };
 
@@ -51,14 +51,42 @@ in
           gawk
         ];
 
-        wantedBy = [ "multi-user.target" ];
+      };
+
+      services."zfs-rclone-backup-full" = {
+        description = "ZFS Google Drive full backup (reseed)";
+        serviceConfig = {
+          Type = "oneshot";
+          ExecStart = "${pkgs.writeShellScriptBin "backup.sh" (builtins.readFile ./backup.sh)}/bin/backup.sh";
+        };
+
+        environment = {
+          POOL = cfg.pool;
+          RCLONE_CONFIG = config.age.secrets.rclone-config.path;
+          FULL = "1";
+        };
+
+        path = with pkgs; [
+          rclone
+          zfs
+          gawk
+        ];
+
       };
 
       timers."zfs-rclone-backup" = {
-        enable = false;
+        wantedBy = [ "timers.target" ];
         timerConfig = {
           OnCalendar = "00:05";
           RandomizedDelaySec = "5h";
+        };
+      };
+
+      timers."zfs-rclone-backup-full" = {
+        wantedBy = [ "timers.target" ];
+        timerConfig = {
+          OnCalendar = "quarterly";
+          RandomizedDelaySec = "6h";
         };
       };
     };

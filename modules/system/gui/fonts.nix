@@ -13,6 +13,7 @@
     roboto
     nerd-fonts.symbols-only
     nerd-fonts.iosevka
+    corefonts
   ];
 
   fonts.enableDefaultPackages = true;

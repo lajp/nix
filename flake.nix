@@ -166,7 +166,7 @@
             };
             hardware.zfs.enable = true;
             services.zfs-backup = {
-              enable = false;
+              enable = true;
               pool = "naspool";
             };
             services.prometheus.enable = true;
@@ -439,14 +439,22 @@
       };
 
       # This is highly advised, and will prevent many possible mistakes
-      checks = {
-        x86_64-linux = deploy-rs.lib.x86_64-linux.deployChecks {
-          nodes = { inherit (self.deploy.nodes) nas vaasanas; };
+      checks =
+        let
+          testPkgs = import nixpkgs { system = "x86_64-linux"; };
+        in
+        {
+          x86_64-linux =
+            deploy-rs.lib.x86_64-linux.deployChecks {
+              nodes = { inherit (self.deploy.nodes) nas vaasanas; };
+            }
+            // {
+              zfs-backup = testPkgs.callPackage ./tests/zfs-backup.nix { };
+            };
+          aarch64-linux = deploy-rs.lib.aarch64-linux.deployChecks {
+            nodes = { inherit (self.deploy.nodes) proxy-pi ankka; };
+          };
         };
-        aarch64-linux = deploy-rs.lib.aarch64-linux.deployChecks {
-          nodes = { inherit (self.deploy.nodes) proxy-pi ankka; };
-        };
-      };
 
     }
     // flake-utils.lib.eachDefaultSystem (system: rec {
