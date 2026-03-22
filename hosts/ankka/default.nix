@@ -9,8 +9,6 @@
   nixpkgs.hostPlatform = "aarch64-linux";
   security.sudo.wheelNeedsPassword = false;
 
-  documentation.man.generateCaches = false;
-
   boot.tmp.cleanOnBoot = true;
   zramSwap.enable = true;
   networking.hostName = "ankka";

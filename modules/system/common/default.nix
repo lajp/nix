@@ -103,6 +103,8 @@ in
     inputs.agenix.packages."${system}".default
   ];
 
+  documentation.man.generateCaches = mkIf server false;
+
   # NOTE: On servers we'll use gpg agent forwarding
   # so we don't want the agent to overwrite the socket
   programs.gnupg.agent.settings.no-autostart = mkIf server true;

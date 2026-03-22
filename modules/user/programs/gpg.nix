@@ -7,7 +7,7 @@ let
   gpgKey = pkgs.fetchurl {
     url = "https://keys.openpgp.org/vks/v1/by-fingerprint/${osConfig.lajp.user.key}";
     # NOTE: This is sub-optimal since it has to be changed each time the pubkey changes
-    sha256 = "VIl1uCM0ZC+0fqgYBmsUMkIT8WBRlb2rrE9vbitbltw=";
+    sha256 = "vdwLNpjm2+xCJL4jMP7PkJuPoVukF+Wb2TUavlC1bBw=";
   };
 in
 {
