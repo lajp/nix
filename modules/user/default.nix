@@ -53,7 +53,7 @@ in
       trusted-substituters = [
         "https://cache.nixos.org"
         "https://nix-community.cachix.org"
-        "https://cache.lajp.fi"
+        "https://cache.lajp.fi/ci"
       ];
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
