@@ -16,6 +16,7 @@
     ./gpg.nix
     ./vaultwarden.nix
     ./restic.nix
+    ./backup-notify.nix
     ./niri.nix
     ./pia.nix
     ./website.nix

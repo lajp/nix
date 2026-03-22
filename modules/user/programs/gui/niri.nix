@@ -7,6 +7,32 @@
 let
   inherit (lib) mkIf;
   cfg = osConfig.lajp.services.niri;
+  backupNotifyEnabled = osConfig.lajp.services.backup-notify.enable;
+
+  normalImage = ../../../../images/colemak_dh_iso.png;
+  stateFile = "/var/lib/backup-notify/state";
+
+  wallpaperScript = pkgs.writeShellScript "niri-wallpaper" ''
+    if [ -f "${stateFile}" ]; then
+      IMAGE=$(cat "${stateFile}")
+    else
+      IMAGE="${normalImage}"
+    fi
+    exec ${lib.getExe pkgs.swaybg} -m fit -i "$IMAGE"
+  '';
+
+  wallpaperSwapScript = pkgs.writeShellScript "backup-wallpaper-swap" ''
+    ${pkgs.procps}/bin/pkill -x swaybg || true
+    ${pkgs.coreutils}/bin/sleep 0.5
+
+    if [ -f "${stateFile}" ]; then
+      IMAGE=$(cat "${stateFile}")
+    else
+      IMAGE="${normalImage}"
+    fi
+
+    ${lib.getExe pkgs.swaybg} -m fit -i "$IMAGE" &
+  '';
 in
 {
   config = mkIf cfg.enable {
@@ -146,13 +172,7 @@ in
 
       spawn-at-startup = [
         {
-          command = [
-            "${lib.getExe pkgs.swaybg}"
-            "-m"
-            "fit"
-            "-i"
-            "${../../../../images/colemak_dh_iso.png}"
-          ];
+          command = [ "${wallpaperScript}" ];
         }
       ];
 
@@ -265,6 +285,21 @@ in
             "Mod+Shift+${toString x}".action.move-column-to-workspace = x;
           }) (builtins.genList (x: x + 1) 9)
         ));
+    };
+
+    systemd.user.services.backup-wallpaper-swap = mkIf backupNotifyEnabled {
+      Unit.Description = "Swap wallpaper based on backup state";
+      Service = {
+        Type = "oneshot";
+        ExecStart = "${wallpaperSwapScript}";
+        KillMode = "process";
+      };
+    };
+
+    systemd.user.paths.backup-wallpaper-watcher = mkIf backupNotifyEnabled {
+      Unit.Description = "Watch backup state for wallpaper changes";
+      Path.PathChanged = "/var/lib/backup-notify";
+      Install.WantedBy = [ "graphical-session.target" ];
     };
   };
 }

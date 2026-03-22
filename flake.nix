@@ -278,6 +278,7 @@
             core.hostname = "framework";
 
             services.restic.enable = true;
+            services.backup-notify.enable = true;
             services.niri.enable = true;
             services.ssh = {
               enable = true;
