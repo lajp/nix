@@ -7,51 +7,63 @@ Feel free to utilize my code in your own configuration.
 
 ## Overview of the systems
 
-The [flake.nix](./flake.nix) a bunch of different NixOS systems
-* nas, My main server for media, hot backups and other related stuff.
-* vaasanas, My secondary server.
-* t480, My daily-driver laptop with home-manager
+The [flake.nix](./flake.nix) defines the following NixOS systems:
+* **nas** — Main server for media, backups, and other services (Jellyfin, Nextcloud, Vaultwarden, nixarr, etc.)
+* **vaasanas** — Secondary server (Samba, ZFS, Prometheus)
+* **t480** — Thinkpad T480 laptop with home-manager
+* **framework** — Framework 13 laptop with home-manager (daily driver)
+* **proxy-pi** — Raspberry Pi 4 running AdGuard Home and Prometheus
+* **ankka** — Hetzner aarch64 server (Headscale, mail server, Grafana, central Prometheus, website, HedgeDoc)
 
 ## Structure of the configuration
 
 ```
 .
 ├── hosts
-│   ├── nas
-│   ├── t480
-│   └── vaasanas
+│   ├── ankka
+│   ├── framework
+│   ├── nas
+│   ├── proxy-pi
+│   ├── t480
+│   └── vaasanas
 ├── images
 ├── lib
 ├── modules
-│   ├── system
-│   │   ├── common
-│   │   ├── gui
-│   │   ├── hardware
-│   │   ├── services
-│   │   └── virtualisation
-│   └── user
-│       ├── programs
-│       │   └── neomutt
-│       └── services
+│   ├── system
+│   │   ├── common
+│   │   ├── gui
+│   │   ├── hardware
+│   │   ├── services
+│   │   │   └── dashboards
+│   │   └── virtualisation
+│   └── user
+│       ├── programs
+│       │   ├── gui
+│       │   └── neomutt
+│       └── services
+├── nixos
+├── pkgs
 └── secrets
 ```
 
-* [/hosts](./hosts) contains hosts-specific configuration
+* [/hosts](./hosts) contains host-specific configuration
 * [/lib](./lib) contains the `mkHost` helper function
-* [/modules/system](./modules/system) contains system configuration
-* [/modules/user](./modules/user) contains home-manager configuration
+* [/modules/system](./modules/system) contains NixOS system modules (`lajp.*` options)
+* [/modules/user](./modules/user) contains home-manager modules (`lajp.*` options)
+* [/nixos](./nixos) contains standalone NixOS modules
+* [/pkgs](./pkgs) contains custom package definitions
 
 
 ## Configuration of interest
 
-### Agenix
+### Agenix-rekey
 
-I use [agenix](https://github.com/ryantm/agenix) for secret management both with and 
-without the home-manager integration, depending on the system.
+I use [agenix-rekey](https://github.com/oddlama/agenix-rekey) for secret management.
+Secrets are encrypted with a YubiKey-based master identity.
 
 ### Neovim
 
-My [Neovim configuration](./modules/user/programs/neovim.nix) 
+My [Neovim configuration](./modules/user/programs/neovim.nix)
 is probably the single largest component of this repository.
 I use [Nixvim](https://github.com/nix-community/nixvim) for configuring it.
 
@@ -63,26 +75,52 @@ It features:
 
 ### Niri
 
-I've recently adopted the [Niri](https://github.com/YaLTeR/niri) tiling and 
+I've recently adopted the [Niri](https://github.com/YaLTeR/niri) tiling and
 scrolling Wayland compositor. I configure it through the
 [niri-flake](https://github.com/sodiboo/niri-flake).
 
 ### Neomutt
 
-I use Neomutt as my primary email client. My [neomutt configuration]
-together with my home-manager [accounts configuration](./modules/user/accounts.nix) 
-is quite sophisticated. It supports multiple accounts well and allows authenticating 
+I use Neomutt as my primary email client. My [neomutt configuration](./modules/user/programs/neomutt/)
+together with my home-manager [accounts configuration](./modules/user/accounts.nix)
+is quite sophisticated. It supports multiple accounts well and allows authenticating
 to servers with oauth. Helpers for adding outlook and gmail accounts are provided.
 Support for PGP is also included.
 
 ### YubiKey
 
-I use my YubiKey for signing commits, authenticating through SSH, decrypting my passwords and even for logging into my computer.
+I use my YubiKey for signing commits, authenticating through SSH, decrypting my passwords and even for logging into my computer and unlocking the disk encryption.
 
-### Transmission & Cross-Seed + Jackett + flaresolverr
+### Nixarr
 
-I run Transmission in a separate network namespace as configured in the [pia-nix flake](https://github.com/Atte/pia-nix).
+I use [nixarr](https://github.com/rasmus-kirk/nixarr) to manage my media stack.
+It runs Jellyfin, Transmission (in a VPN namespace), Sonarr, Radarr, Lidarr, Prowlarr,
+Bazarr, Jellyseerr, and cross-seed for cross-seeding between private trackers.
 
-### Jellyfin & TvHeadend
+### Monitoring
 
-I have configured Jellyfin to be able to play live-tv through tvheadend.
+Distributed Prometheus monitoring across all hosts. Each node runs a monitoring agent
+that pushes metrics via remote write to the central Prometheus instance on ankka.
+Grafana dashboards are provisioned for nginx, ZFS, SMART, GPU, email, and more.
+
+### Port Management
+
+A custom [port allocation system](https://discourse.nixos.org/t/nixos-port-allocation/74953)
+(`modules/system/ports.nix`) that prevents port collisions across services. Ports can
+be explicitly assigned or auto-allocated starting from 3000. Conflicts are reported
+with source locations.
+
+### Attic Binary Cache
+
+A self-hosted [Attic](https://github.com/zhaofengli/attic) Nix binary cache running
+on nas. CI builds are pushed to it, speeding up subsequent builds across the infrastructure.
+
+### Headscale
+
+Self-hosted [Headscale](https://github.com/juanfont/headscale) coordination server
+on ankka, providing a private alternative to the Tailscale SaaS control plane.
+
+### ZFS Cloud Backup
+
+Incremental ZFS snapshot backup to cloud storage via rclone. Uses ZFS holds to track
+backup state and only sends new data. Currently not operational.

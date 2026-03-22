@@ -48,12 +48,15 @@ mkHost {
 
 - `modules/system/` - NixOS modules with `lajp.*` options
   - `services/` - Service configurations (ssh, tailscale, prometheus, nixarr, etc.)
-    - `dashboards/` - Grafana dashboard JSON files (nginx-analytics, etc.)
-  - `hardware/` - Hardware-specific configs (zfs, sound, bluetooth, backlight)
+    - `dashboards/` - Grafana dashboard JSON files (email, gpu, hedgedoc, nginx-analytics, nginx, nixos-nodes, smart, ups, zfs)
+  - `hardware/` - Hardware-specific configs (zfs, sound, bluetooth, backlight, memory, rtl-sdr)
   - `common/` - Base system configuration
+  - `gui/` - GUI-related configs (fonts, keyboard, theme, virt-manager)
+  - `virtualisation/` - Virtualisation configs (podman)
 - `modules/user/` - Home-manager modules with `lajp.*` options
-  - `programs/` - User applications (neovim via nixvim, gui apps, neomutt)
-  - `services/` - User services
+  - `programs/` - User applications (neovim via nixvim, fish, git, gpg, jujutsu, mail, neomutt, pass, ssh, testaustime, zsh)
+    - `gui/` - GUI applications (firefox, mpv, niri)
+  - `services/` - User services (dwm-status, swayidle, waybar)
 
 ### Secrets Management
 
@@ -70,6 +73,15 @@ Master identity: `yubikey.pub` (YubiKey-based)
 - `niri` - Wayland compositor
 - `deploy-rs` - remote deployment
 - `stylix` - system-wide theming
+- `nixarr` - media stack (Jellyfin, transmission, *arr suite)
+- `nixos-hardware` - hardware-specific optimizations
+
+### Port Management
+
+Custom port allocation system in `modules/system/ports.nix`. Services request ports via `lajp.portRequests` — either as an explicit number or `true` for auto-allocation (starting from 3000). Allocated ports are available via `lajp.ports.<service>`. Detects collisions with source location reporting.
+
+### Notes
+
 - When creating a service, always check if it can be added to prometheus and grafana
 - Kernel upgrade on nas requires reboot, otherwise cuda in jellyfin fails
 - Secret management is done with agenix *rekey*, no secrets.nix like in agenix
