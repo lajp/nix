@@ -47,6 +47,7 @@ in
         server = {
           http_addr = "127.0.0.1";
           http_port = grafanaPort;
+          root_url = "https://grafana.lajp.fi";
           enforce_domain = true;
           enable_gzip = true;
           domain = "grafana.lajp.fi";
