@@ -436,7 +436,14 @@
       };
 
       # This is highly advised, and will prevent many possible mistakes
-      checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
+      checks = {
+        x86_64-linux = deploy-rs.lib.x86_64-linux.deployChecks {
+          nodes = { inherit (self.deploy.nodes) nas vaasanas; };
+        };
+        aarch64-linux = deploy-rs.lib.aarch64-linux.deployChecks {
+          nodes = { inherit (self.deploy.nodes) proxy-pi ankka; };
+        };
+      };
 
     }
     // flake-utils.lib.eachDefaultSystem (system: rec {

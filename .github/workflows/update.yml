@@ -71,21 +71,23 @@ jobs:
     if: needs.update.outputs.update_available == 'true'
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
       - name: Create pull request
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ needs.update.outputs.branch }}
-          base: main
-          title: "chore: update flake inputs ($(date +%Y-%m-%d))"
-          body: |
-            This automated PR updates flake inputs.
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ needs.update.outputs.branch }}
+        run: |
+          if ! gh pr list --head "$BRANCH" --json number --jq '.[0].number' | grep -q .; then
+            gh pr create \
+              --base main \
+              --head "$BRANCH" \
+              --title "chore: update flake inputs ($(date +%Y-%m-%d))" \
+              --body "This automated PR updates flake inputs.
 
-            - Created by the **Update inputs** workflow
-            - Triggered on schedule or manual dispatch
-
-          commit-message: "flake.inputs: automatic update"
-          delete-branch: true
-          labels: |
-            automated
-            dependencies
+          - Created by the **Update inputs** workflow
+          - Triggered on schedule or manual dispatch"
+          else
+            echo "PR already exists for $BRANCH"
+          fi
