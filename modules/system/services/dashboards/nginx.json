@@ -1,7 +1,11 @@
 {
   "uid": "nixos-nginx",
   "title": "Nginx Traffic",
-  "tags": ["nixos", "prometheus", "nginx"],
+  "tags": [
+    "nixos",
+    "prometheus",
+    "nginx"
+  ],
   "timezone": "browser",
   "schemaVersion": 38,
   "version": 1,
@@ -11,7 +15,10 @@
       {
         "name": "job",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": null },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "query": "label_values(nginx_up, job)",
         "multi": true,
         "includeAll": true,
@@ -20,7 +27,10 @@
       {
         "name": "instance",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": null },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "query": "label_values(nginx_up{job=~\"$job\"}, instance)",
         "multi": true,
         "includeAll": true,
@@ -32,64 +42,146 @@
     {
       "type": "stat",
       "title": "Nginx Up",
-      "gridPos": { "x": 0, "y": 0, "w": 4, "h": 4 },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 4,
+        "h": 4
+      },
       "targets": [
         {
           "expr": "nginx_up{job=~\"$job\",instance=~\"$instance\"}",
-          "refId": "A"
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { 
-            "mappings": [ { "type": "value", "options": { "0": { "text": "Down", "color": "red" }, "1": { "text": "Up", "color": "green" } } } ] 
+        "defaults": {
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "Down",
+                  "color": "red"
+                },
+                "1": {
+                  "text": "Up",
+                  "color": "green"
+                }
+              }
+            }
+          ]
         }
+      },
+      "id": 1,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "timeseries",
       "title": "Requests per Second",
-      "gridPos": { "x": 4, "y": 0, "w": 20, "h": 8 },
+      "gridPos": {
+        "x": 4,
+        "y": 0,
+        "w": 20,
+        "h": 8
+      },
       "targets": [
         {
           "expr": "rate(nginx_http_requests_total{job=~\"$job\",instance=~\"$instance\"}[1m])",
           "refId": "A",
-          "legendFormat": "{{instance}}"
+          "legendFormat": "{{instance}}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
-      ]
+      ],
+      "id": 2,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      }
     },
     {
       "type": "timeseries",
       "title": "Active Connections",
-      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+      "gridPos": {
+        "x": 0,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      },
       "targets": [
         {
           "expr": "nginx_connections_active{job=~\"$job\",instance=~\"$instance\"}",
           "refId": "A",
-          "legendFormat": "{{instance}}"
+          "legendFormat": "{{instance}}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
-      ]
+      ],
+      "id": 3,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      }
     },
     {
       "type": "timeseries",
       "title": "Connection State",
-      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+      "gridPos": {
+        "x": 12,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      },
       "targets": [
         {
           "expr": "nginx_connections_reading{job=~\"$job\",instance=~\"$instance\"}",
           "refId": "A",
-          "legendFormat": "{{instance}} Reading"
+          "legendFormat": "{{instance}} Reading",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         },
         {
           "expr": "nginx_connections_writing{job=~\"$job\",instance=~\"$instance\"}",
           "refId": "B",
-          "legendFormat": "{{instance}} Writing"
+          "legendFormat": "{{instance}} Writing",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         },
         {
           "expr": "nginx_connections_waiting{job=~\"$job\",instance=~\"$instance\"}",
           "refId": "C",
-          "legendFormat": "{{instance}} Waiting"
+          "legendFormat": "{{instance}} Waiting",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
-      ]
+      ],
+      "id": 4,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      }
     }
-  ]
+  ],
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  }
 }

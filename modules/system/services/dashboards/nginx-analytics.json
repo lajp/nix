@@ -1,7 +1,12 @@
 {
   "uid": "nixos-nginx-analytics",
   "title": "Nginx Analytics (Detailed)",
-  "tags": ["nixos", "prometheus", "nginx", "logs"],
+  "tags": [
+    "nixos",
+    "prometheus",
+    "nginx",
+    "logs"
+  ],
   "timezone": "browser",
   "schemaVersion": 38,
   "version": 1,
@@ -11,7 +16,10 @@
       {
         "name": "job",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": null },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "query": "label_values(nginx_http_response_count_total, job)",
         "multi": true,
         "includeAll": true,
@@ -20,7 +28,10 @@
       {
         "name": "instance",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": null },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "query": "label_values(nginx_http_response_count_total{job=~\"$job\"}, instance)",
         "multi": true,
         "includeAll": true,
@@ -29,7 +40,10 @@
       {
         "name": "vhost",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": null },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "query": "label_values(nginx_http_response_count_total{job=~\"$job\", instance=~\"$instance\"}, vhost)",
         "multi": true,
         "includeAll": true,
@@ -41,141 +55,319 @@
     {
       "type": "stat",
       "title": "Total Requests (5m)",
-      "gridPos": { "x": 0, "y": 0, "w": 4, "h": 4 },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 4,
+        "h": 4
+      },
       "targets": [
         {
           "expr": "sum(increase(nginx_http_response_count_total{job=~\"$job\",instance=~\"$instance\",vhost=~\"$vhost\"}[5m]))",
-          "refId": "A"
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
-      ]
+      ],
+      "id": 1,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      }
     },
     {
       "type": "stat",
       "title": "Error Rate (5xx)",
-      "gridPos": { "x": 4, "y": 0, "w": 4, "h": 4 },
+      "gridPos": {
+        "x": 4,
+        "y": 0,
+        "w": 4,
+        "h": 4
+      },
       "targets": [
         {
           "expr": "(sum(rate(nginx_http_response_count_total{job=~\"$job\",instance=~\"$instance\",vhost=~\"$vhost\",status=~\"5..\"}[5m])) or vector(0)) / sum(rate(nginx_http_response_count_total{job=~\"$job\",instance=~\"$instance\",vhost=~\"$vhost\"}[5m]))",
-          "refId": "A"
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "percent", "min": 0, "max": 1, "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null }, { "color": "red", "value": 0.01 } ] } }
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 0.01
+              }
+            ]
+          }
+        }
+      },
+      "id": 2,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "stat",
       "title": "Average Response Time",
-      "gridPos": { "x": 8, "y": 0, "w": 4, "h": 4 },
+      "gridPos": {
+        "x": 8,
+        "y": 0,
+        "w": 4,
+        "h": 4
+      },
       "targets": [
         {
           "expr": "sum(rate(nginx_http_response_time_seconds_hist_sum{job=~\"$job\",instance=~\"$instance\",vhost=~\"$vhost\",status!=\"101\",method!=\"\"}[5m])) / sum(rate(nginx_http_response_time_seconds_hist_count{job=~\"$job\",instance=~\"$instance\",vhost=~\"$vhost\",status!=\"101\",method!=\"\"}[5m]))",
-          "refId": "A"
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "s" }
+        "defaults": {
+          "unit": "s"
+        }
+      },
+      "id": 3,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "stat",
       "title": "P95 Response Time",
-      "gridPos": { "x": 12, "y": 0, "w": 4, "h": 4 },
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 4,
+        "h": 4
+      },
       "targets": [
         {
           "expr": "histogram_quantile(0.95, sum(rate(nginx_http_response_time_seconds_hist_bucket{job=~\"$job\",instance=~\"$instance\",vhost=~\"$vhost\",status!=\"101\",method!=\"\"}[5m])) by (le))",
-          "refId": "A"
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "s" }
+        "defaults": {
+          "unit": "s"
+        }
+      },
+      "id": 4,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "bargauge",
       "title": "Total Requests by VHost",
-      "gridPos": { "x": 16, "y": 0, "w": 8, "h": 4 },
+      "gridPos": {
+        "x": 16,
+        "y": 0,
+        "w": 8,
+        "h": 4
+      },
       "targets": [
         {
           "expr": "sum by (vhost) (increase(nginx_http_response_count_total{job=~\"$job\",instance=~\"$instance\",vhost=~\"$vhost\"}[$__range]))",
           "refId": "A",
-          "legendFormat": "{{vhost}}"
+          "legendFormat": "{{vhost}}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "options": {
         "orientation": "horizontal",
         "displayMode": "gradient",
         "showUnfilled": true
+      },
+      "id": 5,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "timeseries",
       "title": "Requests by VHost",
-      "gridPos": { "x": 0, "y": 4, "w": 12, "h": 8 },
+      "gridPos": {
+        "x": 0,
+        "y": 4,
+        "w": 12,
+        "h": 8
+      },
       "targets": [
         {
           "expr": "sum by (vhost) (rate(nginx_http_response_count_total{job=~\"$job\",instance=~\"$instance\",vhost=~\"$vhost\"}[1m]))",
           "refId": "A",
-          "legendFormat": "{{vhost}}"
+          "legendFormat": "{{vhost}}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
-      ]
+      ],
+      "id": 6,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      }
     },
     {
       "type": "timeseries",
       "title": "Response Time by VHost (P95)",
-      "gridPos": { "x": 12, "y": 4, "w": 12, "h": 8 },
+      "gridPos": {
+        "x": 12,
+        "y": 4,
+        "w": 12,
+        "h": 8
+      },
       "targets": [
         {
           "expr": "histogram_quantile(0.95, sum(rate(nginx_http_response_time_seconds_hist_bucket{job=~\"$job\",instance=~\"$instance\",vhost=~\"$vhost\",status!=\"101\",method!=\"\"}[5m])) by (le, vhost))",
           "refId": "A",
-          "legendFormat": "{{vhost}}"
+          "legendFormat": "{{vhost}}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "s" }
+        "defaults": {
+          "unit": "s"
+        }
+      },
+      "id": 7,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "heatmap",
       "title": "Response Time Heatmap",
-      "gridPos": { "x": 0, "y": 12, "w": 24, "h": 10 },
+      "gridPos": {
+        "x": 0,
+        "y": 12,
+        "w": 24,
+        "h": 10
+      },
       "targets": [
         {
           "expr": "sum(rate(nginx_http_response_time_seconds_hist_bucket{job=~\"$job\",instance=~\"$instance\",vhost=~\"$vhost\",status!=\"101\",method!=\"\"}[5m])) by (le)",
           "refId": "A",
-          "format": "heatmap"
+          "format": "heatmap",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { "custom": { "scheme": "Spectral", "hideFrom": { "tooltip": false, "viz": false, "legend": false } } }
+        "defaults": {
+          "custom": {
+            "scheme": "Spectral",
+            "hideFrom": {
+              "tooltip": false,
+              "viz": false,
+              "legend": false
+            }
+          }
+        }
+      },
+      "id": 8,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "timeseries",
       "title": "Response Codes",
-      "gridPos": { "x": 0, "y": 22, "w": 12, "h": 8 },
+      "gridPos": {
+        "x": 0,
+        "y": 22,
+        "w": 12,
+        "h": 8
+      },
       "targets": [
         {
           "expr": "sum by (status) (rate(nginx_http_response_count_total{job=~\"$job\",instance=~\"$instance\",vhost=~\"$vhost\"}[1m]))",
           "refId": "A",
-          "legendFormat": "{{status}}"
+          "legendFormat": "{{status}}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
-      ]
+      ],
+      "id": 9,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      }
     },
     {
       "type": "timeseries",
       "title": "Bytes Sent",
-      "gridPos": { "x": 12, "y": 22, "w": 12, "h": 8 },
+      "gridPos": {
+        "x": 12,
+        "y": 22,
+        "w": 12,
+        "h": 8
+      },
       "targets": [
         {
           "expr": "sum(rate(nginx_http_response_size_bytes{job=~\"$job\",instance=~\"$instance\",vhost=~\"$vhost\"}[1m]))",
           "refId": "A",
-          "legendFormat": "Bytes/sec"
+          "legendFormat": "Bytes/sec",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "bytes" }
+        "defaults": {
+          "unit": "bytes"
+        }
+      },
+      "id": 10,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     }
-  ]
+  ],
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  }
 }

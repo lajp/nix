@@ -1,7 +1,14 @@
 {
   "uid": "email-services",
   "title": "Email Services",
-  "tags": ["nixos", "prometheus", "email", "postfix", "dovecot", "rspamd"],
+  "tags": [
+    "nixos",
+    "prometheus",
+    "email",
+    "postfix",
+    "dovecot",
+    "rspamd"
+  ],
   "timezone": "browser",
   "schemaVersion": 38,
   "version": 2,
@@ -11,7 +18,10 @@
       {
         "name": "job",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": null },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "query": "label_values(up{job=~\"postfix|dovecot|rspamd\"}, job)",
         "multi": true,
         "includeAll": true,
@@ -20,7 +30,10 @@
       {
         "name": "instance",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": null },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "query": "label_values(up{job=~\"$job\"}, instance)",
         "multi": true,
         "includeAll": true,
@@ -32,149 +45,333 @@
     {
       "type": "stat",
       "title": "Service Status",
-      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 4 },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 4
+      },
       "targets": [
         {
           "expr": "up{job=~\"$job\", instance=~\"$instance\"}",
-          "legendFormat": "{{job}} - {{instance}}"
+          "legendFormat": "{{job}} - {{instance}}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
         "defaults": {
           "mappings": [
-            { "type": "value", "options": { "0": { "text": "Down", "color": "red" }, "1": { "text": "Up", "color": "green" } } }
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "Down",
+                  "color": "red"
+                },
+                "1": {
+                  "text": "Up",
+                  "color": "green"
+                }
+              }
+            }
           ]
         }
+      },
+      "id": 1,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "row",
       "title": "Postfix",
       "collapsed": false,
-      "gridPos": { "x": 0, "y": 4, "w": 24, "h": 1 }
+      "gridPos": {
+        "x": 0,
+        "y": 4,
+        "w": 24,
+        "h": 1
+      },
+      "id": 2
     },
     {
       "type": "stat",
       "title": "Total Incoming Messages",
-      "gridPos": { "x": 0, "y": 5, "w": 12, "h": 4 },
+      "gridPos": {
+        "x": 0,
+        "y": 5,
+        "w": 12,
+        "h": 4
+      },
       "targets": [
         {
           "expr": "sum(postfix_smtpd_messages_processed_total{instance=~\"$instance\"})",
-          "legendFormat": "Total Incoming"
+          "legendFormat": "Total Incoming",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "short" }
+        "defaults": {
+          "unit": "short"
+        }
+      },
+      "id": 3,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "stat",
       "title": "Total Sent Messages",
-      "gridPos": { "x": 12, "y": 5, "w": 12, "h": 4 },
+      "gridPos": {
+        "x": 12,
+        "y": 5,
+        "w": 12,
+        "h": 4
+      },
       "targets": [
         {
           "expr": "sum(postfix_smtp_messages_processed_total{instance=~\"$instance\", status=\"sent\"})",
-          "legendFormat": "Total Sent"
+          "legendFormat": "Total Sent",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "short" }
+        "defaults": {
+          "unit": "short"
+        }
+      },
+      "id": 4,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "timeseries",
       "title": "Postfix Queue Depth",
-      "gridPos": { "x": 0, "y": 9, "w": 12, "h": 8 },
+      "gridPos": {
+        "x": 0,
+        "y": 9,
+        "w": 12,
+        "h": 8
+      },
       "targets": [
         {
           "expr": "sum(postfix_showq_queue_depth{instance=~\"$instance\"}) by (queue)",
-          "legendFormat": "{{queue}}"
+          "legendFormat": "{{queue}}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "short" }
+        "defaults": {
+          "unit": "short"
+        }
+      },
+      "id": 5,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "timeseries",
       "title": "Postfix Mail Activity",
-      "gridPos": { "x": 12, "y": 9, "w": 12, "h": 8 },
+      "gridPos": {
+        "x": 12,
+        "y": 9,
+        "w": 12,
+        "h": 8
+      },
       "targets": [
         {
           "expr": "rate(postfix_smtpd_messages_processed_total{instance=~\"$instance\"}[5m])",
-          "legendFormat": "Processed (Incoming)"
+          "legendFormat": "Processed (Incoming)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         },
         {
           "expr": "rate(postfix_smtp_messages_processed_total{instance=~\"$instance\", status=\"sent\"}[5m])",
-          "legendFormat": "Sent (Outgoing)"
+          "legendFormat": "Sent (Outgoing)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "mps" }
+        "defaults": {
+          "unit": "mps"
+        }
+      },
+      "id": 6,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "row",
       "title": "Dovecot",
       "collapsed": false,
-      "gridPos": { "x": 0, "y": 17, "w": 24, "h": 1 }
+      "gridPos": {
+        "x": 0,
+        "y": 17,
+        "w": 24,
+        "h": 1
+      },
+      "id": 7
     },
     {
       "type": "stat",
       "title": "Dovecot Status",
-      "gridPos": { "x": 0, "y": 18, "w": 6, "h": 4 },
+      "gridPos": {
+        "x": 0,
+        "y": 18,
+        "w": 6,
+        "h": 4
+      },
       "targets": [
         {
           "expr": "dovecot_up{instance=~\"$instance\"}",
-          "legendFormat": "Dovecot Up"
+          "legendFormat": "Dovecot Up",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
         "defaults": {
           "mappings": [
-            { "type": "value", "options": { "0": { "text": "Down", "color": "red" }, "1": { "text": "Up", "color": "green" } } }
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "Down",
+                  "color": "red"
+                },
+                "1": {
+                  "text": "Up",
+                  "color": "green"
+                }
+              }
+            }
           ]
         }
+      },
+      "id": 8,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "row",
       "title": "Rspamd",
       "collapsed": false,
-      "gridPos": { "x": 0, "y": 26, "w": 24, "h": 1 }
+      "gridPos": {
+        "x": 0,
+        "y": 26,
+        "w": 24,
+        "h": 1
+      },
+      "id": 9
     },
     {
       "type": "stat",
       "title": "Rspamd Scanned",
-      "gridPos": { "x": 0, "y": 27, "w": 6, "h": 4 },
+      "gridPos": {
+        "x": 0,
+        "y": 27,
+        "w": 6,
+        "h": 4
+      },
       "targets": [
         {
           "expr": "increase(rspamd_scanned{instance=~\"$instance\"}[1h])",
-          "legendFormat": "Scanned (1h)"
+          "legendFormat": "Scanned (1h)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
-      ]
+      ],
+      "id": 10,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      }
     },
     {
       "type": "stat",
       "title": "Rspamd Ham",
-      "gridPos": { "x": 6, "y": 27, "w": 6, "h": 4 },
+      "gridPos": {
+        "x": 6,
+        "y": 27,
+        "w": 6,
+        "h": 4
+      },
       "targets": [
         {
           "expr": "increase(rspamd_ham_count{instance=~\"$instance\"}[1h])",
-          "legendFormat": "Ham (1h)"
+          "legendFormat": "Ham (1h)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
-      ]
+      ],
+      "id": 11,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      }
     },
     {
       "type": "stat",
       "title": "Rspamd Spam",
-      "gridPos": { "x": 12, "y": 27, "w": 6, "h": 4 },
+      "gridPos": {
+        "x": 12,
+        "y": 27,
+        "w": 6,
+        "h": 4
+      },
       "targets": [
         {
           "expr": "increase(rspamd_spam_count{instance=~\"$instance\"}[1h])",
-          "legendFormat": "Spam (1h)"
+          "legendFormat": "Spam (1h)",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
-      ]
+      ],
+      "id": 12,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      }
     }
-  ]
+  ],
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  }
 }

@@ -1,7 +1,11 @@
 {
   "uid": "nixos-nodes",
   "title": "NixOS Nodes",
-  "tags": ["nixos", "prometheus", "node-exporter"],
+  "tags": [
+    "nixos",
+    "prometheus",
+    "node-exporter"
+  ],
   "timezone": "browser",
   "schemaVersion": 38,
   "version": 1,
@@ -11,7 +15,10 @@
       {
         "name": "job",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": null },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "query": "label_values(node_uname_info, job)",
         "multi": true,
         "includeAll": true,
@@ -20,7 +27,10 @@
       {
         "name": "instance",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": null },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "query": "label_values(node_uname_info{job=~\"$job\"}, instance)",
         "multi": true,
         "includeAll": true,
@@ -29,7 +39,10 @@
       {
         "name": "location",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": null },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "query": "label_values(node_uname_info{job=~\"$job\"}, location)",
         "multi": true,
         "includeAll": true,
@@ -38,7 +51,10 @@
       {
         "name": "role",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": null },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "query": "label_values(node_uname_info{job=~\"$job\"}, role)",
         "multi": true,
         "includeAll": true,
@@ -50,115 +66,262 @@
     {
       "type": "stat",
       "title": "Uptime",
-      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 6,
+        "h": 4
+      },
       "targets": [
         {
           "expr": "time() - node_boot_time_seconds{job=~\"$job\",instance=~\"$instance\",location=~\"$location\",role=~\"$role\"}",
-          "refId": "A"
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "s" }
+        "defaults": {
+          "unit": "s"
+        }
+      },
+      "id": 1,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "stat",
       "title": "Load / Cores",
-      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
+      "gridPos": {
+        "x": 6,
+        "y": 0,
+        "w": 6,
+        "h": 4
+      },
       "targets": [
         {
           "expr": "node_load1{job=~\"$job\",instance=~\"$instance\"} / count(node_cpu_seconds_total{mode=\"idle\",job=~\"$job\",instance=~\"$instance\"})",
-          "refId": "A"
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
-      ]
+      ],
+      "id": 2,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      }
     },
     {
       "type": "stat",
       "title": "Worst Disk Usage",
-      "gridPos": { "x": 12, "y": 0, "w": 6, "h": 4 },
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 6,
+        "h": 4
+      },
       "targets": [
         {
           "expr": "max(1 - (node_filesystem_avail_bytes{job=~\"$job\",instance=~\"$instance\",fstype!~\"tmpfs|overlay\"} / node_filesystem_size_bytes{job=~\"$job\",instance=~\"$instance\",fstype!~\"tmpfs|overlay\"}))",
-          "refId": "A"
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "percent", "min": 0, "max": 1 }
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 1
+        }
+      },
+      "id": 3,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "stat",
       "title": "Memory Usage",
-      "gridPos": { "x": 18, "y": 0, "w": 6, "h": 4 },
+      "gridPos": {
+        "x": 18,
+        "y": 0,
+        "w": 6,
+        "h": 4
+      },
       "targets": [
         {
           "expr": "avg(1 - (node_memory_MemAvailable_bytes{job=~\"$job\",instance=~\"$instance\",location=~\"$location\",role=~\"$role\"} / node_memory_MemTotal_bytes{job=~\"$job\",instance=~\"$instance\",location=~\"$location\",role=~\"$role\"}))",
-          "refId": "A"
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "percentunit", "min": 0, "max": 1 }
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1
+        }
+      },
+      "id": 4,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "timeseries",
       "title": "CPU Usage by Mode",
-      "gridPos": { "x": 0, "y": 4, "w": 12, "h": 6 },
+      "gridPos": {
+        "x": 0,
+        "y": 4,
+        "w": 12,
+        "h": 6
+      },
       "targets": [
         {
           "expr": "sum by (mode) (rate(node_cpu_seconds_total{job=~\"$job\",instance=~\"$instance\"}[5m]))",
-          "refId": "A"
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
-      "options": { "stacking": { "mode": "normal" } }
+      "options": {
+        "stacking": {
+          "mode": "normal"
+        }
+      },
+      "id": 5,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      }
     },
     {
       "type": "timeseries",
       "title": "CPU Pressure (PSI)",
-      "gridPos": { "x": 12, "y": 4, "w": 12, "h": 6 },
+      "gridPos": {
+        "x": 12,
+        "y": 4,
+        "w": 12,
+        "h": 6
+      },
       "targets": [
         {
           "expr": "rate(node_pressure_cpu_waiting_seconds_total{job=~\"$job\",instance=~\"$instance\"}[5m])",
-          "refId": "A"
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
-      ]
+      ],
+      "id": 6,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      }
     },
     {
       "type": "timeseries",
       "title": "Memory Usage",
-      "gridPos": { "x": 0, "y": 10, "w": 12, "h": 6 },
+      "gridPos": {
+        "x": 0,
+        "y": 10,
+        "w": 12,
+        "h": 6
+      },
       "targets": [
         {
           "expr": "1 - (node_memory_MemAvailable_bytes{job=~\"$job\",instance=~\"$instance\",location=~\"$location\",role=~\"$role\"} / node_memory_MemTotal_bytes{job=~\"$job\",instance=~\"$instance\",location=~\"$location\",role=~\"$role\"})",
-          "refId": "A"
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "percentunit", "min": 0, "max": 1 }
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1
+        }
+      },
+      "id": 7,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "timeseries",
       "title": "Memory Pressure (PSI)",
-      "gridPos": { "x": 12, "y": 10, "w": 12, "h": 6 },
+      "gridPos": {
+        "x": 12,
+        "y": 10,
+        "w": 12,
+        "h": 6
+      },
       "targets": [
         {
           "expr": "rate(node_pressure_memory_waiting_seconds_total{job=~\"$job\",instance=~\"$instance\",location=~\"$location\",role=~\"$role\"}[5m])",
-          "refId": "A"
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
-      ]
+      ],
+      "id": 8,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      }
     },
     {
       "type": "table",
       "title": "Failed systemd Units",
-      "gridPos": { "x": 0, "y": 16, "w": 24, "h": 6 },
+      "gridPos": {
+        "x": 0,
+        "y": 16,
+        "w": 24,
+        "h": 6
+      },
       "targets": [
         {
           "expr": "node_systemd_unit_state{job=~\"$job\",instance=~\"$instance\",state=\"failed\"} == 1",
-          "refId": "A"
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
-      ]
+      ],
+      "id": 9,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
+      }
     }
-  ]
+  ],
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  }
 }
-

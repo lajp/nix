@@ -56,15 +56,21 @@ in
       };
 
       provision = {
-        datasources.settings.datasources = [
-          {
-            name = "Prometheus";
-            type = "prometheus";
-            url = "http://${config.services.prometheus.listenAddress}:${toString config.services.prometheus.port}";
-            isDefault = true;
-            editable = false;
-          }
-        ];
+        datasources.settings = {
+          deleteDatasources = [
+            { name = "Prometheus"; orgId = 1; }
+          ];
+          datasources = [
+            {
+              name = "Prometheus";
+              type = "prometheus";
+              uid = "prometheus";
+              url = "http://${config.services.prometheus.listenAddress}:${toString config.services.prometheus.port}";
+              isDefault = true;
+              editable = false;
+            }
+          ];
+        };
 
         dashboards.settings.providers = [
           {

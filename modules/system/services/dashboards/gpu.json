@@ -1,7 +1,12 @@
 {
   "uid": "nixos-gpu",
   "title": "Nvidia GPU Stats",
-  "tags": ["nixos", "prometheus", "gpu", "nvidia"],
+  "tags": [
+    "nixos",
+    "prometheus",
+    "gpu",
+    "nvidia"
+  ],
   "timezone": "browser",
   "schemaVersion": 38,
   "version": 1,
@@ -11,7 +16,10 @@
       {
         "name": "job",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": null },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "query": "label_values(nvidia_smi_utilization_gpu_ratio, job)",
         "multi": true,
         "includeAll": true,
@@ -20,7 +28,10 @@
       {
         "name": "instance",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": null },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "query": "label_values(nvidia_smi_utilization_gpu_ratio{job=~\"$job\"}, instance)",
         "multi": true,
         "includeAll": true,
@@ -29,7 +40,10 @@
       {
         "name": "gpu",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": null },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "query": "label_values(nvidia_smi_utilization_gpu_ratio{job=~\"$job\", instance=~\"$instance\"}, uuid)",
         "multi": true,
         "includeAll": true,
@@ -41,67 +55,160 @@
     {
       "type": "gauge",
       "title": "GPU Utilization",
-      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 6 },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 6,
+        "h": 6
+      },
       "targets": [
         {
           "expr": "nvidia_smi_utilization_gpu_ratio{job=~\"$job\",instance=~\"$instance\",uuid=~\"$gpu\"}",
           "refId": "A",
-          "legendFormat": "{{instance}} GPU"
+          "legendFormat": "{{instance}} GPU",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "percent", "min": 0, "max": 100, "thresholds": { "mode": "absolute", "steps": [ { "color": "green", "value": null }, { "color": "orange", "value": 70 }, { "color": "red", "value": 90 } ] } }
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 70
+              },
+              {
+                "color": "red",
+                "value": 90
+              }
+            ]
+          }
+        }
+      },
+      "id": 1,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "gauge",
       "title": "Memory Utilization",
-      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 6 },
+      "gridPos": {
+        "x": 6,
+        "y": 0,
+        "w": 6,
+        "h": 6
+      },
       "targets": [
         {
           "expr": "nvidia_smi_utilization_memory_ratio{job=~\"$job\",instance=~\"$instance\",uuid=~\"$gpu\"}",
           "refId": "A",
-          "legendFormat": "{{instance}} Mem"
+          "legendFormat": "{{instance}} Mem",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "percent", "min": 0, "max": 100 }
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100
+        }
+      },
+      "id": 2,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "timeseries",
       "title": "Memory Usage",
-      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 6 },
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 12,
+        "h": 6
+      },
       "targets": [
         {
           "expr": "nvidia_smi_memory_used_bytes{job=~\"$job\",instance=~\"$instance\",uuid=~\"$gpu\"}",
           "refId": "A",
-          "legendFormat": "{{instance}} Used"
+          "legendFormat": "{{instance}} Used",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         },
         {
           "expr": "nvidia_smi_memory_total_bytes{job=~\"$job\",instance=~\"$instance\",uuid=~\"$gpu\"}",
           "refId": "B",
-          "legendFormat": "{{instance}} Total"
+          "legendFormat": "{{instance}} Total",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "bytes" }
+        "defaults": {
+          "unit": "bytes"
+        }
+      },
+      "id": 3,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "timeseries",
       "title": "Temperature",
-      "gridPos": { "x": 0, "y": 6, "w": 12, "h": 6 },
+      "gridPos": {
+        "x": 0,
+        "y": 6,
+        "w": 12,
+        "h": 6
+      },
       "targets": [
         {
           "expr": "nvidia_smi_temperature_gpu{job=~\"$job\",instance=~\"$instance\",uuid=~\"$gpu\"}",
           "refId": "A",
-          "legendFormat": "{{instance}}"
+          "legendFormat": "{{instance}}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "celsius" }
+        "defaults": {
+          "unit": "celsius"
+        }
+      },
+      "id": 4,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     }
-  ]
+  ],
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  }
 }

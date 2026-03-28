@@ -1,7 +1,11 @@
 {
   "uid": "nixos-zfs",
   "title": "ZFS Stats",
-  "tags": ["nixos", "prometheus", "zfs"],
+  "tags": [
+    "nixos",
+    "prometheus",
+    "zfs"
+  ],
   "timezone": "browser",
   "schemaVersion": 38,
   "version": 2,
@@ -11,7 +15,10 @@
       {
         "name": "job",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": null },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "query": "label_values(node_zfs_arc_size, job)",
         "multi": true,
         "includeAll": true,
@@ -20,7 +27,10 @@
       {
         "name": "instance",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": null },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "query": "label_values(node_zfs_arc_size{job=~\"$job\"}, instance)",
         "multi": true,
         "includeAll": true,
@@ -29,7 +39,10 @@
       {
         "name": "zfs_job",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": null },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "query": "label_values(zfs_pool_health, job)",
         "multi": true,
         "includeAll": true,
@@ -39,7 +52,10 @@
       {
         "name": "zfs_instance",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": null },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "query": "label_values(zfs_pool_health{job=~\"$zfs_job\"}, instance)",
         "multi": true,
         "includeAll": true,
@@ -49,7 +65,10 @@
       {
         "name": "pool",
         "type": "query",
-        "datasource": { "type": "prometheus", "uid": null },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "prometheus"
+        },
         "query": "label_values(zfs_pool_health{job=~\"$zfs_job\", instance=~\"$zfs_instance\"}, pool)",
         "multi": true,
         "includeAll": true,
@@ -61,98 +80,226 @@
     {
       "type": "stat",
       "title": "ARC Size",
-      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 6,
+        "h": 4
+      },
       "targets": [
         {
           "expr": "node_zfs_arc_size{job=~\"$job\",instance=~\"$instance\"}",
-          "refId": "A"
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "bytes" }
+        "defaults": {
+          "unit": "bytes"
+        }
+      },
+      "id": 1,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "timeseries",
       "title": "ARC Hit Ratio",
-      "gridPos": { "x": 6, "y": 0, "w": 18, "h": 8 },
+      "gridPos": {
+        "x": 6,
+        "y": 0,
+        "w": 18,
+        "h": 8
+      },
       "targets": [
         {
           "expr": "rate(node_zfs_arc_hits{job=~\"$job\",instance=~\"$instance\"}[5m]) / (rate(node_zfs_arc_hits{job=~\"$job\",instance=~\"$instance\"}[5m]) + rate(node_zfs_arc_misses{job=~\"$job\",instance=~\"$instance\"}[5m]))",
           "refId": "A",
-          "legendFormat": "{{instance}} Hit Ratio"
+          "legendFormat": "{{instance}} Hit Ratio",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "percent", "min": 0, "max": 1 }
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 1
+        }
+      },
+      "id": 2,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "timeseries",
       "title": "L2ARC Hit Ratio",
-      "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 },
+      "gridPos": {
+        "x": 0,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      },
       "targets": [
         {
           "expr": "rate(node_zfs_l2arc_hits{job=~\"$job\",instance=~\"$instance\"}[5m]) / (rate(node_zfs_l2arc_hits{job=~\"$job\",instance=~\"$instance\"}[5m]) + rate(node_zfs_l2arc_misses{job=~\"$job\",instance=~\"$instance\"}[5m]))",
           "refId": "A",
-          "legendFormat": "{{instance}} L2 Hit Ratio"
+          "legendFormat": "{{instance}} L2 Hit Ratio",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "percent", "min": 0, "max": 1 }
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 1
+        }
+      },
+      "id": 3,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "stat",
       "title": "Pool Status (Online)",
-      "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 },
+      "gridPos": {
+        "x": 12,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      },
       "targets": [
         {
           "expr": "node_zfs_zpool_state{state=\"online\", job=~\"$job\", instance=~\"$instance\"}",
-          "refId": "A"
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { "mappings": [ { "type": "value", "options": { "0": { "text": "Degraded/Offline", "color": "red" }, "1": { "text": "Online", "color": "green" } } } ] }
+        "defaults": {
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "Degraded/Offline",
+                  "color": "red"
+                },
+                "1": {
+                  "text": "Online",
+                  "color": "green"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "id": 4,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "row",
       "title": "Pool & Dataset Details",
       "collapsed": false,
-      "gridPos": { "x": 0, "y": 16, "w": 24, "h": 1 }
+      "gridPos": {
+        "x": 0,
+        "y": 16,
+        "w": 24,
+        "h": 1
+      },
+      "id": 5
     },
     {
       "type": "stat",
       "title": "Pool Allocation",
-      "gridPos": { "x": 0, "y": 17, "w": 8, "h": 8 },
+      "gridPos": {
+        "x": 0,
+        "y": 17,
+        "w": 8,
+        "h": 8
+      },
       "targets": [
         {
           "expr": "zfs_pool_allocated_bytes{job=~\"$zfs_job\", instance=~\"$zfs_instance\", pool=~\"$pool\"}",
-          "legendFormat": "{{pool}} Allocated"
+          "legendFormat": "{{pool}} Allocated",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         },
         {
           "expr": "zfs_pool_size_bytes{job=~\"$zfs_job\", instance=~\"$zfs_instance\", pool=~\"$pool\"}",
-          "legendFormat": "{{pool}} Total"
+          "legendFormat": "{{pool}} Total",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "bytes" }
+        "defaults": {
+          "unit": "bytes"
+        }
+      },
+      "id": 6,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     },
     {
       "type": "timeseries",
       "title": "Dataset Usage",
-      "gridPos": { "x": 8, "y": 17, "w": 16, "h": 8 },
+      "gridPos": {
+        "x": 8,
+        "y": 17,
+        "w": 16,
+        "h": 8
+      },
       "targets": [
         {
           "expr": "zfs_dataset_used_bytes{job=~\"$zfs_job\", instance=~\"$zfs_instance\", pool=~\"$pool\"}",
-          "legendFormat": "{{name}}"
+          "legendFormat": "{{name}}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "prometheus"
+          }
         }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "bytes" }
+        "defaults": {
+          "unit": "bytes"
+        }
+      },
+      "id": 7,
+      "datasource": {
+        "type": "prometheus",
+        "uid": "prometheus"
       }
     }
-  ]
+  ],
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  }
 }
