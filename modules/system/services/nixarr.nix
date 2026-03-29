@@ -97,6 +97,9 @@ in
 
     # TODO: migrate library under nixarr.mediaDir
     systemd.services.transmission.serviceConfig.BindPaths = [ "/media/luukas/Torrents" ];
+    # nixpkgs transmission sets UMask=0066, blocking group reads that cross-seed needs
+    systemd.services.transmission.serviceConfig.UMask = lib.mkForce "0026";
+    users.users.cross-seed.extraGroups = [ "media" ];
     systemd.services.jellyfin.serviceConfig.BindPaths = [
       "/media/luukas/Films"
       "/media/luukas/TV"
