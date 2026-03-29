@@ -265,6 +265,16 @@ in
           ];
         }
       ]
+      ++ lib.optionals config.services.matrix-synapse.enable [
+        {
+          job_name = "synapse";
+          static_configs = [
+            {
+              targets = [ "127.0.0.1:${toString config.lajp.ports.matrix-metrics}" ];
+            }
+          ];
+        }
+      ]
       ++ lib.optionals config.services.hedgedoc.enable [
         {
           job_name = "hedgedoc";

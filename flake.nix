@@ -370,6 +370,7 @@
             #services.memegenerator.enable = true;
             services.formicer-website.enable = false;
             services.cheese.enable = true;
+            services.matrix.enable = true;
             # NOTE: vulnerable and dropped from nixpkgs
             # services.crabfit.enable = true;
             services.prometheus = {
@@ -468,6 +469,7 @@
       devShells.default = pkgs.mkShell {
         packages = [
           pkgs.agenix-rekey
+          pkgs.age-plugin-yubikey
           deploy-rs.packages.${system}.default
           pkgs.nh
         ];

@@ -45,5 +45,6 @@
     ./resource-limits.nix
     ./email-telegram-bridge.nix
     ./attic.nix
+    ./matrix.nix
   ];
 }

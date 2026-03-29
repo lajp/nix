@@ -94,6 +94,16 @@ in
               alerts = [ { type = "email"; } ];
             }
             {
+              name = "Matrix";
+              group = "public";
+              url = "https://matrix.lajp.fi/_matrix/federation/v1/version";
+              conditions = [
+                "[STATUS] == 200"
+                "[CERTIFICATE_EXPIRATION] > 48h"
+              ];
+              alerts = [ { type = "email"; } ];
+            }
+            {
               name = "Vaultwarden";
               group = "internal";
               url = "https://vault.intra.lajp.fi/api/alive";
