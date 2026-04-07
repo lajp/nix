@@ -22,7 +22,7 @@ let
   '';
 
   wallpaperSwapScript = pkgs.writeShellScript "backup-wallpaper-swap" ''
-    ${pkgs.procps}/bin/pkill -x swaybg || true
+    ${pkgs.procps}/bin/pkill -f swaybg || true
     ${pkgs.coreutils}/bin/sleep 0.5
 
     if [ -f "${stateFile}" ]; then
@@ -296,9 +296,9 @@ in
       };
     };
 
-    systemd.user.paths.backup-wallpaper-watcher = mkIf backupNotifyEnabled {
+    systemd.user.paths.backup-wallpaper-swap = mkIf backupNotifyEnabled {
       Unit.Description = "Watch backup state for wallpaper changes";
-      Path.PathChanged = "/var/lib/backup-notify";
+      Path.PathModified = "/var/lib/backup-notify";
       Install.WantedBy = [ "graphical-session.target" ];
     };
   };
