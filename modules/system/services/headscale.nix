@@ -9,6 +9,7 @@ in
 
   config = mkIf cfg.enable {
     lajp.portRequests.headscale = true;
+    lajp.portRequests.headscale-metrics = true;
     lajp.services.nginx.enable = true;
 
     services = {
@@ -19,6 +20,7 @@ in
 
         settings = {
           server_url = "https://headscale.lajp.fi";
+          metrics_listen_addr = "127.0.0.1:${toString config.lajp.ports.headscale-metrics}";
           logtail.enabled = false;
           dns = {
             base_domain = "tailnet.lajp.fi";

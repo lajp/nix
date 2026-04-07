@@ -285,6 +285,16 @@ in
           ];
           metrics_path = "/metrics";
         }
+      ]
+      ++ lib.optionals config.services.headscale.enable [
+        {
+          job_name = "headscale";
+          static_configs = [
+            {
+              targets = [ "127.0.0.1:${toString config.lajp.ports.headscale-metrics}" ];
+            }
+          ];
+        }
       ];
 
       exporters = {
