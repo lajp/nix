@@ -37,7 +37,10 @@ in
             "clock"
           ];
 
-          mpris.interval = 1;
+          mpris = {
+            interval = 1;
+            title-len = 40;
+          };
 
           wireplumber = {
             format = "{volume}%";
