@@ -87,6 +87,16 @@
         forceSSL = true;
         useACMEHost = "intra.lajp.fi";
       };
+
+      "adguard.intra.lajp.fi" = {
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:${toString config.lajp.ports.adguardhome}";
+          proxyWebsockets = true;
+        };
+
+        forceSSL = true;
+        useACMEHost = "intra.lajp.fi";
+      };
     };
   };
 

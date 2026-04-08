@@ -25,6 +25,7 @@ in
           dns = {
             base_domain = "tailnet.lajp.fi";
             nameservers.global = [
+              "100.64.0.3"
               "1.1.1.1"
               "8.8.8.8"
             ];
