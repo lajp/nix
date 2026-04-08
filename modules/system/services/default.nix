@@ -35,6 +35,7 @@
     ./zfs-backup
     ./vpn.nix
     ./adguardhome.nix
+    ./coredns.nix
     ./nextcloud.nix
     ./memegenerator.nix
     ./cheese

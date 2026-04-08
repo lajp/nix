@@ -373,6 +373,7 @@
             services.matrix.enable = true;
             # NOTE: vulnerable and dropped from nixpkgs
             # services.crabfit.enable = true;
+            services.coredns.enable = true;
             services.prometheus = {
               enable = true;
               central = true;
