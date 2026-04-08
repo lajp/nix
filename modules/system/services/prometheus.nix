@@ -106,7 +106,10 @@ in
       globalConfig.scrape_interval = "10s";
       port = prometheusPort;
       listenAddress = if cfg.central then "0.0.0.0" else "127.0.0.1";
-      extraFlags = lib.optionals cfg.central [ "--web.enable-remote-write-receiver" ];
+      extraFlags = lib.optionals cfg.central [
+        "--web.enable-remote-write-receiver"
+        "--storage.tsdb.retention.size=8GB"
+      ];
       enableAgentMode = !cfg.central;
 
       # Push metrics to central node if we are NOT the central node
