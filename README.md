@@ -5,20 +5,24 @@ together with my home-manager configuration.
 
 Feel free to utilize my code in your own configuration.
 
+For a detailed infrastructure overview with network diagrams, see [docs/INFRASTRUCTURE.md](./docs/INFRASTRUCTURE.md).
+
 ## Overview of the systems
 
 The [flake.nix](./flake.nix) defines the following NixOS systems:
-* **nas** — Main server for media, backups, and other services (Jellyfin, Nextcloud, Vaultwarden, nixarr, etc.)
-* **vaasanas** — Secondary server (Samba, ZFS, Prometheus)
-* **t480** — Thinkpad T480 laptop with home-manager
-* **framework** — Framework 13 laptop with home-manager (daily driver)
-* **proxy-pi** — Raspberry Pi 4 running AdGuard Home and Prometheus
-* **ankka** — Hetzner aarch64 server (Headscale, mail server, Grafana, central Prometheus, website, HedgeDoc)
+* **nas** — Main server for media, backups, and storage (Jellyfin, nixarr, Nextcloud, Syncthing, Samba, Vaultwarden, Attic cache, ZFS)
+* **vaasanas** — Secondary server (NFS, Samba, ZFS)
+* **t480** — ThinkPad T480 laptop with home-manager
+* **framework** — Framework 13 AMD laptop with home-manager (daily driver)
+* **proxy-pi** — Raspberry Pi 4 running AdGuard Home DNS and nginx reverse proxy for internal services
+* **ankka** — Hetzner aarch64 server (central Prometheus/Grafana, Headscale, mail server, Matrix, HedgeDoc, Gatus, CoreDNS, CHEESE Ilmomasiina, website)
 
 ## Structure of the configuration
 
 ```
 .
+├── docs
+│   └── INFRASTRUCTURE.md
 ├── hosts
 │   ├── ankka
 │   ├── framework
@@ -46,6 +50,7 @@ The [flake.nix](./flake.nix) defines the following NixOS systems:
 └── secrets
 ```
 
+* [/docs](./docs) contains infrastructure documentation and diagrams
 * [/hosts](./hosts) contains host-specific configuration
 * [/lib](./lib) contains the `mkHost` helper function
 * [/modules/system](./modules/system) contains NixOS system modules (`lajp.*` options)
@@ -99,9 +104,11 @@ Bazarr, Jellyseerr, and cross-seed for cross-seeding between private trackers.
 
 ### Monitoring
 
-Distributed Prometheus monitoring across all hosts. Each node runs a monitoring agent
-that pushes metrics via remote write to the central Prometheus instance on ankka.
-Grafana dashboards are provisioned for nginx, ZFS, SMART, GPU, email, and more.
+Distributed Prometheus monitoring across servers. The nas, vaasanas, and proxy-pi
+hosts run Prometheus in agent mode, pushing metrics via remote write to the central
+Prometheus instance on ankka. Grafana dashboards are provisioned for nginx, ZFS,
+SMART, GPU, email, UPS, Headscale, HedgeDoc, and Matrix Synapse. Gatus provides
+a public status page with email alerting.
 
 ### Port Management
 
