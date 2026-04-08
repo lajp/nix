@@ -18,8 +18,8 @@ let
 
     # Read and store email
     EMAIL=$(${pkgs.coreutils}/bin/cat)
-    SUBJECT=$(echo "$EMAIL" | ${pkgs.procmail}/bin/formail -xSubject: | ${pkgs.coreutils}/bin/tr -d '\n')
-    BODY=$(echo "$EMAIL" | ${pkgs.gawk}/bin/awk '/^$/{found=1; next} found{print}' | ${pkgs.coreutils}/bin/head -c 3000)
+    SUBJECT=$(echo "$EMAIL" | ${pkgs.procmail}/bin/formail -xSubject: | ${pkgs.coreutils}/bin/tr -d '\n' | ${pkgs.perl}/bin/perl -MMIME::QuotedPrint -e 'print decode_qp(join("",<STDIN>))')
+    BODY=$(echo "$EMAIL" | ${pkgs.gawk}/bin/awk '/^$/{found=1; next} found{print}' | ${pkgs.coreutils}/bin/head -c 3000 | ${pkgs.perl}/bin/perl -MMIME::QuotedPrint -e 'print decode_qp(join("",<STDIN>))')
 
     # Escape HTML entities
     SUBJECT_ESC=$(echo "$SUBJECT" | ${pkgs.gnused}/bin/sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g')
