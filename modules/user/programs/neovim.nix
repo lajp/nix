@@ -172,7 +172,7 @@ in
         idris2.enable = true;
         treesitter = {
           enable = true;
-          grammarPackages = pkgs.vimPlugins.nvim-treesitter.allGrammars ++ [ tree-sitter-stlcpp ];
+          grammarPackages = pkgs-unstable.vimPlugins.nvim-treesitter.allGrammars ++ [ tree-sitter-stlcpp ];
           settings = {
             #auto_install = true;
             highlight.enable = true;
