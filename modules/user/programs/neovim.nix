@@ -55,7 +55,7 @@ let
 in
 {
   imports = [
-    inputs.nixvim.homeManagerModules.nixvim
+    inputs.nixvim.homeModules.nixvim
   ];
 
   options.lajp.editors.nvim.enable = mkEnableOption "Enable Neovim";
@@ -101,9 +101,6 @@ in
     programs.nixvim = {
       enable = true;
       enableMan = false;
-
-      # NOTE: Due to this: https://github.com/neovim/neovim/issues/30675
-      package = pkgs-unstable.neovim-unwrapped;
 
       globals.mapleader = " ";
 
