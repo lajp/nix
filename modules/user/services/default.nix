@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  pkgs-unstable,
   osConfig,
   lib,
   ...
@@ -35,6 +36,11 @@ in
 
     dunst = mkIf gui {
       enable = true;
+      # Use 1.13.2 from unstable for the NULL check in
+      # toplevel_handle_output_{enter,leave}, which fixes a SIGSEGV
+      # that triggers on Wayland output hotplug / suspend-resume
+      # (dunst-project/dunst@v1.13.1...v1.13.2).
+      package = pkgs-unstable.dunst;
       settings.global.monitor = "eDP-1";
     };
     picom = mkIf xserver {
