@@ -79,4 +79,21 @@
   #   newPrefix = "https://mail.lajp.fi/";
   #   environment.RUST_LOG = "info";
   # };
+
+  networking.networkmanager.ensureProfiles.profiles = {
+    "Aalto VPN" = {
+      connection = {
+        id = "Aalto VPN";
+        type = "vpn";
+      };
+      vpn = {
+        gateway = "vpn1.aalto.fi";
+        useragent = "AnyConnect-compatible OpenConnect VPN agent";
+        cookie-flags = 2;
+        service-type = "org.freedesktop.NetworkManager.openconnect";
+      };
+    };
+  };
+  networking.networkmanager.plugins = [ pkgs.networkmanager-openconnect ];
+  programs.nm-applet.enable = true;
 }
