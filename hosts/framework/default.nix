@@ -35,6 +35,7 @@
   virtualisation.docker.enable = true;
 
   hardware.graphics.enable = true;
+  hardware.amdgpu.initrd.enable = true;
   hardware.framework.amd-7040.preventWakeOnAC = true;
 
   services.fprintd.enable = true;
