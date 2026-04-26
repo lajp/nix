@@ -26,5 +26,12 @@ in
       domains = cfg.domains;
       apiTokenFile = config.age.secrets.cloudflare-api-token.path;
     };
+
+    systemd.services.cloudflare-dyndns = {
+      wants = [ "network-online.target" ];
+      after = [ "network-online.target" ];
+      serviceConfig.Restart = lib.mkDefault "on-failure";
+      serviceConfig.RestartSec = lib.mkDefault "30s";
+    };
   };
 }

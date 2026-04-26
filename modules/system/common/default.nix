@@ -72,6 +72,7 @@ in
       (import ../../../pkgs/default.nix)
       inputs.nur.overlays.default
       inputs.niri.overlays.niri
+      inputs.nix-minecraft.overlay
     ];
     config.allowUnfree = true;
   };

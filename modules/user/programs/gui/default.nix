@@ -11,7 +11,10 @@ let
   inherit (lib) mkIf mkEnableOption;
 in
 {
-  options.lajp.gui.enable = mkEnableOption "Enable graphical programs";
+  options.lajp.gui = {
+    enable = mkEnableOption "Enable graphical programs";
+    minecraft.enable = mkEnableOption "Install PrismLauncher for Minecraft";
+  };
 
   imports = [
     ./firefox.nix
@@ -56,6 +59,15 @@ in
       libnotify
 
       pdfpc
+    ] ++ lib.optionals cfg.minecraft.enable [
+      (prismlauncher.override {
+        jdks = [
+          jdk8
+          jdk17
+          jdk21
+          jdk25
+        ];
+      })
     ];
 
     programs = {

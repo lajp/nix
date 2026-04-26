@@ -47,5 +47,6 @@
     ./email-telegram-bridge.nix
     ./attic.nix
     ./matrix.nix
+    ./minecraft.nix
   ];
 }

@@ -86,6 +86,16 @@
 
     deploy-rs.url = "github:serokell/deploy-rs";
 
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    nix-minecraft = {
+      url = "github:Infinidoge/nix-minecraft";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     simple-nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-25.11";
 
     nixarr = {
@@ -205,10 +215,6 @@
             };
 
             services.ssh.enable = true;
-            services.dyndns = {
-              enable = true;
-              domains = [ "mc.portfo.rs" ];
-            };
             services.samba = {
               enable = true;
               users = [
@@ -325,7 +331,10 @@
               enable = true;
               testaustime.enable = true;
             };
-            gui.enable = true;
+            gui = {
+              enable = true;
+              minecraft.enable = true;
+            };
           };
         };
         proxy-pi = mkHost {
@@ -347,6 +356,38 @@
             services.prometheus = {
               enable = true;
               role = "proxy";
+            };
+          };
+        };
+        minecraft = mkHost {
+          extraModules = with inputs.nixos-hardware.nixosModules; [
+            common-pc
+            common-cpu-intel
+          ];
+
+          systemConfig = {
+            core = {
+              hostname = "minecraft";
+              server = true;
+            };
+
+            services.ssh.enable = true;
+            services.tailscale.enable = true;
+            services.minecraft = {
+              enable = true;
+              serverPort = 22305;
+              serverProperties.white-list = true;
+              whitelist.Luukasa_ = "edc99f1e-d09b-4da6-be52-97fbdf2cf375";
+              operators.Luukasa_ = "edc99f1e-d09b-4da6-be52-97fbdf2cf375";
+            };
+            services.dyndns = {
+              enable = true;
+              domains = [ "mc.portfo.rs" ];
+            };
+            services.prometheus = {
+              enable = true;
+              role = "minecraft";
+              location = "jmt";
             };
           };
         };
@@ -418,6 +459,17 @@
           };
         };
 
+        minecraft = {
+          hostname = "mc.portfo.rs";
+          profiles.system = {
+            user = "root";
+            sshUser = "lajp";
+            interactiveSudo = true;
+            remoteBuild = false;
+            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.minecraft;
+          };
+        };
+
         #nixos-dev = {
         #  hostname = "nixos-dev";
         #  profiles.system = {
@@ -448,7 +500,7 @@
         {
           x86_64-linux =
             deploy-rs.lib.x86_64-linux.deployChecks {
-              nodes = { inherit (self.deploy.nodes) nas vaasanas; };
+              nodes = { inherit (self.deploy.nodes) nas vaasanas minecraft; };
             }
             // {
               zfs-backup = testPkgs.callPackage ./tests/zfs-backup.nix { };
