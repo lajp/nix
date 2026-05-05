@@ -23,6 +23,7 @@
     ./sonarr.nix
     ./uptime-kuma.nix
     ./mailserver.nix
+    ./webmail.nix
     ./dyndns.nix
     ./smartd.nix
     ./formicer-website.nix

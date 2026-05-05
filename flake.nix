@@ -403,6 +403,7 @@
             services.ssh.enable = true;
             services.gatus.enable = true;
             services.mailserver.enable = true;
+            services.webmail.enable = true;
             services.emailTelegramBridge.enable = true;
             services.headscale.enable = true;
             services.hedgedoc.enable = true;
@@ -504,6 +505,46 @@
             }
             // {
               zfs-backup = testPkgs.callPackage ./tests/zfs-backup.nix { };
+              ankka-webmail-config =
+                let
+                  lib = nixpkgs.lib;
+                  cfg = self.nixosConfigurations.ankka.config;
+                  address = local: domain: local + "@" + domain;
+                  expectedIdentities = [
+                    (address "lajp" "lajp.fi")
+                    (address "luukas" "portfo.rs")
+                    (address "lajp" "portfo.rs")
+                    (address "portfors" "formicer.com")
+                    (address "luukas" "formicer.com")
+                    (address "lajp" "iki.fi")
+                    (address "luukas.portfors" "iki.fi")
+                  ];
+                  senderLoginMaps = "hash:/etc/postfix/vaccounts,hash:/etc/postfix/webmail_sender_login";
+                  check = assertion: message: if assertion then true else throw message;
+                  valid = lib.all (x: x) [
+                    (check cfg.lajp.services.webmail.enable "ankka webmail module is not enabled")
+                    (check cfg.services.roundcube.enable "roundcube is not enabled")
+                    (check (cfg.services.roundcube.hostName == "webmail.lajp.fi") "roundcube hostname is wrong")
+                    (check (lib.elem "virtuser_file" cfg.services.roundcube.plugins) "roundcube virtuser_file plugin is not enabled")
+                    (check (
+                      cfg.lajp.services.webmail.senderIdentities == expectedIdentities
+                    ) "webmail sender identities changed unexpectedly")
+                    (check (builtins.hasAttr "webmail.lajp.fi" cfg.services.nginx.virtualHosts) "webmail nginx vhost is missing")
+                    (check (builtins.hasAttr "iki-smtp-password" cfg.age.secrets) "iki SMTP secret is missing")
+                    (check (
+                      cfg.services.postfix.submissionOptions.smtpd_sender_login_maps == senderLoginMaps
+                    ) "submission sender login maps are wrong")
+                    (check (
+                      cfg.services.postfix.submissionsOptions.smtpd_sender_login_maps == senderLoginMaps
+                    ) "submissions sender login maps are wrong")
+                    (check (lib.any (
+                      endpoint: endpoint.name == "Webmail" && endpoint.url == "https://webmail.lajp.fi/"
+                    ) cfg.services.gatus.settings.endpoints) "Gatus webmail endpoint is missing")
+                  ];
+                in
+                testPkgs.runCommand "ankka-webmail-config" { inherit valid; } ''
+                  mkdir -p $out
+                '';
             };
           aarch64-linux = deploy-rs.lib.aarch64-linux.deployChecks {
             nodes = { inherit (self.deploy.nodes) proxy-pi ankka; };
