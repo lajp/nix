@@ -27,6 +27,10 @@ in
         ytdl-format = "bestaudio/best";
         video = false;
         af = "dynaudnorm";
+        prefetch-playlist = "yes";
+        cache = "yes";
+        cache-secs = "300";
+        gapless-audio = "yes";
       };
     };
   };

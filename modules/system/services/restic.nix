@@ -34,6 +34,7 @@ in
           "introcs_psql_data"
           "ilmomasiina/data"
           "git/braiins/*"
+          "git/corneasense/*"
         ];
         pruneOpts = [
           "--keep-hourly 24"
