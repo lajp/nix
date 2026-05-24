@@ -20,6 +20,7 @@
     ./niri.nix
     ./pia.nix
     ./website.nix
+    ./ip-echo.nix
     ./sonarr.nix
     ./uptime-kuma.nix
     ./mailserver.nix

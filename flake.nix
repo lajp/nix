@@ -409,6 +409,7 @@
             services.hedgedoc.enable = true;
             services.tailscale.enable = true;
             services.website.enable = true;
+            services.ip-echo.enable = true;
             #services.memegenerator.enable = true;
             services.formicer-website.enable = false;
             services.cheese.enable = true;

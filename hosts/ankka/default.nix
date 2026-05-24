@@ -45,5 +45,6 @@
       '';
     };
   };
+
   #networking.firewall.allowedTCPPorts = [ 55555 ];
 }
