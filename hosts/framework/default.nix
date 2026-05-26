@@ -71,6 +71,7 @@
 
   environment.systemPackages = [
     pkgs.nfs-utils
+    pkgs.framework-tool
   ];
 
   services.rpcbind.enable = true; # needed for NFS
