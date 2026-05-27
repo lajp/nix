@@ -1,4 +1,5 @@
 {
+  inputs,
   osConfig,
   lib,
   pkgs,
@@ -178,7 +179,8 @@ in
 
       xwayland-satellite = {
         enable = true;
-        path = lib.getExe pkgs.xwayland-satellite-unstable;
+        # master-built (see niri flake input) to dodge the crates.io 403 on 25.11.
+        path = lib.getExe inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.xwayland-satellite-unstable;
       };
 
       binds =

@@ -6,6 +6,10 @@
 
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+    # master carries the importCargoLock static.crates.io fix (nixpkgs#524985) that
+    # niri needs; drop this once nixos-25.11 picks up backport #524988.
+    nixpkgs-master.url = "github:NixOS/nixpkgs/master";
+
     flake-utils.url = "github:numtide/flake-utils";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware";
@@ -60,7 +64,8 @@
 
     niri = {
       url = "github:sodiboo/niri-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # Build niri's packages against master so importCargoLock uses static.crates.io.
+      inputs.nixpkgs.follows = "nixpkgs-master";
     };
 
     testaustime-nvim = {

@@ -25,50 +25,53 @@ in
   config = mkIf cfg.enable {
     xdg.mimeApps.defaultApplications."application/pdf" = "zathura.desktop";
 
-    home.packages = with pkgs; [
-      pavucontrol
-      helvum
-      discord
-      (flameshot.override { enableWlrSupport = true; })
-      pkgs-unstable.signal-desktop
-      gnuradio
-      quickemu
-      (octaveFull.withPackages (
-        opkgs: with opkgs; [
-          communications
-          signal
-          statistics
-          symbolic
-        ]
-      ))
-      pkgs-unstable.musescore
-      xclip
-      mednaffe
-      gimp
-      sxiv
-      pkgs-unstable.telegram-desktop
-      pkgs-unstable.jellyfin-desktop
-      steam
-      libreoffice-fresh
-      (kitsas.overrideAttrs (final: {
-        patches = final.patches ++ [ ./0001-Enable-yhteenvetoilmoitus-EU-sales-summary-for-local.patch ];
-      }))
-      eddie
+    home.packages =
+      with pkgs;
+      [
+        pavucontrol
+        helvum
+        discord
+        (flameshot.override { enableWlrSupport = true; })
+        pkgs-unstable.signal-desktop
+        gnuradio
+        quickemu
+        (octaveFull.withPackages (
+          opkgs: with opkgs; [
+            communications
+            signal
+            statistics
+            symbolic
+          ]
+        ))
+        pkgs-unstable.musescore
+        xclip
+        mednaffe
+        gimp
+        sxiv
+        pkgs-unstable.telegram-desktop
+        pkgs.jellyfin-desktop
+        steam
+        libreoffice-fresh
+        (kitsas.overrideAttrs (final: {
+          patches = final.patches ++ [ ./0001-Enable-yhteenvetoilmoitus-EU-sales-summary-for-local.patch ];
+        }))
+        eddie
 
-      wifi-qr
-      libnotify
+        wifi-qr
+        libnotify
 
-      pdfpc
-    ] ++ lib.optionals cfg.minecraft.enable [
-      (prismlauncher.override {
-        jdks = [
-          jdk8
-          jdk17
-          jdk21
-          jdk25
-        ];
-      })
-    ];
+        pdfpc
+      ]
+      ++ lib.optionals cfg.minecraft.enable [
+        (prismlauncher.override {
+          jdks = [
+            jdk8
+            jdk17
+            jdk21
+            jdk25
+          ];
+        })
+      ];
 
     programs = {
       imv.enable = true;
