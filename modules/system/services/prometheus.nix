@@ -298,6 +298,21 @@ in
             }
           ];
         }
+      ]
+      ++ lib.optionals config.lajp.services.screego.enable [
+        {
+          job_name = "screego";
+          static_configs = [
+            {
+              targets = [ "127.0.0.1:${toString config.lajp.ports.screego}" ];
+            }
+          ];
+          metrics_path = "/metrics";
+          basic_auth = {
+            username = "lajp";
+            password_file = config.age.secrets.screego-metrics-password.path;
+          };
+        }
       ];
 
       exporters = {

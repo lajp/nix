@@ -1,0 +1,175 @@
+{
+  "uid": "nixos-screego",
+  "title": "Screego",
+  "tags": [
+    "nixos",
+    "prometheus",
+    "screego"
+  ],
+  "timezone": "browser",
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "30s",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Screego Up",
+      "gridPos": { "x": 0, "y": 0, "w": 4, "h": 4 },
+      "targets": [
+        {
+          "expr": "up{job=\"screego\"}",
+          "refId": "A",
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": { "text": "Down", "color": "red" },
+                "1": { "text": "Up", "color": "green" }
+              }
+            }
+          ]
+        }
+      },
+      "id": 1,
+      "datasource": { "type": "prometheus", "uid": "prometheus" }
+    },
+    {
+      "type": "stat",
+      "title": "Active Rooms",
+      "gridPos": { "x": 4, "y": 0, "w": 4, "h": 4 },
+      "targets": [
+        {
+          "expr": "screego_room_created_total - screego_room_closed_total",
+          "refId": "A",
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
+        }
+      ],
+      "id": 2,
+      "datasource": { "type": "prometheus", "uid": "prometheus" }
+    },
+    {
+      "type": "stat",
+      "title": "Active Sessions",
+      "gridPos": { "x": 8, "y": 0, "w": 4, "h": 4 },
+      "targets": [
+        {
+          "expr": "screego_session_created_total - screego_session_closed_total",
+          "refId": "A",
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
+        }
+      ],
+      "id": 3,
+      "datasource": { "type": "prometheus", "uid": "prometheus" }
+    },
+    {
+      "type": "stat",
+      "title": "Active Users",
+      "gridPos": { "x": 12, "y": 0, "w": 4, "h": 4 },
+      "targets": [
+        {
+          "expr": "screego_user_joined_total - screego_user_left_total",
+          "refId": "A",
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
+        }
+      ],
+      "id": 4,
+      "datasource": { "type": "prometheus", "uid": "prometheus" }
+    },
+    {
+      "type": "timeseries",
+      "title": "Rooms (created vs closed, rate/min)",
+      "gridPos": { "x": 0, "y": 4, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "rate(screego_room_created_total[5m]) * 60",
+          "refId": "A",
+          "legendFormat": "created/min",
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
+        },
+        {
+          "expr": "rate(screego_room_closed_total[5m]) * 60",
+          "refId": "B",
+          "legendFormat": "closed/min",
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
+        }
+      ],
+      "id": 5,
+      "datasource": { "type": "prometheus", "uid": "prometheus" }
+    },
+    {
+      "type": "timeseries",
+      "title": "Users (joined vs left, rate/min)",
+      "gridPos": { "x": 12, "y": 4, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "rate(screego_user_joined_total[5m]) * 60",
+          "refId": "A",
+          "legendFormat": "joined/min",
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
+        },
+        {
+          "expr": "rate(screego_user_left_total[5m]) * 60",
+          "refId": "B",
+          "legendFormat": "left/min",
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
+        }
+      ],
+      "id": 6,
+      "datasource": { "type": "prometheus", "uid": "prometheus" }
+    },
+    {
+      "type": "timeseries",
+      "title": "Sessions (created vs closed, rate/min)",
+      "gridPos": { "x": 0, "y": 12, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "rate(screego_session_created_total[5m]) * 60",
+          "refId": "A",
+          "legendFormat": "created/min",
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
+        },
+        {
+          "expr": "rate(screego_session_closed_total[5m]) * 60",
+          "refId": "B",
+          "legendFormat": "closed/min",
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
+        }
+      ],
+      "id": 7,
+      "datasource": { "type": "prometheus", "uid": "prometheus" }
+    },
+    {
+      "type": "timeseries",
+      "title": "Process memory",
+      "gridPos": { "x": 12, "y": 12, "w": 12, "h": 8 },
+      "targets": [
+        {
+          "expr": "go_memstats_alloc_bytes{job=\"screego\"}",
+          "refId": "A",
+          "legendFormat": "alloc",
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
+        },
+        {
+          "expr": "process_resident_memory_bytes{job=\"screego\"}",
+          "refId": "B",
+          "legendFormat": "rss",
+          "datasource": { "type": "prometheus", "uid": "prometheus" }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "bytes" }
+      },
+      "id": 8,
+      "datasource": { "type": "prometheus", "uid": "prometheus" }
+    }
+  ],
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  }
+}

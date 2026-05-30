@@ -124,6 +124,16 @@ in
               alerts = [ { type = "email"; } ];
             }
             {
+              name = "Screego";
+              group = "public";
+              url = "https://screego.lajp.fi/";
+              conditions = [
+                "[STATUS] == 200"
+                "[CERTIFICATE_EXPIRATION] > 48h"
+              ];
+              alerts = [ { type = "email"; } ];
+            }
+            {
               name = "Headscale";
               group = "public";
               url = "https://headscale.lajp.fi/health";

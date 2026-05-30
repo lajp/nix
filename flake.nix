@@ -419,6 +419,7 @@
             services.formicer-website.enable = false;
             services.cheese.enable = true;
             services.matrix.enable = true;
+            services.screego.enable = true;
             # NOTE: vulnerable and dropped from nixpkgs
             # services.crabfit.enable = true;
             services.coredns.enable = true;

@@ -50,5 +50,6 @@
     ./attic.nix
     ./matrix.nix
     ./minecraft.nix
+    ./screego.nix
   ];
 }
