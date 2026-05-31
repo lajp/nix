@@ -45,7 +45,7 @@ graph TD
 | **proxy-pi** | Home | aarch64 | Server | Network edge: AdGuard Home DNS, nginx reverse proxy for internal services |
 | **vaasanas** | Vaasa | x86_64 | Server | Secondary storage: NFS server, Samba, ZFS |
 | **framework** | Mobile | x86_64 | Desktop | Daily driver: Framework 13 AMD, Niri compositor, multiple VPNs, Docker |
-| **t480** | Mobile | x86_64 | Desktop | Secondary laptop: ThinkPad T480, Niri compositor, PIA VPN |
+| **t480** | Mobile | x86_64 | Desktop | Secondary laptop: ThinkPad T480, Niri compositor (not in active use) |
 
 ## DNS Resolution
 

@@ -53,6 +53,10 @@ in
           domain = "grafana.lajp.fi";
         };
         analytics.reporting_enabled = false;
+        # NixOS 26.05 removed the module default for secret_key. Pin the previous
+        # default to keep existing signed sessions/encrypted DB values valid.
+        # TODO: rotate to an agenix secret via the `$__file{}` provider.
+        security.secret_key = "SW2YcwTIb9zpOOhoPsMm";
       };
 
       provision = {
@@ -244,16 +248,15 @@ in
           ];
         }
       ]
-      ++ lib.optionals config.services.prometheus.exporters.rspamd.enable [
+      ++ lib.optionals config.services.rspamd.enable [
         {
+          # NixOS 26.05 removed prometheus.exporters.rspamd; scrape rspamd's
+          # built-in OpenMetrics endpoint on the controller worker directly.
           job_name = "rspamd";
-          metrics_path = "/probe";
-          params = {
-            target = [ "http://127.0.0.1:11334/stat" ];
-          };
+          metrics_path = "/metrics";
           static_configs = [
             {
-              targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.rspamd.port}" ];
+              targets = [ "127.0.0.1:11334" ];
             }
           ];
         }

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-NixOS configuration flake for 6 machines (4 x86_64-linux, 2 aarch64-linux) with home-manager integration. Uses a custom module system with `lajp.*` options for both system and user configuration. Based on nixpkgs 25.11 and home-manager 25.11.
+NixOS configuration flake for 6 machines (4 x86_64-linux, 2 aarch64-linux) with home-manager integration. Uses a custom module system with `lajp.*` options for both system and user configuration. Based on nixpkgs 26.05 and home-manager 26.05.
 
 For a visual infrastructure overview with network diagrams, see [docs/INFRASTRUCTURE.md](./docs/INFRASTRUCTURE.md).
 
@@ -14,13 +14,14 @@ For a visual infrastructure overview with network diagrams, see [docs/INFRASTRUC
 # Build a specific host configuration
 nix build .#nixosConfigurations.<hostname>.config.system.build.toplevel
 
-# Deploy to remote hosts (via deploy-rs)
-deploy .#<hostname>
+# Deploy a remote host (built locally or remotely, then activated). deploy-rs
+# has been removed; deploy with nixos-rebuild (or the nh helper in the dev shell).
+nixos-rebuild switch --flake .#<hostname> --target-host <user>@<host> --use-remote-sudo
 
 # Rekey secrets after adding new hosts or changing keys
 agenix-rekey
 
-# Enter dev shell with required tools (agenix-rekey, age-plugin-yubikey, deploy-rs, nh)
+# Enter dev shell with required tools (agenix-rekey, age-plugin-yubikey, nh)
 nix develop
 ```
 
@@ -32,7 +33,7 @@ Available hosts: `nas`, `vaasanas`, `t480`, `framework`, `proxy-pi`, `ankka`
 |------|------|------|----------|
 | `nas` | x86_64 | server | Media/storage: Jellyfin, nixarr, Nextcloud, Syncthing, Samba, Attic cache, ZFS, NVIDIA GPU, UPS |
 | `vaasanas` | x86_64 | server | Secondary: NFS server, Samba, ZFS, DynDNS (mc.portfo.rs) |
-| `t480` | x86_64 | desktop | ThinkPad T480: Niri compositor, PIA VPN, RTL-SDR |
+| `t480` | x86_64 | desktop | ThinkPad T480: Niri compositor, RTL-SDR (not in active use) |
 | `framework` | x86_64 | desktop | Framework 13 AMD: Niri, multiple VPNs, Docker, virt-manager, fingerprint |
 | `proxy-pi` | aarch64 | server | Raspberry Pi 4: AdGuard Home DNS, nginx reverse proxy for internal services |
 | `ankka` | aarch64 | server | Hetzner VPS: Central Prometheus/Grafana, Headscale, mail server, Matrix, HedgeDoc, Gatus, CoreDNS, website |
@@ -68,7 +69,7 @@ modules/system/                  NixOS modules (lajp.* options)
   rickroll.nix                   rickroll easter egg
   dreamlauncher.nix              dream launcher
   common/                        base config (nix settings, user account, shell)
-  services/                      46 service modules (see below)
+  services/                      45 service modules (see below)
     dashboards/                  11 Grafana dashboard JSONs
   hardware/                      zfs, sound, bluetooth, rtl-sdr, backlight, memory
   gui/                           fonts, keyboard, theme (stylix), virt-manager
@@ -85,7 +86,7 @@ modules/user/                    Home-manager modules (lajp.* options)
 
 ### Service Modules (`modules/system/services/`)
 
-ssh, jellyfin, jackett, prowlarr, transmission, cross-seed, tvheadend, threadfin, testaustime-backup, syncthing, samba, xserver, gpg, vaultwarden, restic, backup-notify, niri, pia, website, sonarr, uptime-kuma, mailserver, dyndns, smartd, formicer-website, nixarr, gatus, headscale, hedgedoc, tailscale, nginx, zfs-backup, vpn, adguardhome, coredns, nextcloud, memegenerator, cheese, crabfit, yensid, prometheus, typst-collab, resource-limits, email-telegram-bridge, attic, matrix
+ssh, jellyfin, jackett, prowlarr, transmission, cross-seed, tvheadend, threadfin, testaustime-backup, syncthing, samba, xserver, gpg, vaultwarden, restic, backup-notify, niri, website, sonarr, uptime-kuma, mailserver, dyndns, smartd, formicer-website, nixarr, gatus, headscale, hedgedoc, tailscale, nginx, zfs-backup, vpn, adguardhome, coredns, nextcloud, memegenerator, cheese, crabfit, yensid, prometheus, typst-collab, resource-limits, email-telegram-bridge, attic, matrix
 
 ### Grafana Dashboards (`modules/system/services/dashboards/`)
 
@@ -119,26 +120,19 @@ Uses agenix with **agenix-rekey** (not plain agenix). There is no `secrets.nix` 
 - **Agent-mode Prometheus** on nas, vaasanas, proxy-pi -- pushes metrics via `remote_write` to `100.64.0.4:9090` (framework and t480 do not run prometheus)
 - **Grafana** on ankka with auto-provisioned dashboards from `services/dashboards/`
 - **Gatus** on ankka (`status.lajp.fi`) -- monitors 30+ endpoints with email alerting (via email-telegram bridge to Telegram)
-- Exporters: node, nginx, nginx-log, smartctl, zfs, nvidia-gpu, apcupsd, dovecot, rspamd, postfix, synapse, hedgedoc, headscale, exportarr (sonarr/radarr/prowlarr)
+- Exporters: node, nginx, nginx-log, smartctl, zfs, nvidia-gpu, apcupsd, postfix, synapse, hedgedoc, headscale, exportarr (sonarr/radarr/prowlarr)
+- rspamd metrics are scraped from rspamd's built-in `/metrics` endpoint (the `prometheus.exporters.rspamd` exporter was removed in 26.05). The dovecot exporter relied on dovecot's `old_stats` plugin, which dovecot 2.4 (26.05) removed, so it is currently dropped.
 
 ## Deployment
 
-### deploy-rs
-
-Remote deployment via deploy-rs for 4 hosts:
-
-| Host | SSH User | Remote Build | Interactive Sudo |
-|------|----------|-------------|-----------------|
-| `nas` | root | no | yes |
-| `vaasanas` | lajp | yes | yes |
-| `proxy-pi` | root | no | no |
-| `ankka` | lajp | no | no |
-
-`t480` and `framework` are local machines -- not in deploy-rs nodes.
+deploy-rs has been removed. Hosts are deployed manually with `nixos-rebuild`
+(e.g. `nixos-rebuild switch --flake .#<hostname> --target-host <user>@<host>
+--use-remote-sudo`) or the `nh` helper available in the dev shell. `t480` and
+`framework` are local machines.
 
 ### CI/CD (GitHub Actions)
 
-- **`ci.yml`**: Builds all hosts except `t480` on push. ARM hosts (ankka, proxy-pi) on `ubuntu-24.04-arm`, x64 hosts on `ubuntu-latest`. Uses Attic binary cache (`cache.lajp.fi/ci`) for push/pull.
+- **`ci.yml`**: Builds the remote/server hosts on push (`ankka`, `proxy-pi` on `ubuntu-24.04-arm`; `nas`, `vaasanas`, `framework` on `ubuntu-latest`). `t480` and `minecraft` are not built in CI. Uses Attic binary cache (`cache.lajp.fi/ci`) for push/pull.
 - **`update.yml`**: Weekly (Monday) automated `nix flake update`, creates PR if inputs changed.
 
 ## Backups
@@ -149,16 +143,15 @@ Remote deployment via deploy-rs for 4 hosts:
 
 ## Key Flake Inputs
 
-- `nixpkgs` (25.11), `nixpkgs-unstable` -- available as `pkgs` and `pkgs-unstable`
-- `home-manager` (25.11), `stylix` (25.11) -- user env and theming
+- `nixpkgs` (26.05), `nixpkgs-unstable` -- available as `pkgs` and `pkgs-unstable`
+- `home-manager` (26.05), `stylix` (tracks `master` -- no release-26.05 branch yet) -- user env and theming
 - `nixos-hardware` -- hardware-specific optimizations
-- `nixvim` -- declarative neovim (follows nixpkgs-unstable)
-- `niri` -- Wayland compositor
+- `nixvim` -- declarative neovim (nixos-26.05 branch, follows `nixpkgs`)
+- `niri` -- Wayland compositor (follows `nixpkgs`)
 - `agenix` + `agenix-rekey` -- secret management
-- `deploy-rs` -- remote deployment
-- `simple-nixos-mailserver` (25.11) -- mail server on ankka
+- `simple-nixos-mailserver` (26.05) -- mail server on ankka
 - `nixarr` (custom fork: lajp/nixarr, cross-seed-fix branch) -- media stack
-- `pia-nix`, `pia` -- PIA VPN integration
+- `pia-nix` -- PIA WireGuard integration (`pia-wg`, used by the disabled `transmission.nix` module; the OpenVPN-based `pia`/Fuwn input was removed)
 - `nur`, `nix-index-database` -- community packages and command lookup
 - `yensid` -- build system proxy with load balancing across builders
 - Custom projects: `lajp-fi` (website), `esn-ical` (calendar), `memegenerator`, `blmgr` (backlight)

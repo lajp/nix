@@ -41,7 +41,7 @@ in
 
       # A list of all login accounts. To create the password hashes, use
       # nix-shell -p mkpasswd --run 'mkpasswd -sm bcrypt'
-      loginAccounts = {
+      accounts = {
         ${admin} = {
           hashedPasswordFile = config.age.secrets.email-password.path;
           aliases = [
@@ -73,29 +73,31 @@ in
         };
       };
 
+      # NixOS 26.05 / dovecot 2.4: mailboxes use `special_use` (with an escaped
+      # leading backslash, per RFC 6154) instead of the old `specialUse`.
       mailboxes = {
         Drafts = {
           auto = "subscribe";
-          specialUse = "Drafts";
+          special_use = "\\Drafts";
         };
         Junk = {
           auto = "subscribe";
-          specialUse = "Junk";
+          special_use = "\\Junk";
         };
         Sent = {
           auto = "subscribe";
-          specialUse = "Sent";
+          special_use = "\\Sent";
         };
         Trash = {
           auto = "no";
-          specialUse = "Trash";
+          special_use = "\\Trash";
         };
         Archive = {
           auto = "subscribe";
         };
       };
 
-      extraVirtualAliases = lib.mergeAttrsList (
+      aliases = lib.mergeAttrsList (
         lib.map (domain: {
           "postmaster@${domain}" = admin;
           "abuse@${domain}" = admin;
@@ -118,8 +120,14 @@ in
         ${"contact" + "@oy.lajp.fi"} = ("lajp" + "+oy" + "@lajp.fi");
       };
 
-      certificateScheme = "acme-nginx";
+      # NixOS 26.05: `certificateScheme = "acme-nginx"` was removed. Reference an
+      # ACME cert managed via nginx (the vhost below provides the HTTP-01 challenge).
+      x509.useACMEHost = "mail.portfo.rs";
     };
+
+    # Replaces the old acme-nginx scheme: a vhost that serves the ACME challenge
+    # so security.acme can obtain the cert for the mail fqdn.
+    services.nginx.virtualHosts."mail.portfo.rs".enableACME = true;
 
     services.rspamd.extraConfig = ''
       actions {
@@ -135,24 +143,17 @@ in
       ];
     };
 
-    services.dovecot2.extraConfig = ''
-      service stats {
-        unix_listener stats {
-          mode = 0666
-        }
-      }
-    '';
-
     security.acme = {
       acceptTerms = true;
       defaults.email = "lajp@iki.fi";
     };
 
-    services.prometheus.exporters.rspamd.enable = true;
+    # NixOS 26.05 removed the rspamd exporter; metrics are scraped from rspamd's
+    # built-in /metrics endpoint instead (see prometheus.nix rspamd job).
     services.prometheus.exporters.postfix.enable = true;
-    services.prometheus.exporters.dovecot = {
-      enable = true;
-      socketPath = "/run/dovecot2/stats";
-    };
+    # The dovecot prometheus exporter relied on the `old_stats` plugin, which
+    # dovecot 2.4 (NixOS 26.05) removed. Dropped until reimplemented on dovecot
+    # 2.4's native OpenMetrics endpoint.
+    # TODO: re-add dovecot metrics via dovecot 2.4's built-in stats exporter.
   };
 }

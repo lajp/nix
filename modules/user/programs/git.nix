@@ -10,7 +10,7 @@
       email = "lajp@iki.fi";
     };
 
-    aliases = {
+    settings.alias = {
       br = "branch";
       co = "checkout";
       st = "status";
@@ -35,13 +35,11 @@
       }
     ];
 
-    extraConfig = {
-      rerere.enabled = true;
-      init.defaultBranch = "main";
+    settings.rerere.enabled = true;
+    settings.init.defaultBranch = "main";
 
-      merge.tool = "nvimdiff";
-      "mergetool \"nvimdiff\"".cmd = "nvim -d $LOCAL $MERGED $REMOTE -c 'wincmd l'";
-    };
+    settings.merge.tool = "nvimdiff";
+    settings."mergetool \"nvimdiff\"".cmd = "nvim -d $LOCAL $MERGED $REMOTE -c 'wincmd l'";
 
     signing = {
       signByDefault = true;

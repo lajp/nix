@@ -18,7 +18,6 @@
     ./restic.nix
     ./backup-notify.nix
     ./niri.nix
-    ./pia.nix
     ./website.nix
     ./ip-echo.nix
     ./sonarr.nix

@@ -6,6 +6,9 @@ in
 {
   programs.zsh = {
     enable = true;
+    # home-manager 26.05 will default dotDir to the XDG config dir; keep the
+    # legacy home-directory location (stateVersion < 26.05) to avoid a migration.
+    dotDir = config.home.homeDirectory;
     enableCompletion = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;

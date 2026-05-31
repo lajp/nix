@@ -35,7 +35,9 @@ in
   };
 
   config = mkIf cfg.enable {
-    services.udev.packages = [ pkgs.light ];
+    # `light` was removed in nixpkgs 26.05; brightnessctl ships equivalent udev
+    # rules granting the `video` group write access to backlight brightness.
+    services.udev.packages = [ pkgs.brightnessctl ];
 
     environment.systemPackages = [
       cfg.package

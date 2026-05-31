@@ -102,6 +102,12 @@ in
       enable = true;
       enableMan = false;
 
+      # nixvim is on its nixos-26.05 branch, but `home-manager.useGlobalPkgs`
+      # feeds it the system nixpkgs (a different 26.05 commit than nixvim pins).
+      # Pin nixvim's nixpkgs.source to the pkgs actually in use to silence the
+      # resulting source-mismatch warning (both are 26.05).
+      nixpkgs.source = pkgs.path;
+
       globals.mapleader = " ";
 
       filetype.extension = {

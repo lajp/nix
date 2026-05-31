@@ -46,6 +46,7 @@ in
     # Bind mount the source path to the user's data directory (read-only)
     fileSystems.${dataDir} = {
       device = cfg.sourcePath;
+      fsType = "none";
       options = [ "bind" "ro" ];
     };
 

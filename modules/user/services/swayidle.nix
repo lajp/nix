@@ -19,7 +19,7 @@ in
 
   services.swayidle = mkIf (!xserver && gui) {
     enable = true;
-    systemdTarget = "graphical-session.target";
+    systemdTargets = [ "graphical-session.target" ];
     events = [
       {
         event = "before-sleep";

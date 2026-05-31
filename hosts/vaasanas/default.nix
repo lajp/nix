@@ -30,6 +30,7 @@
 
   fileSystems."/export/vaasanas" = {
     device = "/media/vaasapool";
+    fsType = "none";
     options = [ "bind" ];
   };
 

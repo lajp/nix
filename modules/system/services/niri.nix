@@ -18,8 +18,7 @@ in
   config = mkIf cfg.enable {
     programs.niri.enable = true;
 
-    # Built against nixpkgs-master (see flake input) so its crate fetches use the
-    # static.crates.io CDN; pkgs.niri-unstable (25.11 overlay) still 403s on crates.io.
+    # Use niri-flake's niri-unstable, which tracks niri releases ahead of nixpkgs.
     programs.niri.package = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri-unstable;
 
     services.greetd =

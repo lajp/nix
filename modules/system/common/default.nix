@@ -108,7 +108,7 @@ in
     inputs.agenix.packages."${system}".default
   ];
 
-  documentation.man.generateCaches = false;
+  documentation.man.cache.enable = false;
 
   # NOTE: On servers we'll use gpg agent forwarding
   # so we don't want the agent to overwrite the socket

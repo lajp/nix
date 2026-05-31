@@ -20,6 +20,15 @@ in
   config = mkIf cfg.enable {
     lajp.services.nginx.enable = true;
 
+    # The nixarr fork's cross-seed package (pkgs/cross-seed) builds against
+    # nodejs_20, which NixOS 26.05 marks insecure (Node 20 reached EOL). Build it
+    # against the current LTS instead.
+    # TODO: bump nodejs_20 -> nodejs_22 in the lajp/nixarr fork's pkgs/cross-seed
+    # and drop this overlay.
+    nixpkgs.overlays = [
+      (_final: prev: { nodejs_20 = prev.nodejs_22; })
+    ];
+
     age.secrets.nixarr-vpn.rekeyFile = ../../../secrets/nixarr-vpn.age;
 
     environment = {

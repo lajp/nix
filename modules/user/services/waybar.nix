@@ -45,7 +45,7 @@ in
           wireplumber = {
             format = "{volume}%";
             format-muted = "";
-            on-click = "${pkgs.helvum}/bin/helvum";
+            on-click = "${pkgs.crosspipe}/bin/crosspipe";
             max-volume = 150;
             scroll-step = 0.2;
           };

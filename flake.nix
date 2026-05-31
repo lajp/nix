@@ -2,13 +2,9 @@
   description = "lajp NixOS flake";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
 
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-
-    # master carries the importCargoLock static.crates.io fix (nixpkgs#524985) that
-    # niri needs; drop this once nixos-25.11 picks up backport #524988.
-    nixpkgs-master.url = "github:NixOS/nixpkgs/master";
 
     flake-utils.url = "github:numtide/flake-utils";
 
@@ -20,8 +16,6 @@
     };
 
     pia-nix.url = "github:Atte/pia-nix";
-
-    pia.url = "github:Fuwn/pia.nix";
 
     agenix = {
       url = "github:ryantm/agenix";
@@ -37,19 +31,20 @@
     nur.url = "github:nix-community/NUR";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.11";
+      url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
     stylix = {
-      url = "github:danth/stylix/release-25.11";
+      # No release-26.05 branch exists yet; track master until one is cut.
+      # (master dropped its own home-manager input, so don't override it.)
+      url = "github:danth/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
     };
 
     nixvim = {
-      url = "github:nix-community/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      url = "github:nix-community/nixvim/nixos-26.05";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     blmgr = {
@@ -64,8 +59,7 @@
 
     niri = {
       url = "github:sodiboo/niri-flake";
-      # Build niri's packages against master so importCargoLock uses static.crates.io.
-      inputs.nixpkgs.follows = "nixpkgs-master";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     testaustime-nvim = {
@@ -89,7 +83,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    deploy-rs.url = "github:serokell/deploy-rs";
 
     disko = {
       url = "github:nix-community/disko";
@@ -101,7 +94,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    simple-nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-25.11";
+    simple-nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-26.05";
 
     nixarr = {
       #url = "github:rasmus-kirk/nixarr/main";
@@ -130,7 +123,6 @@
   outputs =
     {
       self,
-      deploy-rs,
       agenix-rekey,
       flake-utils,
       nixpkgs,
@@ -265,7 +257,6 @@
 
             services.restic.enable = true;
             services.niri.enable = true;
-            services.pia.enable = true;
             hardware.sound.enable = true;
             hardware.bluetooth.enable = true;
             hardware.rtl-sdr.enable = true;
@@ -437,80 +428,13 @@
         nixosConfigurations = self.nixosConfigurations;
       };
 
-      deploy.nodes = {
-        proxy-pi = {
-          hostname = "proxy-pi";
-          profiles.system = {
-            user = "root";
-            path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.proxy-pi;
-          };
-        };
-
-        nas = {
-          hostname = "nas";
-          profiles.system = {
-            user = "root";
-            interactiveSudo = true;
-            remoteBuild = false;
-            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.nas;
-          };
-        };
-
-        vaasanas = {
-          hostname = "vaasanas";
-          profiles.system = {
-            user = "root";
-            sshUser = "lajp";
-            interactiveSudo = true;
-            remoteBuild = true;
-            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.vaasanas;
-          };
-        };
-
-        minecraft = {
-          hostname = "mc.portfo.rs";
-          profiles.system = {
-            user = "root";
-            sshUser = "lajp";
-            interactiveSudo = true;
-            remoteBuild = false;
-            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.minecraft;
-          };
-        };
-
-        #nixos-dev = {
-        #  hostname = "nixos-dev";
-        #  profiles.system = {
-        #    user = "root";
-        #    sshUser = "lajp";
-        #    interactiveSudo = true;
-        #    remoteBuild = true;
-        #    path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.nixos-dev;
-        #  };
-        #};
-
-        ankka = {
-          hostname = "ankka";
-          profiles.system = {
-            user = "root";
-            sshUser = "lajp";
-            #remoteBuild = true;
-            path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.ankka;
-          };
-        };
-      };
-
-      # This is highly advised, and will prevent many possible mistakes
       checks =
         let
           testPkgs = import nixpkgs { system = "x86_64-linux"; };
         in
         {
           x86_64-linux =
-            deploy-rs.lib.x86_64-linux.deployChecks {
-              nodes = { inherit (self.deploy.nodes) nas vaasanas minecraft; };
-            }
-            // {
+            {
               zfs-backup = testPkgs.callPackage ./tests/zfs-backup.nix { };
               ankka-webmail-config =
                 let
@@ -553,9 +477,6 @@
                   mkdir -p $out
                 '';
             };
-          aarch64-linux = deploy-rs.lib.aarch64-linux.deployChecks {
-            nodes = { inherit (self.deploy.nodes) proxy-pi ankka; };
-          };
         };
 
     }
@@ -571,7 +492,6 @@
         packages = [
           pkgs.agenix-rekey
           pkgs.age-plugin-yubikey
-          deploy-rs.packages.${system}.default
           pkgs.nh
         ];
       };

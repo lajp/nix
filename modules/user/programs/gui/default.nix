@@ -29,7 +29,9 @@ in
       with pkgs;
       [
         pavucontrol
-        helvum
+        # helvum was removed in nixpkgs 26.05 (unmaintained); crosspipe is the
+        # upstream-suggested PipeWire patchbay replacement.
+        crosspipe
         discord
         (flameshot.override { enableWlrSupport = true; })
         pkgs-unstable.signal-desktop
@@ -53,7 +55,7 @@ in
         steam
         libreoffice-fresh
         (kitsas.overrideAttrs (final: {
-          patches = final.patches ++ [ ./0001-Enable-yhteenvetoilmoitus-EU-sales-summary-for-local.patch ];
+          patches = (final.patches or [ ]) ++ [ ./0001-Enable-yhteenvetoilmoitus-EU-sales-summary-for-local.patch ];
         }))
         eddie
 

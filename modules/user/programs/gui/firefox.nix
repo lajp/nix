@@ -65,6 +65,9 @@ in
     programs.firefox = {
       enable = true;
       package = pkgs-unstable.firefox;
+      # home-manager 26.05 moved the default profile path to the XDG config dir;
+      # keep the legacy ~/.mozilla/firefox location (stateVersion < 26.05).
+      configPath = ".mozilla/firefox";
 
       profiles.default = {
         name = "default";
