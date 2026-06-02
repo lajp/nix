@@ -97,8 +97,7 @@
     simple-nixos-mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-26.05";
 
     nixarr = {
-      #url = "github:rasmus-kirk/nixarr/main";
-      url = "github:lajp/nixarr/cross-seed-fix";
+      url = "github:rasmus-kirk/nixarr";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -189,7 +188,7 @@
                 "prowlarr"
                 "bazarr"
                 "transmission"
-                "jellyseerr"
+                "seerr"
               ];
               earlyoomAvoid = [
                 "sshd"

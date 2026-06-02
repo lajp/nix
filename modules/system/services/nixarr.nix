@@ -1,7 +1,6 @@
 {
   inputs,
   pkgs,
-  pkgs-unstable,
   lib,
   config,
   ...
@@ -19,15 +18,6 @@ in
 
   config = mkIf cfg.enable {
     lajp.services.nginx.enable = true;
-
-    # The nixarr fork's cross-seed package (pkgs/cross-seed) builds against
-    # nodejs_20, which NixOS 26.05 marks insecure (Node 20 reached EOL). Build it
-    # against the current LTS instead.
-    # TODO: bump nodejs_20 -> nodejs_22 in the lajp/nixarr fork's pkgs/cross-seed
-    # and drop this overlay.
-    nixpkgs.overlays = [
-      (_final: prev: { nodejs_20 = prev.nodejs_22; })
-    ];
 
     age.secrets.nixarr-vpn.rekeyFile = ../../../secrets/nixarr-vpn.age;
 
@@ -92,10 +82,7 @@ in
       };
 
       bazarr.enable = true;
-      jellyseerr = {
-        enable = true;
-        package = pkgs-unstable.jellyseerr;
-      };
+      seerr.enable = true;
       prowlarr.enable = true;
       # TODO: requires nixos-25.05
       # recyclarr.enable = true;
@@ -106,9 +93,6 @@ in
 
     # TODO: migrate library under nixarr.mediaDir
     systemd.services.transmission.serviceConfig.BindPaths = [ "/media/luukas/Torrents" ];
-    # nixpkgs transmission sets UMask=0066, blocking group reads that cross-seed needs
-    systemd.services.transmission.serviceConfig.UMask = lib.mkForce "0026";
-    users.users.cross-seed.extraGroups = [ "media" ];
     systemd.services.jellyfin.serviceConfig.BindPaths = [
       "/media/luukas/Films"
       "/media/luukas/TV"
