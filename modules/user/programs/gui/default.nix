@@ -51,11 +51,27 @@ in
         gimp
         sxiv
         pkgs-unstable.telegram-desktop
-        pkgs.jellyfin-desktop
+        (pkgs.symlinkJoin {
+          name = "jellyfin-desktop-wrapped";
+          paths = [
+            pkgs.jellyfin-desktop
+          ];
+          nativeBuildInputs = [
+            pkgs.makeWrapper
+          ];
+          # Playback on qt6-webengine 6.11.0 is broken: https://github.com/NixOS/nixpkgs/issues/519073
+          postBuild = ''
+            wrapProgram $out/bin/jellyfin-desktop \
+              --set QTWEBENGINE_FORCE_USE_GBM 0
+          '';
+        })
         steam
         libreoffice-fresh
         (kitsas.overrideAttrs (final: {
-          patches = (final.patches or [ ]) ++ [ ./0001-Enable-yhteenvetoilmoitus-EU-sales-summary-for-local.patch ];
+          patches = (final.patches or [ ]) ++ [
+            # https://github.com/artoh/kitupiikki/pull/1435
+            ./0001-Enable-yhteenvetoilmoitus-EU-sales-summary-for-local.patch
+          ];
         }))
         eddie
 

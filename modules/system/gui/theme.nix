@@ -5,5 +5,6 @@
     image = ../../../images/haskell.jpg;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-hard.yaml";
     #base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-light-soft.yaml";
+    targets.qt.enable = false;
   };
 }
