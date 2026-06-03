@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   ...
@@ -28,6 +29,9 @@
 
   hardware.nvidia.prime.offload.enable = false;
   hardware.nvidia.open = false;
+  # The Quadro P600 (Pascal/GP107) was dropped from the mainline driver (595.xx
+  # reports "No NVIDIA GPU found"); Pascal is only supported by the 580 legacy branch.
+  hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.legacy_580;
 
   services.apcupsd.enable = true;
   services.prometheus.exporters.apcupsd.enable = true;
