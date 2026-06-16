@@ -68,7 +68,10 @@ in
       wants = [ "network-online.target" ];
       after = [ "network-online.target" ];
 
-      environment = { NEW_PREFIX = cfg.newPrefix; } // cfg.environment;
+      environment = {
+        NEW_PREFIX = cfg.newPrefix;
+      }
+      // cfg.environment;
 
       serviceConfig = {
         ExecStart = "${cfg.package}/bin/k9mail-link";
