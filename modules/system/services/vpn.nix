@@ -6,6 +6,7 @@
 }:
 let
   inherit (lib) mkIf mkEnableOption;
+  inherit (config.lajp.user) username;
   cfg = config.lajp.services.vpn;
 in
 {
@@ -47,6 +48,28 @@ in
             down ${pkgs.update-systemd-resolved}/libexec/openvpn/update-systemd-resolved
           '';
           autoStart = cfg.braiins.autostart;
+        };
+      };
+    }
+    {
+      config = mkIf cfg.braiins.enable {
+        # NOTE: avoid the default port to allow a second client
+        lajp.portRequests.netbird-braiins = 51821;
+
+        users.users.${username}.extraGroups = [ "netbird-braiins" ];
+
+        services.netbird.clients.braiins = {
+          autoStart = false;
+
+          environment = {
+            NB_MANAGEMENT_URL = "https://nbvpn.braiins.cz";
+            NB_ADMIN_URL = "https://nbvpn.braiins.cz";
+          };
+
+          port = config.lajp.ports.netbird-braiins;
+          ui.enable = false;
+          openFirewall = false;
+          openInternalFirewall = false;
         };
       };
     }
