@@ -2,6 +2,7 @@
 {
   imports = [
     ./ssh.nix
+    ./automatic-timezone.nix
     ./jellyfin.nix
     ./jackett.nix
     ./prowlarr.nix

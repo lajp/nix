@@ -282,6 +282,7 @@
 
             services.restic.enable = true;
             services.backup-notify.enable = true;
+            services.automatic-timezone.enable = true;
             services.niri.enable = true;
             services.ssh = {
               enable = true;
