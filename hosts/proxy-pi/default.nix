@@ -60,7 +60,7 @@
     virtualHosts = {
       "ilo.intra.lajp.fi" = {
         locations."/" = {
-          proxyPass = "https://192.168.1.38";
+          proxyPass = "https://192.168.8.107";
           proxyWebsockets = true;
         };
 
@@ -70,7 +70,7 @@
 
       "router.intra.lajp.fi" = {
         locations."/" = {
-          proxyPass = "http://192.168.1.1";
+          proxyPass = "http://192.168.8.1";
           proxyWebsockets = true;
         };
 
@@ -80,7 +80,7 @@
 
       "miniminer.intra.lajp.fi" = {
         locations."/" = {
-          proxyPass = "http://192.168.1.135";
+          proxyPass = "http://192.168.8.225";
           proxyWebsockets = true;
         };
 
@@ -90,7 +90,7 @@
 
       "vault.intra.lajp.fi" = {
         locations."/" = {
-          proxyPass = "http://192.168.1.35:8222";
+          proxyPass = "http://192.168.8.104:8222";
           proxyWebsockets = true;
         };
 

@@ -12,9 +12,9 @@ graph TD
         ankka["<b>ankka</b> (aarch64)<br/>Central Services<br/>37.27.191.46<br/>Tailnet: 100.64.0.4"]
     end
 
-    subgraph home["Home Network — 192.168.1.0/24"]
-        router["Router<br/>192.168.1.1"]
-        nas["<b>nas</b> (x86_64)<br/>HP Microserver<br/>Media & Storage<br/>Tailnet: 100.64.0.2<br/>iLO: 192.168.1.38"]
+    subgraph home["Home Network — 192.168.8.0/24"]
+        router["Router<br/>192.168.8.1"]
+        nas["<b>nas</b> (x86_64)<br/>HP Microserver<br/>Media & Storage<br/>Tailnet: 100.64.0.2<br/>iLO: 192.168.8.107"]
         proxypi["<b>proxy-pi</b> (aarch64)<br/>DNS & Reverse Proxy<br/>Tailnet: 100.64.0.3"]
         framework["<b>framework</b> (x86_64)<br/>Daily Driver Laptop"]
         t480["<b>t480</b> (x86_64)<br/>ThinkPad Laptop"]
@@ -221,9 +221,9 @@ flowchart LR
 | Domain | Proxied To |
 |--------|-----------|
 | `adguard.intra.lajp.fi` | AdGuard Home (localhost) |
-| `ilo.intra.lajp.fi` | iLO on nas (192.168.1.38) |
-| `router.intra.lajp.fi` | Router (192.168.1.1) |
-| `vault.intra.lajp.fi` | Vaultwarden (192.168.1.35:8222) |
+| `ilo.intra.lajp.fi` | iLO on nas (192.168.8.107) |
+| `router.intra.lajp.fi` | Router (192.168.8.1) |
+| `vault.intra.lajp.fi` | Vaultwarden (192.168.8.104:8222) |
 
 ## Mail Server
 
@@ -243,7 +243,7 @@ Accounts: one main account on lajp.fi, plus send-only accounts for alerts (monit
 
 | Segment | CIDR | Hosts | Notes |
 |---------|------|-------|-------|
-| Home LAN | 192.168.1.0/24 | nas, proxy-pi, framework, t480 | Router at .1, nas iLO at .38, Vaultwarden at .35 |
+| Home LAN | 192.168.8.0/24 | nas, proxy-pi, framework, t480 | Router at .1, nas at .104 (Vaultwarden), nas iLO at .107  |
 | Vaasa LAN | 192.168.178.0/24 | vaasanas | Accessible from framework via WireGuard |
 | Tailnet | 100.64.0.0/10 | All hosts | Managed by Headscale on ankka |
 | Hetzner Public | 37.27.191.46/32 | ankka | Public-facing services |
