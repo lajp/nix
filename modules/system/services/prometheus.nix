@@ -62,7 +62,10 @@ in
       provision = {
         datasources.settings = {
           deleteDatasources = [
-            { name = "Prometheus"; orgId = 1; }
+            {
+              name = "Prometheus";
+              orgId = 1;
+            }
           ];
           datasources = [
             {
@@ -107,12 +110,12 @@ in
 
     services.prometheus = {
       enable = true;
-      globalConfig.scrape_interval = "10s";
+      globalConfig.scrape_interval = "30s";
       port = prometheusPort;
       listenAddress = if cfg.central then "0.0.0.0" else "127.0.0.1";
       extraFlags = lib.optionals cfg.central [
         "--web.enable-remote-write-receiver"
-        "--storage.tsdb.retention.size=8GB"
+        "--storage.tsdb.retention.size=4GB"
       ];
       enableAgentMode = !cfg.central;
 
