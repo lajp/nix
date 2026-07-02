@@ -118,6 +118,7 @@ in
         ${"eetu" + "@formicer.com"} = ("eet" + "u.mae" + "npaa" + "@outlook.com");
         ${"tammi" + "@formicer.com"} = ("osse" + ".tammi" + "@gmail.com");
         ${"contact" + "@oy.lajp.fi"} = ("lajp" + "+oy" + "@lajp.fi");
+        ${"laskutus" + "@oy.lajp.fi"} = ("lajp" + "+oy" + "@lajp.fi");
       };
 
       # NixOS 26.05: `certificateScheme = "acme-nginx"` was removed. Reference an
