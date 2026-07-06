@@ -100,7 +100,7 @@ Custom port allocation system in `modules/system/ports.nix`. Services request po
 
 Uses agenix with **agenix-rekey** (not plain agenix). There is no `secrets.nix` file -- each module declares its own `age.secrets.*.rekeyFile` pointing to files in `secrets/*.age`.
 
-- Master identity: `yubikey.pub` (YubiKey-based)
+- Master identities: `yubikey-1.pub` (primary) and `yubikey-2.pub`
 - Encrypted secrets: `secrets/*.age` (~35 files)
 - Per-host rekeyed secrets: `secrets/rekeyed/<hostname>/`
 - Rekey command: `agenix-rekey` (available in dev shell)

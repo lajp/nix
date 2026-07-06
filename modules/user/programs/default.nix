@@ -35,7 +35,10 @@ in
   age.rekey = {
     storageMode = "local";
     localStorageDir = osConfig.age.rekey.localStorageDir + "-${username}";
-    masterIdentities = [ ../../../yubikey.pub ];
+    masterIdentities = [
+      ../../../yubikey-1.pub
+      ../../../yubikey-2.pub
+    ];
   };
 
   home.packages = with pkgs; [

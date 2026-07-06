@@ -16,7 +16,10 @@ in
 
   config = mkIf cfg.enable {
     age.rekey = {
-      masterIdentities = [ ../../../yubikey.pub ];
+      masterIdentities = [
+        ../../../yubikey-1.pub
+        ../../../yubikey-2.pub
+      ];
       storageMode = "local";
       localStorageDir = osConfig.age.rekey.localStorageDir + "-${username}";
       hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF7gs/ba3jdX+kfCruDK0NluwnFqO4AB+BZV3+2r36gY";

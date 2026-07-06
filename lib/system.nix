@@ -72,12 +72,16 @@ in
           { config, ... }:
           {
             age.rekey = {
-              masterIdentities = [ ../yubikey.pub ];
+              masterIdentities = [
+                ../yubikey-1.pub
+                ../yubikey-2.pub
+              ];
               storageMode = "local";
               localStorageDir = ../. + "/secrets/rekeyed/${config.networking.hostName}";
             };
           }
         )
-      ] ++ extraModules;
+      ]
+      ++ extraModules;
     };
 }
