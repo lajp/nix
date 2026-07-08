@@ -69,6 +69,7 @@
   environment.systemPackages = [
     pkgs.nfs-utils
     pkgs.framework-tool
+    pkgs.bolt
   ];
 
   services.rpcbind.enable = true; # needed for NFS
@@ -95,4 +96,6 @@
   };
   networking.networkmanager.plugins = [ pkgs.networkmanager-openconnect ];
   programs.nm-applet.enable = true;
+
+  services.hardware.bolt.enable = true;
 }
