@@ -3,6 +3,8 @@
   nodejs,
   python3,
   pnpm,
+  pnpmConfigHook,
+  fetchPnpmDeps,
   brotli,
   makeWrapper,
   fetchFromGitHub,
@@ -22,32 +24,32 @@
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "ilmomasiina";
-  version = "v2.0.0-alpha41";
+  version = "v2.1.1";
 
   src = fetchFromGitHub {
     owner = "Tietokilta";
     repo = "ilmomasiina";
     tag = finalAttrs.version;
-    hash = "sha256-kAZ5jWX4BMXDe3+0ERg+xYpboc8lKriUegYpbtin8q4=";
+    hash = "sha256-Bpw6Erl11NSFU3NK4UakPxwMStpq05fDHcQPuX7Qb/4=";
   };
 
   nativeBuildInputs = [
     nodejs
     pnpm
-    pnpm.configHook
+    pnpmConfigHook
     makeWrapper
     brotli
     python3
   ];
 
-  pnpmDeps = pnpm.fetchDeps {
+  pnpmDeps = fetchPnpmDeps {
     inherit (finalAttrs)
       pname
       version
       src
       ;
-    fetcherVersion = 2;
-    hash = "sha256-ky6slMf64bPavmlRHfqF7tJNL3JRliHPAs7e+G9VjAg=";
+    fetcherVersion = 3;
+    hash = "sha256-bEs4DF18QGcyZiAFXMrtNV3gxzlRgAihsNGP3ocMvPo=";
   };
 
   inherit
@@ -70,7 +72,7 @@ stdenv.mkDerivation (finalAttrs: {
       cp -f ${favicon} packages/ilmomasiina-frontend/public/favicon.ico
     ''
     + lib.optionalString (css != null) ''
-      cp -f ${css} packages/ilmomasiina-components/src/styles/_definitions.scss
+      cp -f ${css} packages/ilmomasiina-frontend/src/styles/_definitions.scss
     '';
 
   buildPhase = ''
