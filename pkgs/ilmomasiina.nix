@@ -1,6 +1,7 @@
 {
   stdenv,
   nodejs,
+  nodejs-slim,
   python3,
   pnpm,
   pnpmConfigHook,
@@ -114,7 +115,7 @@ stdenv.mkDerivation (finalAttrs: {
     # remove dangling symlinks
     find $out/lib -xtype l -print -delete
 
-    makeWrapper ${nodejs}/bin/node $out/bin/ilmomasiina \
+    makeWrapper ${nodejs-slim}/bin/node $out/bin/ilmomasiina \
       --chdir $out/lib \
       --add-flag $out/lib/packages/ilmomasiina-backend/dist/bin/server.js \
       --set NODE_ENV production

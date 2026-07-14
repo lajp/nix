@@ -3,22 +3,24 @@ _final: prev: {
 
   ilmomasiina =
     let
-      # nodejs_20 reached EOL and is marked insecure in nixpkgs 26.05; build
-      # ilmomasiina against the current LTS instead.
-      nodejs = prev.nodejs_22;
+      nodejs = prev.nodejs_24;
+      nodejs-slim = prev.nodejs-slim_24;
+      pnpm = prev.pnpm_9.override { inherit nodejs-slim; };
     in
     prev.callPackage ./ilmomasiina.nix {
-      inherit nodejs;
-      pnpm = prev.pnpm_9.override { inherit nodejs; };
+      inherit nodejs nodejs-slim pnpm;
+      fetchPnpmDeps = prev.fetchPnpmDeps.override { inherit pnpm; };
     };
 
   ilmomasiina_3 =
     let
       nodejs = prev.nodejs_24;
+      nodejs-slim = prev.nodejs-slim_24;
+      pnpm = prev.pnpm_9.override { inherit nodejs-slim; };
     in
     (prev.callPackage ./ilmomasiina.nix {
-      inherit nodejs;
-      pnpm = prev.pnpm_9.override { inherit nodejs; };
+      inherit nodejs nodejs-slim pnpm;
+      fetchPnpmDeps = prev.fetchPnpmDeps.override { inherit pnpm; };
     }).overrideAttrs
       (prev: {
         version = "v3.0.0-alpha.12";
