@@ -5,7 +5,7 @@ _final: prev: {
     let
       nodejs = prev.nodejs_24;
       nodejs-slim = prev.nodejs-slim_24;
-      pnpm = prev.pnpm_9.override { inherit nodejs-slim; };
+      pnpm = prev.pnpm_10.override { inherit nodejs-slim; };
     in
     prev.callPackage ./ilmomasiina.nix {
       inherit nodejs nodejs-slim pnpm;
@@ -16,7 +16,7 @@ _final: prev: {
     let
       nodejs = prev.nodejs_24;
       nodejs-slim = prev.nodejs-slim_24;
-      pnpm = prev.pnpm_9.override { inherit nodejs-slim; };
+      pnpm = prev.pnpm_10.override { inherit nodejs-slim; };
     in
     (prev.callPackage ./ilmomasiina.nix {
       inherit nodejs nodejs-slim pnpm;
