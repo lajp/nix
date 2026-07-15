@@ -818,11 +818,11 @@
         "systems": "systems_5"
       },
       "locked": {
-        "lastModified": 1784052253,
-        "narHash": "sha256-twloCv52Tg0aIuG87Eixl6LMkkfwR0zv4CRsrvtuleA=",
+        "lastModified": 1784098813,
+        "narHash": "sha256-ofhrEhIGflQjGGKKsEK+bBI7oQnTyNK+6Zt7pDEB4Dc=",
         "owner": "lajp",
         "repo": "lajp.fi",
-        "rev": "a92f6aef684d9868f4a8bd274c65f21f4f42f86f",
+        "rev": "59e3b3672a5c8f83ccead8e962e7e641b6d122a2",
         "type": "github"
       },
       "original": {
