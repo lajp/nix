@@ -50,7 +50,7 @@ stdenv.mkDerivation (finalAttrs: {
       src
       ;
     fetcherVersion = 3;
-    hash = "sha256-bEs4DF18QGcyZiAFXMrtNV3gxzlRgAihsNGP3ocMvPo=";
+    hash = "sha256-nKPSdn6nPOjWOYOZCufzk36fdsq9I4+dnh0KtuBVdRU=";
   };
 
   inherit
@@ -97,7 +97,7 @@ stdenv.mkDerivation (finalAttrs: {
 
     mkdir -p $out/bin $out/lib/packages
 
-    # NOTE: pnpm_9 doesn't support recursive pruning
+    # NOTE: pnpm doesn't support recursive pruning https://pnpm.io/cli/prune/
     rm -rf node_modules
     pnpm install --ignore-scripts --verbose --frozen-lockfile --offline --prod --filter @tietokilta/ilmomasiina-backend --filter @tietokilta/ilmomasiina-models
 

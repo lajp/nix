@@ -28,6 +28,6 @@ _final: prev: {
           hash = "sha256-zOjKDRc+M988Ci2WV79SD+7NjqrNm1JVgp8fu95zJ4A=";
         };
 
-        pnpmDeps = prev.pnpmDeps.override { hash = "sha256-unHOLbLdeZ1p03/ucMKS1sRTP9IPCWy5vhy1L2l2nVs="; };
+        pnpmDeps = prev.pnpmDeps.override { hash = "sha256-u2aHksbX4Q9gkwNRR3uOLn5u4H6dSgyngHHLKdYt04U="; };
       });
 }
