@@ -51,20 +51,24 @@ in
         gimp
         sxiv
         pkgs-unstable.telegram-desktop
-        (pkgs.symlinkJoin {
-          name = "jellyfin-desktop-wrapped";
-          paths = [
-            pkgs.jellyfin-desktop
-          ];
-          nativeBuildInputs = [
-            pkgs.makeWrapper
-          ];
-          # Playback on qt6-webengine 6.11.0 is broken: https://github.com/NixOS/nixpkgs/issues/519073
-          postBuild = ''
-            wrapProgram $out/bin/jellyfin-desktop \
-              --set QTWEBENGINE_FORCE_USE_GBM 0
-          '';
-        })
+        # NOTE: jellyfin-desktop qt5->qt6 works poorly and seems to have been vibe-coded
+        # jellyfin-desktop Rust rewrite is vibe-coded (despite what's claimed by the author)
+        # and full of unsound code.
+        # (pkgs.symlinkJoin {
+        #   name = "jellyfin-desktop-wrapped";
+        #   paths = [
+        #     pkgs.jellyfin-desktop
+        #   ];
+        #   nativeBuildInputs = [
+        #     pkgs.makeWrapper
+        #   ];
+        #   # Playback on qt6-webengine 6.11.0 is broken: https://github.com/NixOS/nixpkgs/issues/519073
+        #   postBuild = ''
+        #     wrapProgram $out/bin/jellyfin-desktop \
+        #       --set QTWEBENGINE_FORCE_USE_GBM 0
+        #   '';
+        # })
+        fladder
         steam
         libreoffice-fresh
         (kitsas.overrideAttrs (final: {
