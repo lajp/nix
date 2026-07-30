@@ -414,6 +414,7 @@
             # NOTE: vulnerable and dropped from nixpkgs
             # services.crabfit.enable = true;
             services.coredns.enable = true;
+            services.open-webui.enable = true;
             services.prometheus = {
               enable = true;
               central = true;

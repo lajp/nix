@@ -328,6 +328,17 @@ in
               ];
               alerts = [ { type = "email"; } ];
             }
+          ]
+          ++ lib.optionals config.lajp.services.open-webui.enable [
+            {
+              name = "Open WebUI";
+              group = "internal";
+              url = "http://localhost:${toString config.lajp.ports.open-webui}";
+              conditions = [
+                "[STATUS] == 200"
+              ];
+              alerts = [ { type = "email"; } ];
+            }
           ];
         };
       };
