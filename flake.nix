@@ -171,7 +171,7 @@
             };
             hardware.zfs.enable = true;
             services.zfs-backup = {
-              enable = true;
+              enable = false;
               pool = "naspool";
             };
             services.prometheus.enable = true;
