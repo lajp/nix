@@ -100,10 +100,32 @@ Custom port allocation system in `modules/system/ports.nix`. Services request po
 
 Uses agenix with **agenix-rekey** (not plain agenix). There is no `secrets.nix` file -- each module declares its own `age.secrets.*.rekeyFile` pointing to files in `secrets/*.age`.
 
-- Master identities: `yubikey-1.pub` (primary) and `yubikey-2.pub`
-- Encrypted secrets: `secrets/*.age` (~35 files)
+- Master identity: `yubikey-master.pub` -- one shared age recipient (`age1yubikey1qgg672...`) held by every YubiKey
+- Encrypted secrets: `secrets/*.age` (40 files), each with exactly one `piv-p256` stanza
 - Per-host rekeyed secrets: `secrets/rekeyed/<hostname>/`
 - Rekey command: `agenix-rekey` (available in dev shell)
+
+### Shared-recipient model
+
+One P-256 key is generated on an airgapped machine and imported into a PIV retired slot on every YubiKey, mirroring the PGP setup where an offline certify key provisions subkeys for several tokens. Every key therefore presents the **same** age recipient; only the `AGE-PLUGIN-YUBIKEY-...` identity stubs differ, since those encode serial + slot + pubkey tag.
+
+`yubikey-master.pub` is the concatenation of one identity stub per YubiKey. `masterIdentities` is declared in three places and all must agree:
+
+- `lib/system.nix` -- system scope, applies to every host
+- `modules/user/programs/default.nix` -- home-manager scope
+- `modules/user/programs/testaustime.nix` -- home-manager scope
+
+agenix-rekey unions `masterIdentities` across **all** nodes, including home-manager configs nested inside NixOS hosts. A stale entry in any one file re-adds that recipient to every secret in the repo, not just the ones in its own scope.
+
+Each entry uses the explicit `{ identity; pubkey; }` form. Secrets are encrypted to the `pubkey` string, so `nix build` and CI evaluate with no YubiKey present; the identity file is only passed as `-i` when decrypting.
+
+Adding a YubiKey: provision it per [docs/YUBIKEY-PROVISIONING.md](./docs/YUBIKEY-PROVISIONING.md), then append its identity to `yubikey-master.pub`. No re-encryption, no `agenix rekey`, no redeploy -- rekeyed output names hash `hostPubkey + rekeyFile`, never the master identities.
+
+Rotating the shared key means re-encrypting everything, and is not revocation: ciphertexts already in git history stay readable by the old key.
+
+### Gotcha: secrets behind disabled modules
+
+`agenix update-masterkeys` only walks secrets reachable through some node's `age.secrets.*.rekeyFile`. A secret whose service module is disabled is invisible to it and silently keeps its old recipients. During the August 2026 migration this affected `cross-seed`, `gg-ctf`, `ghcr-token`, `memegenerator`, `pia`, `pia2` and `rclone-config`. To include them, temporarily declare them as `age.secrets.*` on one host, run the migration, then remove the declaration.
 
 ## Networking & DNS
 

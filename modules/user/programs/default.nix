@@ -36,8 +36,10 @@ in
     storageMode = "local";
     localStorageDir = osConfig.age.rekey.localStorageDir + "-${username}";
     masterIdentities = [
-      ../../../yubikey-1.pub
-      ../../../yubikey-2.pub
+      {
+        identity = ../../../yubikey-master.pub;
+        pubkey = "age1yubikey1qgg672mrx7l3qgqqzvvsqwj76rlqjmktmsnl9qzaf0z7pqjlja0pz7hxkg7";
+      }
     ];
   };
 

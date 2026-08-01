@@ -8,6 +8,8 @@ let
   cfg = config.lajp.services.open-webui;
   port = config.lajp.ports.open-webui;
   searxPort = config.lajp.ports.searx;
+  browserlessPort = config.lajp.ports.browserless;
+  browserlessToken = "internal-browserless-token";
 in
 {
   options.lajp.services.open-webui.enable = mkEnableOption "Enable open-webui";
@@ -15,8 +17,25 @@ in
   config = mkIf cfg.enable {
     # NOTE: hard coded since the proxy is on proxy-pi
     lajp.portRequests.open-webui = 8223;
+    lajp.portRequests.browserless = true;
 
     age.secrets.novita-api-key.rekeyFile = ../../../secrets/novita-api-key.age;
+
+    lajp.virtualisation.podman.enable = true;
+    virtualisation.oci-containers = {
+      backend = "podman";
+      containers.browserless = {
+        image = "ghcr.io/browserless/chromium";
+        ports = [ "${toString browserlessPort}:3000" ];
+        environment = {
+          TOKEN = browserlessToken;
+          CONCURRENT = "5";
+          TIMEOUT = "30000";
+          HOST = "0.0.0.0";
+        };
+        extraOptions = [ "--shm-size=2g" ];
+      };
+    };
 
     containers.open-webui = {
       autoStart = true;
@@ -27,11 +46,17 @@ in
         isReadOnly = true;
       };
 
-      config = { ... }: {
+      config = { pkgs, ... }: {
         services.open-webui = {
           enable = true;
           host = "0.0.0.0";
           port = port;
+          # The default open-webui package omits optional dependencies
+          # (playwright, unstructured, etc.) that the web search + playwright
+          # loader needs. Add them all to avoid missing-module errors.
+          package = pkgs.open-webui.overridePythonAttrs (old: {
+            dependencies = old.dependencies ++ pkgs.open-webui.optional-dependencies.all;
+          });
           environment = {
             SCARF_NO_ANALYTICS = "True";
             DO_NOT_TRACK = "True";
@@ -40,6 +65,10 @@ in
             ENABLE_WEB_SEARCH = "True";
             WEB_SEARCH_ENGINE = "searxng";
             SEARXNG_QUERY_URL = "http://127.0.0.1:${toString searxPort}/search";
+            ENABLE_PERSISTENT_CONFIG = "False";
+            BYPASS_WEB_SEARCH_EMBEDDING_AND_RETRIEVAL = "True";
+            WEB_LOADER_ENGINE = "playwright";
+            PLAYWRIGHT_WS_URL = "ws://127.0.0.1:${toString browserlessPort}/chromium/playwright?token=${browserlessToken}";
           };
           environmentFile = "/run/secrets/novita-api-key";
         };
@@ -51,6 +80,9 @@ in
 
     networking.firewall.allowedTCPPorts = [ port ];
 
-    systemd.services."container@open-webui".after = [ "agenix.service" ];
+    systemd.services."container@open-webui".after = [
+      "agenix.service"
+      "podman-browserless.service"
+    ];
   };
 }
