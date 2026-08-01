@@ -177,6 +177,7 @@
             services.prometheus.enable = true;
             services.resourceLimits.enable = true;
             services.k9mail-link.enable = true;
+            services.open-webui.enable = true;
             hardware.memory = {
               enable = true;
               zramPercent = 50;
@@ -414,7 +415,6 @@
             # NOTE: vulnerable and dropped from nixpkgs
             # services.crabfit.enable = true;
             services.coredns.enable = true;
-            services.open-webui.enable = true;
             services.prometheus = {
               enable = true;
               central = true;

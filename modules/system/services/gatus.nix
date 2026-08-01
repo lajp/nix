@@ -329,13 +329,14 @@ in
               alerts = [ { type = "email"; } ];
             }
           ]
-          ++ lib.optionals config.lajp.services.open-webui.enable [
+          ++ [
             {
               name = "Open WebUI";
               group = "internal";
-              url = "http://localhost:${toString config.lajp.ports.open-webui}";
+              url = "https://chat.intra.lajp.fi/";
               conditions = [
                 "[STATUS] == 200"
+                "[CERTIFICATE_EXPIRATION] > 48h"
               ];
               alerts = [ { type = "email"; } ];
             }

@@ -107,6 +107,16 @@
         forceSSL = true;
         useACMEHost = "intra.lajp.fi";
       };
+
+      "chat.intra.lajp.fi" = {
+        locations."/" = {
+          proxyPass = "http://192.168.8.104:8223";
+          proxyWebsockets = true;
+        };
+
+        forceSSL = true;
+        useACMEHost = "intra.lajp.fi";
+      };
     };
   };
 

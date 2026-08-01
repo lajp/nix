@@ -224,6 +224,7 @@ flowchart LR
 | `ilo.intra.lajp.fi` | iLO on nas (192.168.8.107) |
 | `router.intra.lajp.fi` | Router (192.168.8.1) |
 | `vault.intra.lajp.fi` | Vaultwarden (192.168.8.104:8222) |
+| `chat.intra.lajp.fi` | Open WebUI (192.168.8.104:8223) |
 
 ## Mail Server
 
