@@ -117,6 +117,16 @@
         forceSSL = true;
         useACMEHost = "intra.lajp.fi";
       };
+
+      "searx.intra.lajp.fi" = {
+        locations."/" = {
+          proxyPass = "http://192.168.8.104:8888";
+          proxyWebsockets = true;
+        };
+
+        forceSSL = true;
+        useACMEHost = "intra.lajp.fi";
+      };
     };
   };
 

@@ -178,6 +178,7 @@
             services.resourceLimits.enable = true;
             services.k9mail-link.enable = true;
             services.open-webui.enable = true;
+            services.searx.enable = true;
             hardware.memory = {
               enable = true;
               zramPercent = 50;

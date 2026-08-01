@@ -45,10 +45,11 @@
     ./yensid.nix
     ./prometheus.nix
     ./typst-collab.nix
-    ./resource-limits.nix
-    ./email-telegram-bridge.nix
-    ./attic.nix
-    ./matrix.nix
+./resource-limits.nix
+  ./email-telegram-bridge.nix
+  ./attic.nix
+  ./searx.nix
+  ./matrix.nix
     ./minecraft.nix
     ./screego.nix
     ./k9mail-link.nix

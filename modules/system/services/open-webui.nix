@@ -7,6 +7,7 @@ let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.lajp.services.open-webui;
   port = config.lajp.ports.open-webui;
+  searxPort = config.lajp.ports.searx;
 in
 {
   options.lajp.services.open-webui.enable = mkEnableOption "Enable open-webui";
@@ -37,7 +38,8 @@ in
             ANONYMIZED_TELEMETRY = "False";
             OPENAI_API_BASE_URL = "https://api.novita.ai/v3/openai";
             ENABLE_WEB_SEARCH = "True";
-            WEB_SEARCH_ENGINE = "duckduckgo";
+            WEB_SEARCH_ENGINE = "searxng";
+            SEARXNG_QUERY_URL = "http://127.0.0.1:${toString searxPort}/search";
           };
           environmentFile = "/run/secrets/novita-api-key";
         };
