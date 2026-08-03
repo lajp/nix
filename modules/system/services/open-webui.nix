@@ -54,8 +54,13 @@ in
           # The default open-webui package omits optional dependencies
           # (playwright, unstructured, etc.) that the web search + playwright
           # loader needs. Add them all to avoid missing-module errors.
+          # Exclude colbert-ai: it pulls datasets 4.5.0, which conflicts with
+          # the datasets_3 (3.6.0) that open-webui depends on directly, and
+          # is unused since BYPASS_WEB_SEARCH_EMBEDDING_AND_RETRIEVAL is set.
           package = pkgs.open-webui.overridePythonAttrs (old: {
-            dependencies = old.dependencies ++ pkgs.open-webui.optional-dependencies.all;
+            dependencies =
+              old.dependencies
+              ++ (pkgs.lib.remove pkgs.python3Packages.colbert-ai pkgs.open-webui.optional-dependencies.all);
           });
           environment = {
             SCARF_NO_ANALYTICS = "True";
