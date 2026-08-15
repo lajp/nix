@@ -63,18 +63,16 @@ in
             # the extraction with plain innerText plus a bounded network-idle
             # wait so client-side rendering settles before reading the DOM.
             # Call-site lines are identical in 0.6.x and 0.11.x.
-            postPatch =
-              (old.postPatch or "")
-              + ''
-                for f in backend/open_webui/retrieval/web/utils.py open_webui/retrieval/web/utils.py; do
-                  if [ -f "$f" ]; then
-                    sed -i -E \
-                      -e 's|^([[:space:]]*)text = self\.evaluator\.evaluate\(page, browser, response\)$|\1try:\n\1    page.wait_for_load_state("networkidle", timeout=min(self.playwright_timeout, 15000))\n\1except Exception:\n\1    pass\n\1text = page.inner_text("body")|' \
-                      -e 's|^([[:space:]]*)text = await self\.evaluator\.evaluate_async\(page, browser, response\)$|\1try:\n\1    await page.wait_for_load_state("networkidle", timeout=min(self.playwright_timeout, 15000))\n\1except Exception:\n\1    pass\n\1text = await page.inner_text("body")|' \
-                      "$f"
-                  fi
-                done
-              '';
+            postPatch = (old.postPatch or "") + ''
+              for f in backend/open_webui/retrieval/web/utils.py open_webui/retrieval/web/utils.py; do
+                if [ -f "$f" ]; then
+                  sed -i -E \
+                    -e 's|^([[:space:]]*)text = self\.evaluator\.evaluate\(page, browser, response\)$|\1try:\n\1    page.wait_for_load_state("networkidle", timeout=min(self.playwright_timeout, 15000))\n\1except Exception:\n\1    pass\n\1text = page.inner_text("body")|' \
+                    -e 's|^([[:space:]]*)text = await self\.evaluator\.evaluate_async\(page, browser, response\)$|\1try:\n\1    await page.wait_for_load_state("networkidle", timeout=min(self.playwright_timeout, 15000))\n\1except Exception:\n\1    pass\n\1text = await page.inner_text("body")|' \
+                    "$f"
+                fi
+              done
+            '';
             dependencies =
               old.dependencies
               ++ (pkgs.lib.remove pkgs.python3Packages.colbert-ai pkgs.open-webui.optional-dependencies.all);

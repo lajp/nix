@@ -446,6 +446,8 @@
                   (address "lajp" "lajp.fi")
                   (address "luukas" "portfo.rs")
                   (address "lajp" "portfo.rs")
+                  (address "luukas" "portfors.fi")
+                  (address "lajp" "portfors.fi")
                   (address "portfors" "formicer.com")
                   (address "luukas" "formicer.com")
                   (address "lajp" "iki.fi")

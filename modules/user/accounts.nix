@@ -149,6 +149,8 @@ in
         aliases = [
           "luukas@portfo.rs"
           "lajp@portfo.rs"
+          "luukas@portfors.fi"
+          "lajp@portfors.fi"
         ];
         imap.host = "mail.portfo.rs";
 
@@ -180,7 +182,7 @@ in
             # This together with `set reverse_name` allows automatically
             # determening the address from which to reply based on the
             # recipient of the original mail
-            alternates luukas@portfo.rs lajp@iki.fi luukas.portfors@iki.fi
+            alternates luukas@portfo.rs luukas@portfors.fi lajp@portfors.fi lajp@iki.fi luukas.portfors@iki.fi
             source ${config.xdg.configHome}/neomutt/sidebar/personal
           '';
         };

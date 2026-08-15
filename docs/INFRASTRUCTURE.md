@@ -235,6 +235,7 @@ FQDN: `mail.portfo.rs` (ankka). Uses simple-nixos-mailserver with rspamd spam fi
 |--------|---------|
 | `lajp.fi` | Primary personal |
 | `portfo.rs` | Family |
+| `portfors.fi` | IT-tuki Pörtfors ry |
 | `formicer.com` | Organization |
 | `nextcloud.otanix.fi` | Service notifications |
 | `oy.lajp.fi` | Business |

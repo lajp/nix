@@ -29,6 +29,7 @@ in
       domains = [
         "lajp.fi"
         "portfo.rs"
+        "portfors.fi"
         "formicer.com"
         "nextcloud.otanix.fi"
         "oy.lajp.fi"
@@ -49,6 +50,8 @@ in
             ("luukas" + "@formicer.com")
             ("luukas" + "@portfo.rs")
             ("lajp" + "@portfo.rs")
+            ("luukas" + "@portfors.fi")
+            ("lajp" + "@portfors.fi")
           ];
         };
 
