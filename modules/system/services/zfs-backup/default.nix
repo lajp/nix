@@ -20,6 +20,11 @@ in
       description = "name of the zfs pool to backup";
       type = types.str;
     };
+    datasets = mkOption {
+      description = "datasets to back up; each dataset and all of its children that have auto-snapshots are included";
+      type = types.listOf types.str;
+      default = [ "${cfg.pool}/critical" ];
+    };
   };
 
   config = mkIf cfg.enable {
@@ -42,15 +47,14 @@ in
 
         environment = {
           POOL = cfg.pool;
+          ROOTS = lib.concatStringsSep " " cfg.datasets;
           RCLONE_CONFIG = config.age.secrets.rclone-config.path;
         };
 
         path = with pkgs; [
           rclone
           zfs
-          gawk
         ];
-
       };
 
       services."zfs-rclone-backup-full" = {
@@ -62,6 +66,7 @@ in
 
         environment = {
           POOL = cfg.pool;
+          ROOTS = lib.concatStringsSep " " cfg.datasets;
           RCLONE_CONFIG = config.age.secrets.rclone-config.path;
           FULL = "1";
         };
@@ -69,9 +74,7 @@ in
         path = with pkgs; [
           rclone
           zfs
-          gawk
         ];
-
       };
 
       timers."zfs-rclone-backup" = {

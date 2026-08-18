@@ -19,7 +19,6 @@ pkgs.testers.nixosTest {
       environment.systemPackages = with pkgs; [
         zfs
         rclone
-        gawk
       ];
     };
 
@@ -29,22 +28,27 @@ pkgs.testers.nixosTest {
     # Create ZFS pool on the empty disk
     machine.succeed("zpool create testpool /dev/vdb")
 
-    # Create encrypted dataset (required for zfs send -w)
+    # Encrypted root (children inherit encryption, so they exercise the -w
+    # raw-send path) with two datasets under it, plus a dataset outside the
+    # backup root that must never be sent.
     machine.succeed("dd if=/dev/urandom of=/tmp/zfs-key bs=32 count=1 2>/dev/null")
     machine.succeed(
         "zfs create"
         " -o encryption=aes-256-gcm"
         " -o keyformat=raw"
         " -o keylocation=file:///tmp/zfs-key"
-        " testpool/data"
+        " testpool/critical"
     )
+    machine.succeed("zfs create testpool/critical/backups")
+    machine.succeed("zfs create testpool/critical/state")
+    machine.succeed("zfs create testpool/other")
 
     # Write some data and create an auto-snapshot
-    machine.succeed("echo 'hello world' > /testpool/data/testfile")
-    machine.succeed("zfs snapshot testpool/data@zfs-auto-snap_2024-01-01")
+    machine.succeed("echo 'hello world' > /testpool/critical/backups/testfile")
+    machine.succeed("zfs snapshot testpool/critical/backups@zfs-auto-snap_2024-01-01")
 
     # Set up mock rclone config with local backend
-    machine.succeed("printf '[server-backup-crypt]\\ntype = local\\n' > /tmp/rclone.conf")
+    machine.succeed("printf '[server-backup]\ntype = local\n' > /tmp/rclone.conf")
 
     # Create the destination directory
     machine.succeed("mkdir -p /zfs-snapshots/testpool")
@@ -52,55 +56,94 @@ pkgs.testers.nixosTest {
     # --- Test 1: Full backup (no previous hold exists) ---
     # Run from / so rclone's relative path "zfs-snapshots/..." resolves to /zfs-snapshots/...
     machine.succeed(
-        "cd / && POOL=testpool RCLONE_CONFIG=/tmp/rclone.conf ${backupScript}"
+        "cd / && POOL=testpool ROOTS='testpool/critical' RCLONE_CONFIG=/tmp/rclone.conf ${backupScript}"
     )
 
-    # Verify backup chunk was created and is non-empty (small data = single chunk xaa)
-    machine.succeed("test -s '/zfs-snapshots/testpool/zfs-auto-snap_2024-01-01.xaa.zfs'")
+    # Verify the stream was uploaded as a single file and no .part remains
+    machine.succeed("test -s '/zfs-snapshots/testpool/critical/backups/zfs-auto-snap_2024-01-01.zfs'")
+    machine.fail("test -e '/zfs-snapshots/testpool/critical/backups/.zfs-auto-snap_2024-01-01.zfs.part'")
 
     # Verify hold was placed on the snapshot
-    machine.succeed("zfs holds -H testpool/data@zfs-auto-snap_2024-01-01 | grep -q rclone-backup")
+    machine.succeed("zfs holds -H testpool/critical/backups@zfs-auto-snap_2024-01-01 | grep -q rclone-backup")
 
     # --- Test 1b: Re-run with no new snapshots (should be a no-op) ---
     machine.succeed(
-        "cd / && POOL=testpool RCLONE_CONFIG=/tmp/rclone.conf ${backupScript}"
+        "cd / && POOL=testpool ROOTS='testpool/critical' RCLONE_CONFIG=/tmp/rclone.conf ${backupScript}"
     )
-    machine.succeed("zfs holds -H testpool/data@zfs-auto-snap_2024-01-01 | grep -q rclone-backup")
+    machine.succeed("zfs holds -H testpool/critical/backups@zfs-auto-snap_2024-01-01 | grep -q rclone-backup")
 
     # --- Test 2: Incremental backup ---
-    machine.succeed("echo 'more data' >> /testpool/data/testfile")
-    machine.succeed("zfs snapshot testpool/data@zfs-auto-snap_2024-01-02")
+    machine.succeed("echo 'more data' >> /testpool/critical/backups/testfile")
+    machine.succeed("zfs snapshot testpool/critical/backups@zfs-auto-snap_2024-01-02")
 
     machine.succeed(
-        "cd / && POOL=testpool RCLONE_CONFIG=/tmp/rclone.conf ${backupScript}"
+        "cd / && POOL=testpool ROOTS='testpool/critical' RCLONE_CONFIG=/tmp/rclone.conf ${backupScript}"
     )
 
-    # Verify incremental backup chunk exists and is non-empty
-    machine.succeed("test -s '/zfs-snapshots/testpool/zfs-auto-snap_2024-01-02.xaa.zfs'")
+    # Verify incremental backup file exists and is non-empty
+    machine.succeed("test -s '/zfs-snapshots/testpool/critical/backups/zfs-auto-snap_2024-01-02.zfs'")
 
     # Verify hold moved to the new snapshot
-    machine.succeed("zfs holds -H testpool/data@zfs-auto-snap_2024-01-02 | grep -q rclone-backup")
+    machine.succeed("zfs holds -H testpool/critical/backups@zfs-auto-snap_2024-01-02 | grep -q rclone-backup")
 
     # Verify old hold was released
-    machine.fail("zfs holds -H testpool/data@zfs-auto-snap_2024-01-01 | grep -q rclone-backup")
+    machine.fail("zfs holds -H testpool/critical/backups@zfs-auto-snap_2024-01-01 | grep -q rclone-backup")
 
-    # --- Test 3: Full reseed (FULL=1) ---
-    machine.succeed("echo 'even more data' >> /testpool/data/testfile")
-    machine.succeed("zfs snapshot testpool/data@zfs-auto-snap_2024-02-01")
+    # --- Test 3: second dataset under the root is backed up too ---
+    machine.succeed("echo 'state data' > /testpool/critical/state/file")
+    machine.succeed("zfs snapshot testpool/critical/state@zfs-auto-snap_2024-02-01")
 
     machine.succeed(
-        "cd / && FULL=1 POOL=testpool RCLONE_CONFIG=/tmp/rclone.conf ${backupScript}"
+        "cd / && POOL=testpool ROOTS='testpool/critical' RCLONE_CONFIG=/tmp/rclone.conf ${backupScript}"
+    )
+    machine.succeed("test -s '/zfs-snapshots/testpool/critical/state/zfs-auto-snap_2024-02-01.zfs'")
+    machine.succeed("zfs holds -H testpool/critical/state@zfs-auto-snap_2024-02-01 | grep -q rclone-backup")
+
+    # --- Test 4: dataset outside the root is never sent, even with snapshots ---
+    machine.succeed("echo 'other data' > /testpool/other/file")
+    machine.succeed("zfs snapshot testpool/other@zfs-auto-snap_2024-02-01")
+
+    machine.succeed(
+        "cd / && POOL=testpool ROOTS='testpool/critical' RCLONE_CONFIG=/tmp/rclone.conf ${backupScript}"
+    )
+    machine.fail("test -e '/zfs-snapshots/testpool/other'")
+
+    # --- Test 5: Full reseed (FULL=1) ---
+    machine.succeed("echo 'even more data' >> /testpool/critical/backups/testfile")
+    machine.succeed("zfs snapshot testpool/critical/backups@zfs-auto-snap_2024-03-01")
+
+    machine.succeed(
+        "cd / && FULL=1 POOL=testpool ROOTS='testpool/critical' RCLONE_CONFIG=/tmp/rclone.conf ${backupScript}"
     )
 
     # Verify old incremental files were cleaned up
-    machine.fail("test -e '/zfs-snapshots/testpool/zfs-auto-snap_2024-01-01.xaa.zfs'")
-    machine.fail("test -e '/zfs-snapshots/testpool/zfs-auto-snap_2024-01-02.xaa.zfs'")
+    machine.fail("test -e '/zfs-snapshots/testpool/critical/backups/zfs-auto-snap_2024-01-01.zfs'")
+    machine.fail("test -e '/zfs-snapshots/testpool/critical/backups/zfs-auto-snap_2024-01-02.zfs'")
 
     # Verify new full backup exists
-    machine.succeed("test -s '/zfs-snapshots/testpool/zfs-auto-snap_2024-02-01.xaa.zfs'")
+    machine.succeed("test -s '/zfs-snapshots/testpool/critical/backups/zfs-auto-snap_2024-03-01.zfs'")
 
     # Verify hold is on the new snapshot only
-    machine.succeed("zfs holds -H testpool/data@zfs-auto-snap_2024-02-01 | grep -q rclone-backup")
-    machine.fail("zfs holds -H testpool/data@zfs-auto-snap_2024-01-02 | grep -q rclone-backup")
+    machine.succeed("zfs holds -H testpool/critical/backups@zfs-auto-snap_2024-03-01 | grep -q rclone-backup")
+    machine.fail("zfs holds -H testpool/critical/backups@zfs-auto-snap_2024-01-02 | grep -q rclone-backup")
+
+    # --- Test 6: failed run leaves no file and no hold; re-run succeeds ---
+    machine.succeed("echo 'more data' >> /testpool/critical/backups/testfile")
+    machine.succeed("zfs snapshot testpool/critical/backups@zfs-auto-snap_2024-04-01")
+
+    # Broken rclone config: run must fail before uploading anything
+    machine.succeed("printf '[broken]\ntype = broken\n' > /tmp/broken.conf")
+    machine.fail(
+        "cd / && POOL=testpool ROOTS='testpool/critical' RCLONE_CONFIG=/tmp/broken.conf RETRY_SLEEP=1 ${backupScript}"
+    )
+    machine.fail("test -e '/zfs-snapshots/testpool/critical/backups/zfs-auto-snap_2024-04-01.zfs'")
+    machine.fail("zfs holds -H testpool/critical/backups@zfs-auto-snap_2024-04-01 | grep -q rclone-backup")
+
+    # Fix the config: re-run uploads from the same base and moves the hold
+    machine.succeed(
+        "cd / && POOL=testpool ROOTS='testpool/critical' RCLONE_CONFIG=/tmp/rclone.conf ${backupScript}"
+    )
+    machine.succeed("test -s '/zfs-snapshots/testpool/critical/backups/zfs-auto-snap_2024-04-01.zfs'")
+    machine.succeed("zfs holds -H testpool/critical/backups@zfs-auto-snap_2024-04-01 | grep -q rclone-backup")
   '';
 }
