@@ -30,4 +30,7 @@ _final: prev: {
 
         pnpmDeps = prev.pnpmDeps.override { hash = "sha256-u2aHksbX4Q9gkwNRR3uOLn5u4H6dSgyngHHLKdYt04U="; };
       });
+
+  ilo_exporter = prev.callPackage ./ilo-exporter.nix { };
+  hpilo-exporter = prev.callPackage ./hpilo-exporter.nix { };
 }
