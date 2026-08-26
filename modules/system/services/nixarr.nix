@@ -59,6 +59,14 @@ in
               4
               5
             ];
+            # nixarr's defaults (excludeOlder = excludeRecentSearch = "1 year")
+            # violate cross-seed's requirement that excludeOlder be 2-5x
+            # excludeRecentSearch when searchCadence is set, so the daemon
+            # refuses to start. See https://github.com/nix-media-server/nixarr
+            extraSettings = {
+              excludeRecentSearch = "1 year";
+              excludeOlder = "2 years";
+            };
           };
           disableDhtPex = true;
         };
