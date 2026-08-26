@@ -421,6 +421,7 @@
               central = true;
               location = "hetzner";
             };
+            services.slop.enable = true;
           };
         };
       };
