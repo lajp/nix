@@ -1,6 +1,5 @@
 {
   inputs,
-  pkgs,
   lib,
   config,
   ...
@@ -21,19 +20,12 @@ in
 
     age.secrets.nixarr-vpn.rekeyFile = ../../../secrets/nixarr-vpn.age;
 
-    environment = {
-      systemPackages = [
-        pkgs.transmission_4
-      ];
-
-      shellAliases.t = "transmission-remote";
-    };
-
     nixarr = {
       enable = true;
 
       mediaDir = "/media/luukas/nixarr";
-      stateDir = "/var/lib/nixarr";
+      # On naspool/critical/state (auto-snapshot=true, included in critical backup)
+      stateDir = "/media/luukas/.state/nixarr";
 
       mediaUsers = [ "lajp" ];
 
@@ -57,8 +49,6 @@ in
         vpn.enable = true;
         peerPort = 52361;
 
-        package = pkgs.transmission_4;
-
         privateTrackers = {
           cross-seed = {
             enable = true;
@@ -72,45 +62,25 @@ in
           };
           disableDhtPex = true;
         };
-
-        extraSettings = {
-          incomplete-dir-enabled = false;
-          start-added-torrents = false;
-          peer-limit-global = 100;
-          peer-limit-per-torrent = 25;
-        };
       };
 
       bazarr.enable = true;
-      seerr.enable = true;
+      seerr = {
+        enable = true;
+
+        expose.https = {
+          enable = true;
+          domainName = "jellyseerr.lajp.fi";
+          acmeMail = "lajp" + "@iki.fi";
+        };
+      };
       prowlarr.enable = true;
-      # TODO: requires nixos-25.05
-      # recyclarr.enable = true;
       radarr.enable = true;
       sonarr.enable = true;
       lidarr.enable = true;
     };
 
-    # TODO: migrate library under nixarr.mediaDir
-    systemd.services.transmission.serviceConfig.BindPaths = [ "/media/luukas/Torrents" ];
-    systemd.services.jellyfin.serviceConfig.BindPaths = [
-      "/media/luukas/Films"
-      "/media/luukas/TV"
-    ];
-
     hardware.graphics.enable = true;
-
-    # TODO: change to jellyserr.expose.https when available
-    # Note: Port 5055 is jellyseerr's upstream default, managed by nixarr
-    services.nginx.virtualHosts."jellyseerr.lajp.fi" = {
-      forceSSL = true;
-      enableACME = true;
-
-      locations."/" = {
-        proxyPass = "http://localhost:5055";
-        proxyWebsockets = true;
-      };
-    };
 
     services.fail2ban = {
       enable = true;
@@ -132,10 +102,5 @@ in
                   ^<HOST> .* "(POST|GET) /Users/AuthenticateByName HTTP.*" 401 .*$
       ignoreregex =
     '';
-
-    # TODO: configure or migrate to newer nixarr version
-    # services.prometheus.exporters.exportarr-sonarr.enable = true;
-    # services.prometheus.exporters.exportarr-radarr.enable = true;
-    # services.prometheus.exporters.exportarr-prowlarr.enable = true;
   };
 }
