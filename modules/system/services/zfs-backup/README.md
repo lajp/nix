@@ -51,6 +51,16 @@ are uploaded under a dot-prefixed name and renamed into place only after
 final name. `rcat` retries individual upload chunks; a fully failed run is
 simply re-run.
 
+## Google Drive Upload Limit
+
+Google enforces a per-user upload cap of 750 GB/day (rolling 24h); once hit,
+all uploads fail with `403 userRateLimitExceeded` until 24h pass. A full
+backup whose on-disk stream is near that size will fail partway. The script
+detects this specific error and aborts immediately instead of exhausting its
+retry budget (a short retry can't clear a 24h block); the next day's run
+resumes from the last hold. Use `rclone about server-backup:` to check quota
+usage.
+
 ## Remote File Layout
 
 ```

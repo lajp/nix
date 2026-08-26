@@ -67,12 +67,23 @@ for DATASET in $DATASETS; do
   # run is simply re-run from the same base.
   ok=0
   for attempt in $(seq 1 "$UPLOAD_ATTEMPTS"); do
+    ERR_FILE=$(mktemp)
     if zfs send "${BASE[@]}" "${RAW[@]}" "$NEW_SNAP" \
-       | rclone rcat --drive-chunk-size 256M "$DEST_DIR/.${SNAP_NAME}.zfs.part" \
-       && rclone moveto "$DEST_DIR/.${SNAP_NAME}.zfs.part" "$DEST_DIR/${SNAP_NAME}.zfs"; then
+       | rclone rcat --drive-chunk-size 256M --drive-stop-on-upload-limit "$DEST_DIR/.${SNAP_NAME}.zfs.part" 2>"$ERR_FILE" \
+       && rclone moveto "$DEST_DIR/.${SNAP_NAME}.zfs.part" "$DEST_DIR/${SNAP_NAME}.zfs" 2>>"$ERR_FILE"; then
       ok=1
+      rm -f "$ERR_FILE"
       break
     fi
+    # Google's per-user upload cap (750 GB/day, rolling 24h) blocks ALL uploads
+    # until 24h pass; a short retry can't clear it. Abort the whole run rather
+    # than re-streaming the snapshot -- the next run resumes from the hold.
+    if grep -q 'userRateLimitExceeded' "$ERR_FILE"; then
+      echo "Google Drive user rate limit reached; aborting (block lasts 24h). Re-run tomorrow." >&2
+      rm -f "$ERR_FILE"
+      exit 1
+    fi
+    rm -f "$ERR_FILE"
     echo "Upload of $NEW_SNAP failed (attempt $attempt/$UPLOAD_ATTEMPTS), retrying in ${RETRY_SLEEP}s" >&2
     sleep "$RETRY_SLEEP"
   done

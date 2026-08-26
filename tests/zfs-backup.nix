@@ -6,6 +6,17 @@ let
   backupScript = pkgs.writeShellScript "backup.sh" (
     builtins.readFile ../modules/system/services/zfs-backup/backup.sh
   );
+
+  # Fakes Google Drive being rate-limited: succeeds at mkdir (used before the
+  # upload loop) but fails every upload with Google's userRateLimitExceeded
+  # error, exactly as the real backend prints it.
+  fakeRclone = pkgs.writeShellScript "rclone" ''
+    if [[ "$1" == "mkdir" ]]; then
+      exit 0
+    fi
+    echo "ERROR : .test.zfs.part: Post request rcat error: googleapi: Error 403: User rate limit exceeded., userRateLimitExceeded" >&2
+    exit 1
+  '';
 in
 pkgs.testers.nixosTest {
   name = "zfs-backup";
@@ -145,5 +156,30 @@ pkgs.testers.nixosTest {
     )
     machine.succeed("test -s '/zfs-snapshots/testpool/critical/backups/zfs-auto-snap_2024-04-01.zfs'")
     machine.succeed("zfs holds -H testpool/critical/backups@zfs-auto-snap_2024-04-01 | grep -q rclone-backup")
+
+    # --- Test 7: Google Drive rate limit aborts fast, leaves no hold, and the
+    # next run resumes from the same base ---
+    machine.succeed("echo 'rate limit data' >> /testpool/critical/backups/testfile")
+    machine.succeed("zfs snapshot testpool/critical/backups@zfs-auto-snap_2024-05-01")
+
+    # Fake rclone that fails every upload with Google's rate-limit error
+    machine.succeed("mkdir -p /tmp/fakebin")
+    machine.succeed("ln -sf ${fakeRclone} /tmp/fakebin/rclone")
+
+    out = machine.fail(
+        "cd / && PATH=/tmp/fakebin:$PATH POOL=testpool ROOTS='testpool/critical' "
+        "RCLONE_CONFIG=/tmp/rclone.conf RETRY_SLEEP=1 ${backupScript} 2>&1"
+    )
+    assert "aborting" in out, f"expected fail-fast abort, got: {out}"
+    assert "attempt 2/10" not in out, "rate-limit error must not be retried"
+    machine.fail("test -e '/zfs-snapshots/testpool/critical/backups/zfs-auto-snap_2024-05-01.zfs'")
+    machine.fail("zfs holds -H testpool/critical/backups@zfs-auto-snap_2024-05-01 | grep -q rclone-backup")
+
+    # Back on the real config: resumes from the held base and completes
+    machine.succeed(
+        "cd / && POOL=testpool ROOTS='testpool/critical' RCLONE_CONFIG=/tmp/rclone.conf ${backupScript}"
+    )
+    machine.succeed("test -s '/zfs-snapshots/testpool/critical/backups/zfs-auto-snap_2024-05-01.zfs'")
+    machine.succeed("zfs holds -H testpool/critical/backups@zfs-auto-snap_2024-05-01 | grep -q rclone-backup")
   '';
 }
