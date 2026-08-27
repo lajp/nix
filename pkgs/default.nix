@@ -33,4 +33,5 @@ _final: prev: {
 
   ilo_exporter = prev.callPackage ./ilo-exporter.nix { };
   hpilo-exporter = prev.callPackage ./hpilo-exporter.nix { };
+  moonscraper = prev.callPackage ./moonscraper.nix { };
 }

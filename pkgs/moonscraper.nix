@@ -1,0 +1,148 @@
+{
+  stdenv,
+  lib,
+  fetchurl,
+  wrapGAppsHook3,
+  autoPatchelfHook,
+  alsa-lib,
+  gtk2,
+  gtk3,
+  zlib,
+  libx11,
+  dbus,
+  libGL,
+  libxcursor,
+  libxext,
+  libxi,
+  libxinerama,
+  libxkbcommon,
+  libxrandr,
+  libxscrnsaver,
+  libxxf86vm,
+  udev,
+  vulkan-loader,
+  wayland,
+  ffmpeg,
+  SDL2,
+  makeDesktopItem,
+}: # heavily inspired by clonehero and yarg packages
+# NOTE: we technically have the source for this and the PKGBUILD on github builds it from source
+# This would require some magic with unityhub that doesn't yet exist in nixpkgs so I'll pass
+stdenv.mkDerivation (finalAttrs: {
+  name = "moonscraper";
+  version = "1.5.13";
+
+  src = fetchurl {
+    url = "https://github.com/FireFox2000000/Moonscraper-Chart-Editor/releases/download/${finalAttrs.version}/Moonscraper.Chart.Editor.v${finalAttrs.version}.Linux.Universal.tar.gz";
+    hash = "sha256-/v8gklpLS+bzz/S5FzMo1fZl0ZcHuv3GoNJVlSmDFoc=";
+  };
+
+  nativeBuildInputs = [
+    autoPatchelfHook
+    wrapGAppsHook3
+  ];
+
+  buildInputs = [
+    alsa-lib
+    gtk2 # libgtk-x11-2.0.so.0
+    gtk3
+    (lib.getLib stdenv.cc.cc)
+    zlib
+    libx11
+    ffmpeg
+    SDL2
+
+    dbus
+    libGL
+    libxcursor
+    libxext
+    libxi
+    libxinerama
+    libxkbcommon
+    libxrandr
+    libxscrnsaver
+    libxxf86vm
+    udev
+    vulkan-loader
+    wayland
+  ];
+
+  desktopItem = makeDesktopItem {
+    name = "moonscraper";
+    desktopName = "Moonscraper Chart Editor";
+    comment = finalAttrs.meta.description;
+    icon = "moonscraper";
+    exec = "moonscraper";
+  };
+
+  installPhase = ''
+    runHook preInstall
+
+    install -Dm755 'Moonscraper Chart Editor.x86_64' "$out/libexec/moonscraper/Moonscraper Chart Editor.x86_64"
+
+    install -Dm644 'Moonscraper Chart Editor_Data/Plugins/x86_64/ScreenSelector.so' "$out/lib/moonscraper/ScreenSelector.so"
+    install -Dm644 'Moonscraper Chart Editor_Data/Plugins/x86_64/libStandaloneFileBrowser.so' "$out/lib/moonscraper/libStandaloneFileBrowser.so"
+    install -Dm644 'Moonscraper Chart Editor_Data/Plugins/x86_64/libbass.so' "$out/lib/moonscraper/libbass.so"
+    install -Dm644 'Moonscraper Chart Editor_Data/Plugins/x86_64/libbass_fx.so' "$out/lib/moonscraper/libbass_fx.so"
+    install -Dm644 'Moonscraper Chart Editor_Data/Plugins/x86_64/libbassopus.so' "$out/lib/moonscraper/libbassopus.so"
+
+    mkdir -p "$out/share/moonscraper"
+    cp -r 'Moonscraper Chart Editor_Data' "$out/share/moonscraper/data"
+    cp -r 'Config' "$out/share/moonscraper/config"
+    cp -r 'Custom Resources' "$out/share/moonscraper/custom-resources"
+
+    install -Dm644 "$desktopItem/share/applications/moonscraper.desktop" "$out/share/applications/moonscraper.desktop"
+
+    mkdir -p "$out/bin" "$out/share/icons/hicolor/128x128/apps"
+    ln -s "$out/libexec/moonscraper/Moonscraper Chart Editor.x86_64" "$out/bin/moonscraper"
+
+    ln -s "$out/lib/moonscraper/ScreenSelector.so" "$out/libexec/moonscraper/ScreenSelector.so"
+    ln -s "$out/lib/moonscraper/libStandaloneFileBrowser.so" "$out/libexec/moonscraper/libStandaloneFileBrowser.so"
+    ln -s "$out/lib/moonscraper/libbass.so" "$out/libexec/moonscraper/libbass.so"
+    ln -s "$out/lib/moonscraper/libbass_fx.so" "$out/libexec/moonscraper/libbass_fx.so"
+    ln -s "$out/lib/moonscraper/libbassopus.so" "$out/libexec/moonscraper/libbassopus.so"
+
+    ln -s "$out/share/moonscraper/data" "$out/libexec/moonscraper/Moonscraper Chart Editor_Data"
+    ln -s "$out/share/moonscraper/config" "$out/libexec/moonscraper/Config"
+    ln -s "$out/share/moonscraper/custom-resources" "$out/libexec/moonscraper/Custom Resources"
+
+    ln -s "$out/share/moonscraper/data/Resources/UnityPlayer.png" "$out/share/icons/hicolor/128x128/apps/moonscraper.png"
+
+    runHook postInstall
+  '';
+
+  preFixup = ''
+    patchelf \
+      --add-needed libasound.so.2 \
+      --add-needed libdbus-1.so.3 \
+      --add-needed libGL.so.1 \
+      --add-needed libpthread.so.0 \
+      --add-needed libudev.so.1 \
+      --add-needed libvulkan.so.1 \
+      --add-needed libwayland-client.so.0 \
+      --add-needed libwayland-cursor.so.0 \
+      --add-needed libwayland-egl.so.1 \
+      --add-needed libX11.so.6 \
+      --add-needed libXcursor.so.1 \
+      --add-needed libXext.so.6 \
+      --add-needed libXi.so.6 \
+      --add-needed libXinerama.so.1 \
+      --add-needed libxkbcommon.so.0 \
+      --add-needed libXrandr.so.2 \
+      --add-needed libXss.so.1 \
+      --add-needed libXxf86vm.so.1 \
+      --add-needed libSDL2.so \
+      "$out/libexec/moonscraper/Moonscraper Chart Editor.x86_64"
+
+    # Unity wont find the data dir without this
+    gappsWrapperArgs+=(--argv0 "$out/libexec/moonscraper/Moonscraper Chart Editor.x86_64")
+  '';
+
+  meta = {
+    description = "A song editor for Guitar Hero style rhythm games";
+    maintainers = [ lib.maintainers.lajp ];
+    license = lib.licenses.bsd3;
+    platforms = [ "x86_64-linux" ];
+    sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
+  };
+})

@@ -83,6 +83,8 @@ in
         libnotify
 
         pdfpc
+
+        moonscraper
       ]
       ++ lib.optionals cfg.minecraft.enable [
         (prismlauncher.override {
