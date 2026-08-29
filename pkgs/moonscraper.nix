@@ -2,13 +2,15 @@
   stdenv,
   lib,
   fetchurl,
+  makeWrapper,
   wrapGAppsHook3,
   autoPatchelfHook,
+  buildFHSEnv,
+  liberation_ttf,
   alsa-lib,
   gtk2,
   gtk3,
   zlib,
-  libx11,
   dbus,
   libGL,
   libxcursor,
@@ -22,12 +24,23 @@
   udev,
   vulkan-loader,
   wayland,
-  ffmpeg,
   SDL2,
   makeDesktopItem,
 }: # heavily inspired by clonehero and yarg packages
 # NOTE: we technically have the source for this and the PKGBUILD on github builds it from source
 # This would require some magic with unityhub that doesn't yet exist in nixpkgs so I'll pass
+let
+  # Required because unity uses a hard-coded font path for legacy text boxes (similar to unityhub?)
+  # avformat.58 is required from ffmpeg_4 when exporting tracks
+  fhsEnv = buildFHSEnv {
+    name = "moonscraper-fhs-env";
+    runScript = "";
+    targetPkgs = pkgs: [
+      liberation_ttf
+      (pkgs.lib.getLib pkgs.ffmpeg_4)
+    ];
+  };
+in
 stdenv.mkDerivation (finalAttrs: {
   name = "moonscraper";
   version = "1.5.13";
@@ -40,6 +53,7 @@ stdenv.mkDerivation (finalAttrs: {
   nativeBuildInputs = [
     autoPatchelfHook
     wrapGAppsHook3
+    makeWrapper
   ];
 
   buildInputs = [
@@ -48,8 +62,6 @@ stdenv.mkDerivation (finalAttrs: {
     gtk3
     (lib.getLib stdenv.cc.cc)
     zlib
-    libx11
-    ffmpeg
     SDL2
 
     dbus
@@ -80,12 +92,6 @@ stdenv.mkDerivation (finalAttrs: {
 
     install -Dm755 'Moonscraper Chart Editor.x86_64' "$out/libexec/moonscraper/Moonscraper Chart Editor.x86_64"
 
-    install -Dm644 'Moonscraper Chart Editor_Data/Plugins/x86_64/ScreenSelector.so' "$out/lib/moonscraper/ScreenSelector.so"
-    install -Dm644 'Moonscraper Chart Editor_Data/Plugins/x86_64/libStandaloneFileBrowser.so' "$out/lib/moonscraper/libStandaloneFileBrowser.so"
-    install -Dm644 'Moonscraper Chart Editor_Data/Plugins/x86_64/libbass.so' "$out/lib/moonscraper/libbass.so"
-    install -Dm644 'Moonscraper Chart Editor_Data/Plugins/x86_64/libbass_fx.so' "$out/lib/moonscraper/libbass_fx.so"
-    install -Dm644 'Moonscraper Chart Editor_Data/Plugins/x86_64/libbassopus.so' "$out/lib/moonscraper/libbassopus.so"
-
     mkdir -p "$out/share/moonscraper"
     cp -r 'Moonscraper Chart Editor_Data' "$out/share/moonscraper/data"
     cp -r 'Config' "$out/share/moonscraper/config"
@@ -93,20 +99,17 @@ stdenv.mkDerivation (finalAttrs: {
 
     install -Dm644 "$desktopItem/share/applications/moonscraper.desktop" "$out/share/applications/moonscraper.desktop"
 
-    mkdir -p "$out/bin" "$out/share/icons/hicolor/128x128/apps"
-    ln -s "$out/libexec/moonscraper/Moonscraper Chart Editor.x86_64" "$out/bin/moonscraper"
-
-    ln -s "$out/lib/moonscraper/ScreenSelector.so" "$out/libexec/moonscraper/ScreenSelector.so"
-    ln -s "$out/lib/moonscraper/libStandaloneFileBrowser.so" "$out/libexec/moonscraper/libStandaloneFileBrowser.so"
-    ln -s "$out/lib/moonscraper/libbass.so" "$out/libexec/moonscraper/libbass.so"
-    ln -s "$out/lib/moonscraper/libbass_fx.so" "$out/libexec/moonscraper/libbass_fx.so"
-    ln -s "$out/lib/moonscraper/libbassopus.so" "$out/libexec/moonscraper/libbassopus.so"
+    mkdir -p "$out/share/icons/hicolor/128x128/apps"
 
     ln -s "$out/share/moonscraper/data" "$out/libexec/moonscraper/Moonscraper Chart Editor_Data"
     ln -s "$out/share/moonscraper/config" "$out/libexec/moonscraper/Config"
     ln -s "$out/share/moonscraper/custom-resources" "$out/libexec/moonscraper/Custom Resources"
 
     ln -s "$out/share/moonscraper/data/Resources/UnityPlayer.png" "$out/share/icons/hicolor/128x128/apps/moonscraper.png"
+
+    makeWrapper ${fhsEnv}/bin/moonscraper-fhs-env "$out/bin/moonscraper" \
+      --add-flags "\"$out/libexec/moonscraper/Moonscraper Chart Editor.x86_64\"" \
+      --argv0 "$out/libexec/moonscraper/Moonscraper Chart Editor.x86_64"
 
     runHook postInstall
   '';
@@ -133,9 +136,6 @@ stdenv.mkDerivation (finalAttrs: {
       --add-needed libXxf86vm.so.1 \
       --add-needed libSDL2.so \
       "$out/libexec/moonscraper/Moonscraper Chart Editor.x86_64"
-
-    # Unity wont find the data dir without this
-    gappsWrapperArgs+=(--argv0 "$out/libexec/moonscraper/Moonscraper Chart Editor.x86_64")
   '';
 
   meta = {
