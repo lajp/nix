@@ -66,8 +66,8 @@ in
         DELETION_GRACE_PERIOD_DAYS = "14";
 
         TRUST_PROXY = "true";
-        APP_TIMEZONE = "Europe/Prague";
-        TZ = "Europe/Prague";
+        # APP_TIMEZONE = "Europe/Prague";
+        # TZ = "Europe/Prague";
 
         MAIL_FROM = "CHEESE <no-reply@lajp.fi>";
         MAIL_DEFAULT_LANG = "en";
