@@ -32,6 +32,20 @@
   hardware.graphics.enable = true;
   hardware.amdgpu.initrd.enable = true;
   hardware.framework.amd-7040.preventWakeOnAC = true;
+  # The Framework 13 AMD 7040 EC emits a spurious keypress during the s0i3
+  # power sequence, so a lid-close event while suspended is misread as a
+  # keypress and wakes the machine right back up -- it then sits awake with
+  # the lid closed and drains the battery in a bag.
+  # Kernel commit a55bdad5 quirk-disables this, but only when DMI matches
+  # BIOS "03.03" exactly; nixos-hardware applies this udev rule only on
+  # kernels < 6.7. Neither condition reliably holds here, so apply it
+  # unconditionally.
+  # Trade-off: the keyboard no longer wakes the machine from suspend; open
+  # the lid (lid ACPI event) or use the power button instead.
+  # https://community.frame.work/t/tracking-framework-amd-ryzen-7040-series-lid-wakeup-behavior-feedback/39128/45
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="serio", DRIVERS=="atkbd", ATTR{power/wakeup}="disabled"
+  '';
 
   services.fprintd.enable = true;
 
