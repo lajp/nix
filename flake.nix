@@ -305,14 +305,14 @@
             };
             hardware.sound.enable = true;
             hardware.bluetooth.enable = true;
-              #hardware.rtl-sdr.enable = true;
+            #hardware.rtl-sdr.enable = true;
             hardware.backlight = {
               enable = true;
               gpu = "amd";
             };
             rickroll.enable = true;
             dreamlauncher.enable = true;
-            virt-manager.enable = true;
+            #virt-manager.enable = true;
             services.yensid.enable = true;
             services.typst-collab = {
               enable = true;

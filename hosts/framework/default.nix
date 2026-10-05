@@ -7,8 +7,6 @@
   imports = [
     ./boot.nix
     ./hardware-configuration.nix
-    ../../nixos/ilmomasiina.nix
-    ../../nixos/k9mail-link.nix
   ];
 
   networking.useDHCP = lib.mkDefault true;
@@ -95,7 +93,21 @@
     };
   };
   networking.networkmanager.plugins = [ pkgs.networkmanager-openconnect ];
-  programs.nm-applet.enable = true;
+  #programs.nm-applet.enable = true;
 
   services.hardware.bolt.enable = true;
+
+  powerManagement.powertop.enable = true;
+
+  # services.udev.extraRules = ''
+  #   # Espressif
+  #   ATTR{idVendor}=="303a", MODE="666"
+  #   # # Raspberry Pi
+  #   # ATTR{idVendor}=="2e8a", MODE="666"
+  #   # # STMicro
+  #   # ATTR{idVendor}=="0483", MODE="666"
+  #   # # TI
+  #   # ATTR{idVendor}=="0451", MODE="666"
+  #   # ATTR{idVendor}=="1cbe", MODE="666"
+  # '';
 }
