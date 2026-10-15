@@ -1,4 +1,5 @@
 {
+  config,
   inputs,
   lib,
   ...
@@ -33,6 +34,19 @@
   networking.useDHCP = lib.mkDefault true;
 
   security.sudo.wheelNeedsPassword = false;
+
+  # nix-minecraft only declares its service user while enabled, and NixOS removes
+  # previously-declared users that drop out of the config. Keep the account (and
+  # ownership of /srv/minecraft) while the server is disabled.
+  users = lib.mkIf (!config.lajp.services.minecraft.enable) {
+    users.minecraft = {
+      description = "Minecraft server service user";
+      isSystemUser = true;
+      group = "minecraft";
+      home = "/srv/minecraft";
+    };
+    groups.minecraft = { };
+  };
 
   age.rekey.hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBhxLasz6+7QA81vadBc2YPmFFeoImoTbZFjcKcdGxRT";
 }

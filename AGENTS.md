@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-NixOS configuration flake for 6 machines (4 x86_64-linux, 2 aarch64-linux) with home-manager integration. Uses a custom module system with `lajp.*` options for both system and user configuration. Based on nixpkgs 26.05 and home-manager 26.05.
+NixOS configuration flake for 7 machines (5 x86_64-linux, 2 aarch64-linux) with home-manager integration. Uses a custom module system with `lajp.*` options for both system and user configuration. Based on nixpkgs 26.05 and home-manager 26.05.
 
 For a visual infrastructure overview with network diagrams, see [docs/INFRASTRUCTURE.md](./docs/INFRASTRUCTURE.md).
 
@@ -25,7 +25,7 @@ agenix-rekey
 nix develop
 ```
 
-Available hosts: `nas`, `vaasanas`, `t480`, `framework`, `proxy-pi`, `ankka`
+Available hosts: `nas`, `vaasanas`, `t480`, `framework`, `proxy-pi`, `ankka`, `minecraft`
 
 ## Hosts
 
@@ -37,6 +37,7 @@ Available hosts: `nas`, `vaasanas`, `t480`, `framework`, `proxy-pi`, `ankka`
 | `framework` | x86_64 | desktop | Framework 13 AMD: Niri, multiple VPNs, Docker, virt-manager, fingerprint |
 | `proxy-pi` | aarch64 | server | Raspberry Pi 4: AdGuard Home DNS, nginx reverse proxy for internal services |
 | `ankka` | aarch64 | server | Hetzner VPS: Central Prometheus/Grafana, Headscale, mail server, Matrix, HedgeDoc, Gatus, CoreDNS, website |
+| `minecraft` | x86_64 | server | VM at JMT: Valheim dedicated server, DynDNS (mc.portfo.rs). Minecraft module is disabled but its config, data and account are kept |
 
 Servers (`core.server = true`) have home-manager disabled. Desktops get full home-manager + GUI.
 
@@ -86,7 +87,7 @@ modules/user/                    Home-manager modules (lajp.* options)
 
 ### Service Modules (`modules/system/services/`)
 
-ssh, jellyfin, jackett, prowlarr, transmission, cross-seed, tvheadend, threadfin, testaustime-backup, syncthing, samba, xserver, gpg, vaultwarden, restic, backup-notify, niri, website, sonarr, uptime-kuma, mailserver, dyndns, smartd, formicer-website, nixarr, gatus, headscale, hedgedoc, tailscale, nginx, zfs-backup, vpn, adguardhome, coredns, nextcloud, memegenerator, cheese, crabfit, yensid, prometheus, typst-collab, resource-limits, email-telegram-bridge, attic, matrix
+ssh, jellyfin, jackett, prowlarr, transmission, cross-seed, tvheadend, threadfin, testaustime-backup, syncthing, samba, xserver, gpg, vaultwarden, restic, backup-notify, niri, website, sonarr, uptime-kuma, mailserver, dyndns, smartd, formicer-website, nixarr, gatus, headscale, hedgedoc, tailscale, nginx, zfs-backup, vpn, adguardhome, coredns, nextcloud, memegenerator, cheese, crabfit, yensid, prometheus, typst-collab, resource-limits, email-telegram-bridge, attic, matrix, minecraft, valheim
 
 ### Grafana Dashboards (`modules/system/services/dashboards/`)
 

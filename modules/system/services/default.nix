@@ -52,6 +52,7 @@
     ./searx.nix
     ./matrix.nix
     ./minecraft.nix
+    ./valheim.nix
     ./screego.nix
     ./k9mail-link.nix
     ./open-webui.nix

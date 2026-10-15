@@ -371,13 +371,15 @@
 
             services.ssh.enable = true;
             services.tailscale.enable = true;
+            # Disabled for now; world data and the service account are kept.
             services.minecraft = {
-              enable = true;
+              enable = false;
               serverPort = 22305;
               serverProperties.white-list = true;
               whitelist.Luukasa_ = "edc99f1e-d09b-4da6-be52-97fbdf2cf375";
               operators.Luukasa_ = "edc99f1e-d09b-4da6-be52-97fbdf2cf375";
             };
+            services.valheim.enable = true;
             services.dyndns = {
               enable = true;
               domains = [ "mc.portfo.rs" ];
