@@ -22,7 +22,7 @@ in
 
     services.nextcloud = {
       enable = true;
-      package = pkgs.nextcloud32;
+      package = pkgs.nextcloud33;
       extraApps = {
         inherit (pkgs.nextcloud32Packages.apps) forms onlyoffice;
       };
