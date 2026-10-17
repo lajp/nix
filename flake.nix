@@ -424,6 +424,7 @@
               location = "hetzner";
             };
             services.slop.enable = true;
+            services.thelounge.enable = true;
           };
         };
       };

@@ -56,5 +56,6 @@
     ./screego.nix
     ./k9mail-link.nix
     ./open-webui.nix
+    ./thelounge.nix
   ];
 }

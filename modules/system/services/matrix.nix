@@ -5,7 +5,12 @@
   ...
 }:
 let
-  inherit (lib) mkEnableOption mkIf mkOption types;
+  inherit (lib)
+    mkEnableOption
+    mkIf
+    mkOption
+    types
+    ;
   cfg = config.lajp.services.matrix;
   port = config.lajp.ports.matrix;
   metricsPort = config.lajp.ports.matrix-metrics;
@@ -73,7 +78,10 @@ in
             x_forwarded = true;
             resources = [
               {
-                names = [ "client" "federation" ];
+                names = [
+                  "client"
+                  "federation"
+                ];
                 compress = true;
               }
             ];
@@ -100,6 +108,7 @@ in
         registration_shared_secret_path = config.age.secrets.matrix-shared-secret.path;
 
         max_upload_size = "20M";
+        media_retention.remote_media_lifetime = "30d";
 
         enable_metrics = true;
 
