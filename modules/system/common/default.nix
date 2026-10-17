@@ -114,15 +114,6 @@ in
   # so we don't want the agent to overwrite the socket
   programs.gnupg.agent.settings.no-autostart = mkIf server true;
 
-  # /etc/dbus-1 includes system-path, so it changes on every commit. Reloading
-  # the user bus of a logged-in user then fails and makes the whole switch exit
-  # 4, which auto-upgrade rolls back. The user bus picks up the new config at the
-  # next login instead.
-  systemd.user.services.dbus-broker = mkIf server {
-    reloadIfChanged = lib.mkForce false;
-    restartIfChanged = false;
-  };
-
   programs.tmux = {
     enable = true;
     # It's beneficial to be able to nest tmux sessions
