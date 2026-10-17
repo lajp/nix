@@ -70,7 +70,7 @@
 
       "router.intra.lajp.fi" = {
         locations."/" = {
-          proxyPass = "http://192.168.8.1";
+          proxyPass = "https://192.168.8.1";
           proxyWebsockets = true;
         };
 
