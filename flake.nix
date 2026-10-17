@@ -36,9 +36,7 @@
     };
 
     stylix = {
-      # No release-26.05 branch exists yet; track master until one is cut.
-      # (master dropped its own home-manager input, so don't override it.)
-      url = "github:danth/stylix";
+      url = "github:danth/stylix/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
