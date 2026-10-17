@@ -235,10 +235,7 @@
               role = "nas";
               location = "vaasa";
             };
-            services.auto-upgrade = {
-              enable = true;
-              stageKernel = true;
-            };
+            services.auto-upgrade.enable = true;
           };
         };
         #nixos-dev = mkHost {
