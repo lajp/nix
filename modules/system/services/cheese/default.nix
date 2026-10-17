@@ -21,6 +21,12 @@ in
   options.lajp.services.cheese.enable = mkEnableOption "Enable CHEESE";
 
   config = mkIf cfg.enable {
+    # FIXME: this has to be resolved upstream first.
+    # We aren't effected by any of the known vulnerabilities
+    nixpkgs.config.permittedInsecurePackages = [
+      "pnpm-10.34.0"
+    ];
+
     lajp.portRequests.cheese = true;
     lajp.services.nginx.enable = true;
 
