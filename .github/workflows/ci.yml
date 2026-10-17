@@ -6,36 +6,43 @@ on:
   workflow_dispatch:
   workflow_call:
     inputs:
-      branch:
-        description: Branch name to build on
+      ref:
+        description: Commit to build (defaults to the triggering commit)
         default: ""
         required: false
         type: string
 
+permissions:
+  contents: read
+
 jobs:
-  nix:
-    runs-on: "${{ matrix.runs-on }}"
+  build:
+    name: build (${{ matrix.host }})
+    runs-on: ${{ matrix.runs-on }}
+    timeout-minutes: 180
 
     strategy:
       fail-fast: false
       matrix:
         include:
-          - nix-command: build .#nixosConfigurations.ankka.config.system.build.toplevel
+          - host: ankka
             runs-on: ubuntu-24.04-arm
-          - nix-command: build .#nixosConfigurations.proxy-pi.config.system.build.toplevel
+          - host: proxy-pi
             runs-on: ubuntu-24.04-arm
-          - nix-command: build .#nixosConfigurations.framework.config.system.build.toplevel
-            runs-on: ubuntu-latest
-          - nix-command: build .#nixosConfigurations.nas.config.system.build.toplevel
-            runs-on: ubuntu-latest
-          - nix-command: build .#nixosConfigurations.vaasanas.config.system.build.toplevel
-            runs-on: ubuntu-latest
+          - host: framework
+            runs-on: ubuntu-24.04
+          - host: nas
+            runs-on: ubuntu-24.04
+          - host: vaasanas
+            runs-on: ubuntu-24.04
+          - host: minecraft
+            runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
-          ref: ${{ inputs.branch }}
+          ref: ${{ inputs.ref }}
           persist-credentials: false
 
       - name: Free Disk Space (Ubuntu)
@@ -45,15 +52,106 @@ jobs:
           tool-cache: true
 
       - uses: cachix/install-nix-action@v31
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Configure Attic
+        env:
+          ATTIC_TOKEN: ${{ secrets.ATTIC_TOKEN }}
         run: |
           nix profile install nixpkgs#attic-client
-          attic login ci https://cache.lajp.fi ${{ secrets.ATTIC_TOKEN }}
+          attic login ci https://cache.lajp.fi "$ATTIC_TOKEN"
           attic use ci
 
-      - name: Build command
-        run: nix ${{ matrix.nix-command }}
+      - name: Build
+        id: build
+        run: |
+          out=$(nix build --no-link --print-out-paths \
+            ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel")
+          echo "out=$out" >> "$GITHUB_OUTPUT"
 
       - name: Push to cache
-        run: attic push ci result
+        run: attic push ci "${{ steps.build.outputs.out }}"
+
+      - name: Record store path
+        run: |
+          mkdir -p toplevel
+          echo "${{ steps.build.outputs.out }}" > "toplevel/${{ matrix.host }}"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: toplevel-${{ matrix.host }}
+          path: toplevel/${{ matrix.host }}
+          overwrite: true
+          retention-days: 7
+
+  # Publishes the store paths that every host's auto-upgrade service pulls
+  # (modules/system/services/auto-upgrade.nix). Runs only when every host
+  # built and was pushed to Attic. When called from update.yml, this is also
+  # what fast-forwards main to the lock file update.
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    concurrency:
+      group: deploy
+      cancel-in-progress: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: toplevel-*
+          merge-multiple: true
+          path: toplevel
+
+      - name: Fast-forward main and publish store paths
+        env:
+          REF: ${{ inputs.ref || github.sha }}
+        run: |
+          set -euo pipefail
+          sha=$(git rev-parse "$REF^{commit}")
+
+          # A newer commit may already have been published (runs can finish
+          # out of order). Compare with what is published, not with main, so a
+          # newer but broken commit does not block this one.
+          pub=$(git show origin/deploy:hosts.json 2>/dev/null | jq -r '.rev // empty' || true)
+          if [ -n "$pub" ] && [ "$pub" != "$sha" ] && git merge-base --is-ancestor "$sha" "$pub" 2>/dev/null; then
+            echo "$sha is older than the published $pub, nothing to do"
+            exit 0
+          fi
+
+          # No-op for pushes to main. For update.yml this fast-forwards main;
+          # git rejects it if main moved in the meantime.
+          if ! git merge-base --is-ancestor "$sha" origin/main; then
+            git push origin "$sha:refs/heads/main"
+          fi
+
+          hosts=$(for f in toplevel/*; do
+            jq -n --arg h "${f##*/}" --arg p "$(cat "$f")" '{($h): $p}'
+          done | jq -s 'add')
+          # revs lets hosts check that what they run is in the history of rev,
+          # so unpushed manual deploys are never rolled back.
+          git rev-list "$sha" | jq -R . | jq -s --arg rev "$sha" --argjson hosts "$hosts" \
+            '{rev: $rev, hosts: $hosts, revs: .}' > "$RUNNER_TEMP/hosts.json"
+          jq '{rev, hosts}' "$RUNNER_TEMP/hosts.json"
+
+          blob=$(git hash-object -w "$RUNNER_TEMP/hosts.json")
+          tree=$(printf '100644 blob %s\thosts.json\n' "$blob" | git mktree)
+          parent=$(git rev-parse -q --verify origin/deploy || true)
+          if [ -n "$parent" ] && [ "$tree" = "$(git rev-parse "$parent^{tree}")" ]; then
+            echo "deploy branch is already up to date"
+            exit 0
+          fi
+          commit=$(git -c user.name="github-actions[bot]" \
+            -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit-tree "$tree" ${parent:+-p "$parent"} -m "deploy $sha")
+          # No --force: a concurrent writer makes this fail instead of being overwritten.
+          git push origin "$commit:refs/heads/deploy"

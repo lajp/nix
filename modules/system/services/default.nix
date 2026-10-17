@@ -49,6 +49,7 @@
     ./resource-limits.nix
     ./email-telegram-bridge.nix
     ./attic.nix
+    ./auto-upgrade.nix
     ./searx.nix
     ./matrix.nix
     ./minecraft.nix

@@ -87,7 +87,7 @@ modules/user/                    Home-manager modules (lajp.* options)
 
 ### Service Modules (`modules/system/services/`)
 
-ssh, jellyfin, jackett, prowlarr, transmission, cross-seed, tvheadend, threadfin, testaustime-backup, syncthing, samba, xserver, gpg, vaultwarden, restic, backup-notify, niri, website, sonarr, uptime-kuma, mailserver, dyndns, smartd, formicer-website, nixarr, gatus, headscale, hedgedoc, tailscale, nginx, zfs-backup, vpn, adguardhome, coredns, nextcloud, memegenerator, cheese, crabfit, yensid, prometheus, typst-collab, resource-limits, email-telegram-bridge, attic, matrix, minecraft, valheim
+ssh, jellyfin, jackett, prowlarr, transmission, cross-seed, tvheadend, threadfin, testaustime-backup, syncthing, samba, xserver, gpg, vaultwarden, restic, backup-notify, niri, website, sonarr, uptime-kuma, mailserver, dyndns, smartd, formicer-website, nixarr, gatus, headscale, hedgedoc, tailscale, nginx, zfs-backup, vpn, adguardhome, coredns, nextcloud, memegenerator, cheese, crabfit, yensid, prometheus, typst-collab, resource-limits, email-telegram-bridge, attic, auto-upgrade, matrix, minecraft, valheim
 
 ### Grafana Dashboards (`modules/system/services/dashboards/`)
 
@@ -148,15 +148,50 @@ Rotating the shared key means re-encrypting everything, and is not revocation: c
 
 ## Deployment
 
-deploy-rs has been removed. Hosts are deployed manually with `nixos-rebuild`
-(e.g. `nixos-rebuild switch --flake .#<hostname> --target-host <user>@<host>
---use-remote-sudo`) or the `nh` helper available in the dev shell. `t480` and
-`framework` are local machines.
+Hosts update themselves (pull-based, modelled on nix-community/infra's
+`update.bash`). Manual deploys with `nixos-rebuild switch --flake .#<hostname>
+--target-host <user>@<host> --use-remote-sudo` (or `nh`) still work. deploy-rs
+has been removed. `t480` is manual-only.
+
+1. **CI publishes**: after every host in `ci.yml` builds and is pushed to Attic,
+   the `deploy` job commits `hosts.json` (`{ rev, hosts.<name> = toplevel store
+   path, revs = git rev-list rev }`) to the orphan **`deploy`** branch. This
+   happens for every push to `main` and for the weekly update.
+2. **Hosts pull** (`modules/system/services/auto-upgrade.nix`, enabled per host
+   in `flake.nix`): `auto-upgrade.timer` fetches `hosts.json` nightly,
+   substitutes the path with `nix-store -r` (never builds locally) and activates
+   it with `nixos-rebuild --store-path --no-reexec`.
+
+Servers switch live at night (`ankka` at 05:00, `nas` at 03:00, the rest at
+04:00) and never reboot themselves; a new kernel takes effect when you reboot.
+`nas` and `vaasanas` set `stageKernel`: an update that changes the kernel or its
+modules (incl. nvidia/zfs) is only staged with `nixos-rebuild boot` and applies
+at the next manual reboot (ZFS unlock is manual; a live switch breaks CUDA on
+nas). `framework` always stages (`boot`), only on AC power, and catches up after
+sleep.
+
+- **Rollback**: if the live switch fails (`switch-to-configuration` exits
+  non-zero when any unit fails to start), the host switches back to the previous
+  system and reports a failure. A broken build is retried (and rolled back) each
+  night until a fix is published.
+- **Unpushed deploys are never undone**: a host only moves forward if the
+  `system.configurationRevision` of both its running and its staged system is in
+  `revs`. After a manual deploy from an unpushed/dirty tree or a feature branch,
+  that host skips auto-upgrades until you push (the gatus heartbeat alerts after
+  ~2-4 days).
+- **Rolling back by hand**: `nixos-rebuild switch --rollback`, then
+  `touch /var/lib/auto-upgrade/pause` (otherwise the next night moves it forward
+  again). Remove the file to resume. Test with `systemctl start auto-upgrade`.
+- **Alerts** (gatus external endpoints, email -> Telegram): `auto-upgrade/<host>`
+  (failure; servers also alert when silent for 48h) and `ci/flake-update` (weekly
+  update failed or silent for 8 days). Hosts and CI authenticate with
+  `GATUS_AUTO_UPGRADE_TOKEN` from `secrets/auto-upgrade-env.age` (also a GitHub
+  Actions secret).
 
 ### CI/CD (GitHub Actions)
 
-- **`ci.yml`**: Builds the remote/server hosts on push (`ankka`, `proxy-pi` on `ubuntu-24.04-arm`; `nas`, `vaasanas`, `framework` on `ubuntu-latest`). `t480` and `minecraft` are not built in CI. Uses Attic binary cache (`cache.lajp.fi/ci`) for push/pull.
-- **`update.yml`**: Weekly (Monday) automated `nix flake update`, creates PR if inputs changed.
+- **`ci.yml`**: On every push, builds every auto-upgraded host (`ankka`, `proxy-pi` on `ubuntu-24.04-arm`; `nas`, `vaasanas`, `framework`, `minecraft` on `ubuntu-24.04`) and pushes them to the Attic binary cache (`cache.lajp.fi/ci`). On `main`, the `deploy` job then publishes them (see above). `t480` is not built.
+- **`update.yml`**: Saturdays 01:17 UTC, `nix flake update` (all inputs) is pushed to the `flake-update` branch and built by calling `ci.yml`. If every host builds, its `deploy` job fast-forwards `main` to the lock commit (no PR) and publishes it. If `main` moved in the meantime the fast-forward fails and the next week retries. The bot pushes to `main`, so run `jj git fetch` and rebase before pushing.
 
 ## Backups
 
@@ -185,7 +220,7 @@ deploy-rs has been removed. Hosts are deployed manually with `nixos-rebuild`
 
 - When creating a service, always check if it can be added to prometheus and grafana
 - Similarly, always check if it should be monitored by gatus
-- Kernel upgrade on nas requires reboot, otherwise CUDA in jellyfin fails
+- Kernel upgrade on nas requires reboot, otherwise CUDA in jellyfin fails. nas and vaasanas can't reboot unattended (manual ZFS unlock), so auto-upgrade only stages kernel changes there (`stageKernel`)
 - Secret management is done with agenix **rekey**, no `secrets.nix` like in plain agenix
 - nixarr uses a custom fork (`cross-seed-fix` branch) for cross-seed support
 - `t480` is not built in CI

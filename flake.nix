@@ -160,6 +160,13 @@
             services.nixarr.enable = true;
             services.nextcloud.enable = true;
             services.attic.enable = true;
+            # Hosts the cache, so it upgrades first. Kernel/nvidia changes break
+            # CUDA until a (manual, ZFS unlock) reboot, so those are only staged.
+            services.auto-upgrade = {
+              enable = true;
+              dates = "03:00";
+              stageKernel = true;
+            };
             services.dyndns = {
               enable = true;
               domains = [
@@ -228,6 +235,10 @@
               role = "nas";
               location = "vaasa";
             };
+            services.auto-upgrade = {
+              enable = true;
+              stageKernel = true;
+            };
           };
         };
         #nixos-dev = mkHost {
@@ -284,6 +295,7 @@
 
             services.restic.enable = true;
             services.backup-notify.enable = true;
+            services.auto-upgrade.enable = true;
             services.automatic-timezone.enable = true;
             services.niri.enable = true;
             services.ssh = {
@@ -355,6 +367,7 @@
               enable = true;
               role = "proxy";
             };
+            services.auto-upgrade.enable = true;
           };
         };
         minecraft = mkHost {
@@ -389,6 +402,7 @@
               role = "minecraft";
               location = "jmt";
             };
+            services.auto-upgrade.enable = true;
           };
         };
         ankka = mkHost {
@@ -425,6 +439,11 @@
             };
             services.slop.enable = true;
             services.thelounge.enable = true;
+            # Runs an hour after proxy-pi so the two DNS hosts never switch together.
+            services.auto-upgrade = {
+              enable = true;
+              dates = "05:00";
+            };
           };
         };
       };

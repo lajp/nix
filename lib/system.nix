@@ -46,6 +46,9 @@ in
 
             networking.hostName = hostname;
 
+            # Lets auto-upgrade tell pushed builds apart from unpushed or dirty ones.
+            system.configurationRevision = inputs.self.rev or inputs.self.dirtyRev or null;
+
             lajp = systemConfig;
 
             home-manager =

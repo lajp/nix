@@ -1,93 +1,78 @@
-# Heavily inspired by: https://github.com/Gerschtli/nix-config/blob/master/.github/workflows/update.yml
-
 name: Update inputs
 on:
   workflow_dispatch:
   schedule:
-    - cron: 0 0 * * 1
+    # Saturday 01:17 UTC (04:17 in Helsinki in summer). Hosts pick the update
+    # up the following night, leaving the weekend to fix anything that breaks.
+    - cron: 17 1 * * 6
 
 permissions:
   contents: write
-  pull-requests: write
+
+concurrency:
+  group: flake-update
+  cancel-in-progress: false
 
 jobs:
   update:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     outputs:
-      branch: ${{ steps.branch.outputs.branch }}
-      update_available: ${{ steps.changes.outputs.update_available }}
+      sha: ${{ steps.push.outputs.sha }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      - uses: cachix/install-nix-action@v31
         with:
-          fetch-depth: 0
-          persist-credentials: true
-
-      - name: Install nix
-        uses: cachix/install-nix-action@v31
-
-      - name: Set branch name output
-        id: branch
-        run: echo "branch=ci/automatic-update-$(date +%Y-%m-%d)" >> $GITHUB_OUTPUT
-
-      - name: Create branch locally
-        env:
-          BRANCH_NAME: ${{ steps.branch.outputs.branch }}
-        run: git switch -c "$BRANCH_NAME"
-
-      - name: Setup git
-        run: |
-          git config --global user.email "lajp@iki.fi"
-          git config --global user.name "Luukas Pörtfors"
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Update inputs
         run: |
-          nix \
-            --option commit-lockfile-summary 'flake.inputs: automatic update' \
-            flake update \
-            --commit-lock-file
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          nix --option commit-lock-file-summary 'flake.lock: weekly update' \
+            flake update --commit-lock-file
 
-      - name: Check for changes
-        id: changes
+      - name: Push update branch
+        id: push
         run: |
-          if git diff --exit-code origin/main...; then
-            echo "update_available=false" >> $GITHUB_OUTPUT
-          else
-            echo "update_available=true" >> $GITHUB_OUTPUT
+          if [ "$(git rev-parse HEAD)" = "$GITHUB_SHA" ]; then
+            echo "No input changes"
+            exit 0
           fi
+          git push --force origin HEAD:refs/heads/flake-update
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
-      - name: Push changes
-        if: steps.changes.outputs.update_available == 'true'
-        env:
-          BRANCH_NAME: ${{ steps.branch.outputs.branch }}
-        run: git push --force origin "$BRANCH_NAME"
+  # Builds every host from the update branch. If all of them build, the deploy
+  # job in ci.yml fast-forwards main to the update and publishes it to hosts.
+  build:
+    needs: update
+    if: needs.update.outputs.sha != ''
+    uses: ./.github/workflows/ci.yml
+    with:
+      ref: ${{ needs.update.outputs.sha }}
+    secrets: inherit
 
-  create-pr:
-    runs-on: ubuntu-latest
+  report:
     needs:
       - update
-    if: needs.update.outputs.update_available == 'true'
+      - build
+    if: always()
+    runs-on: ubuntu-24.04
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
-
-      - name: Create pull request
+      - name: Report to Gatus
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: ${{ needs.update.outputs.branch }}
+          TOKEN: ${{ secrets.GATUS_AUTO_UPGRADE_TOKEN }}
+          SUCCESS: ${{ needs.update.result == 'success' && (needs.build.result == 'success' || needs.build.result == 'skipped') }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          if ! gh pr list --head "$BRANCH" --json number --jq '.[0].number' | grep -q .; then
-            gh pr create \
-              --base main \
-              --head "$BRANCH" \
-              --title "chore: update flake inputs ($(date +%Y-%m-%d))" \
-              --body "This automated PR updates flake inputs.
-
-          - Created by the **Update inputs** workflow
-          - Triggered on schedule or manual dispatch"
-          else
-            echo "PR already exists for $BRANCH"
-          fi
+          error=""
+          [ "$SUCCESS" = true ] || error="see $RUN_URL"
+          curl -fsS --retry 3 -o /dev/null -X POST -G \
+            -H "Authorization: Bearer $TOKEN" \
+            --data-urlencode "success=$SUCCESS" \
+            --data-urlencode "error=$error" \
+            https://status.lajp.fi/api/v1/endpoints/ci_flake-update/external

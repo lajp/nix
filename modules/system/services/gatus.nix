@@ -3,6 +3,24 @@ let
   inherit (lib) mkEnableOption mkIf;
   cfg = config.lajp.services.gatus;
   port = config.lajp.ports.gatus;
+
+  # Push endpoints for auto-upgrade.nix and update.yml, e.g.
+  # POST /api/v1/endpoints/auto-upgrade_nas/external. Heartbeats are Go
+  # durations ("48h", not "2d") and alert when nothing is pushed for that long.
+  externalEndpoint =
+    group: name: heartbeat:
+    {
+      inherit group name;
+      token = "\${GATUS_AUTO_UPGRADE_TOKEN}";
+      alerts = [
+        {
+          type = "email";
+          failure-threshold = 1;
+          success-threshold = 1;
+        }
+      ];
+    }
+    // lib.optionalAttrs (heartbeat != null) { heartbeat.interval = heartbeat; };
 in
 {
   options.lajp.services.gatus.enable = mkEnableOption "Enable gatus";
@@ -12,6 +30,12 @@ in
     lajp.services.nginx.enable = true;
 
     age.secrets.gatus-env.rekeyFile = ../../../secrets/gatus-env.age;
+    age.secrets.auto-upgrade-env.rekeyFile = ../../../secrets/auto-upgrade-env.age;
+
+    # Second env file for GATUS_AUTO_UPGRADE_TOKEN; merges with environmentFile.
+    systemd.services.gatus.serviceConfig.EnvironmentFile = [
+      config.age.secrets.auto-upgrade-env.path
+    ];
 
     services = {
       gatus = {
@@ -341,6 +365,20 @@ in
               alerts = [ { type = "email"; } ];
             }
           ];
+
+          external-endpoints =
+            map (host: externalEndpoint "auto-upgrade" host "48h") [
+              "nas"
+              "vaasanas"
+              "proxy-pi"
+              "ankka"
+              "minecraft"
+            ]
+            ++ [
+              # Often asleep or skipping (unpushed deploys), so no heartbeat
+              (externalEndpoint "auto-upgrade" "framework" null)
+              (externalEndpoint "ci" "flake-update" "192h")
+            ];
         };
       };
 
