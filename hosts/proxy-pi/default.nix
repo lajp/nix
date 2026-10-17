@@ -30,7 +30,7 @@
 
   security.sudo.wheelNeedsPassword = false;
 
-  age.rekey.hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKmHiYwlEQEFvgn1RYWaFhQroCjPUwKKHrahR9UhrgCB";
+  age.rekey.hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGMNPji+648seLfAjRRB+GUGGWn0d84E8onbyDEZPHdt";
 
   age.secrets.cloudflare-env.rekeyFile = ../../secrets/cloudflare-env.age;
 
