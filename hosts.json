@@ -1,14 +1,18 @@
 {
-  "rev": "c3a52e30612fea085c57d048ae166ae70f8e3360",
+  "rev": "01fafcbcec4a66cd7cdb2db62dd267ad7ff54b12",
   "hosts": {
-    "ankka": "/nix/store/725fkjd98pg3xwxqknh13bgks1c29mmc-nixos-system-ankka-26.05.20260817.0dd31db",
-    "framework": "/nix/store/rk8ml4bcwq26xzm4nr0b9cql6768bm6z-nixos-system-framework-26.05.20260817.0dd31db",
-    "minecraft": "/nix/store/8qjdsa9ca3vp5r5wbbbbp8d3sq4sml4a-nixos-system-minecraft-26.05.20260817.0dd31db",
-    "nas": "/nix/store/dc5pr21hrfsda6fdwrphr0b9f3wy1n6k-nixos-system-nas-26.05.20260817.0dd31db",
-    "proxy-pi": "/nix/store/vhz0b8njbbsnr89vmjvfcjpzpskwjrb6-nixos-system-proxy-pi-26.05.20260817.0dd31db",
-    "vaasanas": "/nix/store/8kwrzkvm3vzz80gjvcwj5na77nmgjgil-nixos-system-vaasanas-26.05.20260817.0dd31db"
+    "ankka": "/nix/store/pbmnv3q8g87p38j59dlqmwdc828c8fkd-nixos-system-ankka-26.05.20261015.26f4107",
+    "framework": "/nix/store/c725pbil63by9xgy1c8963cv1bjjshhi-nixos-system-framework-26.05.20261015.26f4107",
+    "minecraft": "/nix/store/yj0z3sg82z58fmwlgicckhnrn7qf57df-nixos-system-minecraft-26.05.20261015.26f4107",
+    "nas": "/nix/store/rffx8nancl8fn1kyrf3irh84b29bvk20-nixos-system-nas-26.05.20261015.26f4107",
+    "proxy-pi": "/nix/store/k3iq3zgyfpw7r4i2ix7qb2br76qs1q1w-nixos-system-proxy-pi-26.05.20261015.26f4107",
+    "vaasanas": "/nix/store/x5cyhvfqgaifsy20mjk24nj0psh3mivv-nixos-system-vaasanas-26.05.20261015.26f4107"
   },
   "revs": [
+    "01fafcbcec4a66cd7cdb2db62dd267ad7ff54b12",
+    "ac1291a46d9a91b1853a5cc4651f2d5c9e54dcfb",
+    "7d3ce2c7791affd4c1c54eaaaf86cc89fed7b2d4",
+    "0347c81b3881a5865491a8a227d788631e874749",
     "c3a52e30612fea085c57d048ae166ae70f8e3360",
     "5cce6a5bfb28f9ab03b58e4f558dbc264d08bc28",
     "20f0c75d39702a79b32078580ca4c46513e5add5",
