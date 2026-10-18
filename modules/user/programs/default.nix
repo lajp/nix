@@ -92,7 +92,22 @@ in
   programs = {
     starship = {
       enable = true;
-      settings.add_newline = false;
+      extraPackages = [ pkgs.jj-starship ];
+      settings = {
+        add_newline = false;
+        custom.jj = {
+          when = "jj-starship detected";
+          shell = [
+            "jj-starship"
+            "--no-git-name"
+            "--no-git-id"
+          ];
+          format = "$output ";
+        };
+        git_branch.disabled = true;
+        git_commit.disabled = true;
+        git_status.disabled = true;
+      };
     };
 
     nix-index = {

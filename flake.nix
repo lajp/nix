@@ -159,11 +159,12 @@
             services.nextcloud.enable = true;
             services.attic.enable = true;
             # Hosts the cache, so it upgrades first. Kernel/nvidia changes break
-            # CUDA until a (manual, ZFS unlock) reboot, so those are only staged.
+            # CUDA until a reboot, which needs a manual ZFS unlock, so those are
+            # only staged.
             services.auto-upgrade = {
               enable = true;
               dates = "03:00";
-              stageKernel = true;
+              onKernelChange = "boot";
             };
             services.dyndns = {
               enable = true;
@@ -233,7 +234,10 @@
               role = "nas";
               location = "vaasa";
             };
-            services.auto-upgrade.enable = true;
+            services.auto-upgrade = {
+              enable = true;
+              onKernelChange = "reboot";
+            };
           };
         };
         #nixos-dev = mkHost {
@@ -293,10 +297,7 @@
             services.auto-upgrade.enable = true;
             services.automatic-timezone.enable = true;
             services.niri.enable = true;
-            services.ssh = {
-              enable = true;
-              port = 2222;
-            };
+            services.ssh.enable = true;
             services.tailscale.enable = true;
             services.vpn = {
               braiins.enable = true;
@@ -320,7 +321,6 @@
             rickroll.enable = true;
             dreamlauncher.enable = true;
             #virt-manager.enable = true;
-            services.yensid.enable = true;
           };
 
           userConfig = {
@@ -354,7 +354,10 @@
               enable = true;
               role = "proxy";
             };
-            services.auto-upgrade.enable = true;
+            services.auto-upgrade = {
+              enable = true;
+              onKernelChange = "reboot";
+            };
           };
         };
         minecraft = mkHost {
@@ -389,7 +392,10 @@
               role = "minecraft";
               location = "jmt";
             };
-            services.auto-upgrade.enable = true;
+            services.auto-upgrade = {
+              enable = true;
+              onKernelChange = "reboot";
+            };
           };
         };
         ankka = mkHost {
@@ -425,10 +431,12 @@
             };
             services.slop.enable = true;
             services.thelounge.enable = true;
-            # Runs an hour after proxy-pi so the two DNS hosts never switch together.
+            # Runs an hour after proxy-pi so the two DNS hosts never switch or
+            # reboot together.
             services.auto-upgrade = {
               enable = true;
               dates = "05:00";
+              onKernelChange = "reboot";
             };
           };
         };

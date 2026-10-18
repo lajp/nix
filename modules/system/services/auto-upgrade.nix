@@ -29,7 +29,7 @@ let
     text = ''
       host=${config.networking.hostName}
       operation=${cfg.operation}
-      stage_kernel=${lib.boolToString cfg.stageKernel}
+      on_kernel_change=${cfg.onKernelChange}
 
       # shellcheck disable=SC2329 # invoked via trap
       report() {
@@ -60,11 +60,14 @@ let
       [ "$(readlink -f /nix/var/nix/profiles/system)" != "$path" ] || exit 0 # already done or staged
       nix-store --realise "$path" --add-root /run/auto-upgrade/system >/dev/null # download only, never builds
 
-      if [ "$operation" = boot ] || {
-        [ "$stage_kernel" = true ] &&
-          [ "$(readlink /run/booted-system/kernel-modules)" != "$(readlink "$path/kernel-modules")" ]
-      }; then
+      kernel_changed=false
+      [ "$(readlink /run/booted-system/kernel-modules)" = "$(readlink "$path/kernel-modules")" ] || kernel_changed=true
+
+      if [ "$operation" = boot ] || { [ "$kernel_changed" = true ] && [ "$on_kernel_change" != switch ]; }; then
         nixos-rebuild boot --no-reexec --store-path "$path"
+        if [ "$kernel_changed" = true ] && [ "$on_kernel_change" = reboot ]; then
+          shutdown -r +5 "auto-upgrade: rebooting into the new kernel"
+        fi
         exit 0
       fi
 
@@ -90,7 +93,19 @@ in
       default = if server then "switch" else "boot";
     };
 
-    stageKernel = mkEnableOption "staging updates that change the kernel or its modules for the next (manual) boot instead of switching live";
+    onKernelChange = mkOption {
+      type = types.enum [
+        "switch"
+        "boot"
+        "reboot"
+      ];
+      default = "switch";
+      description = ''
+        What to do with an update that changes the kernel or its modules (incl.
+        nvidia/zfs): switch live and keep running the old kernel until the next
+        reboot, only stage it for the next (manual) boot, or stage it and reboot.
+      '';
+    };
 
     dates = mkOption {
       type = types.str;

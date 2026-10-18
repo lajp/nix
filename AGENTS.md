@@ -163,11 +163,12 @@ has been removed. `t480` is manual-only.
    it with `nixos-rebuild --store-path --no-reexec`.
 
 Servers switch live at night (`ankka` at 05:00, `nas` at 03:00, the rest at
-04:00) and never reboot themselves; a new kernel takes effect when you reboot.
-`nas` and `vaasanas` set `stageKernel`: an update that changes the kernel or its
-modules (incl. nvidia/zfs) is only staged with `nixos-rebuild boot` and applies
-at the next manual reboot (ZFS unlock is manual; a live switch breaks CUDA on
-nas). `framework` always stages (`boot`), only on AC power, and catches up after
+04:00). An update that changes the kernel or its modules (incl. nvidia/zfs) is
+handled per host by `onKernelChange`: `vaasanas`, `minecraft`, `proxy-pi` and
+`ankka` stage it with `nixos-rebuild boot` and reboot 5 minutes later. `nas`
+only stages it, and it applies at the next manual reboot (ZFS unlock is manual;
+a live switch breaks CUDA). Until then later updates on nas are staged too.
+`framework` always stages (`boot`), only on AC power, and catches up after
 sleep.
 
 - **Rollback**: if the live switch fails (`switch-to-configuration` exits
@@ -220,7 +221,7 @@ sleep.
 
 - When creating a service, always check if it can be added to prometheus and grafana
 - Similarly, always check if it should be monitored by gatus
-- Kernel upgrade on nas requires reboot, otherwise CUDA in jellyfin fails. nas and vaasanas can't reboot unattended (manual ZFS unlock), so auto-upgrade only stages kernel changes there (`stageKernel`)
+- Kernel upgrade on nas requires reboot, otherwise CUDA in jellyfin fails. nas can't reboot unattended (manual ZFS unlock), so auto-upgrade only stages kernel changes there (`onKernelChange = "boot"`)
 - Secret management is done with agenix **rekey**, no `secrets.nix` like in plain agenix
 - nixarr uses a custom fork (`cross-seed-fix` branch) for cross-seed support
 - `t480` is not built in CI
