@@ -19,7 +19,9 @@ let
     # Read and store email
     EMAIL=$(${pkgs.coreutils}/bin/cat)
     SUBJECT=$(echo "$EMAIL" | ${pkgs.procmail}/bin/formail -xSubject: | ${pkgs.coreutils}/bin/tr -d '\n' | ${pkgs.perl}/bin/perl -MMIME::QuotedPrint -e 'print decode_qp(join("",<STDIN>))')
-    BODY=$(echo "$EMAIL" | ${pkgs.gawk}/bin/awk '/^$/{found=1; next} found{print}' | ${pkgs.coreutils}/bin/head -c 3000 | ${pkgs.perl}/bin/perl -MMIME::QuotedPrint -e 'print decode_qp(join("",<STDIN>))')
+    # Truncate in perl rather than with `head -c`: head exits early, so awk gets
+    # SIGPIPE on long bodies and pipefail aborts the script.
+    BODY=$(echo "$EMAIL" | ${pkgs.gawk}/bin/awk '/^$/{found=1; next} found{print}' | ${pkgs.perl}/bin/perl -MMIME::QuotedPrint -e 'print substr(decode_qp(join("",<STDIN>)), 0, 3000)')
 
     # Escape HTML entities
     SUBJECT_ESC=$(echo "$SUBJECT" | ${pkgs.gnused}/bin/sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g')
@@ -31,14 +33,17 @@ let
 <pre>$BODY_ESC</pre>"
 
     # Send to Telegram
-    ${pkgs.curl}/bin/curl -s -X POST \
+    ${pkgs.curl}/bin/curl -s --max-time 30 -X POST \
       "https://api.telegram.org/bot$BOT_TOKEN/sendMessage" \
       -d chat_id="$CHAT_ID" \
       -d parse_mode="HTML" \
       --data-urlencode text="$MESSAGE" || true
 
-    # Deliver to main address (won't loop since it doesn't match transport_maps)
-    echo "$EMAIL" | ${pkgs.postfix}/bin/sendmail -G -i "lajp@lajp.fi"
+    # Deliver to main address (won't loop since it doesn't match transport_maps).
+    # Must be the setgid wrapper: the store sendmail runs a postdrop without the
+    # postdrop group, which retries the maildrop write forever until the pipe
+    # time limit (1000s) kills it, holding the single telegram-alert slot.
+    echo "$EMAIL" | ${config.security.wrapperDir}/sendmail -G -i "lajp@lajp.fi"
   '';
 in
 {
