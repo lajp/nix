@@ -35,6 +35,7 @@ in
           let
             inherit (config.lajp.user) username;
             inherit (config.lajp.core) server;
+            inherit (lib) mkIf;
           in
           {
             imports = [
@@ -51,18 +52,16 @@ in
 
             lajp = systemConfig;
 
-            home-manager =
-              if !server then
-                {
-                  useGlobalPkgs = true;
-                  useUserPackages = true;
-                  extraSpecialArgs = {
-                    inherit inputs pkgs-unstable pkgs-nur;
-                  };
-                  users.${username} = user.mkConfig { inherit userConfig; };
-                }
-              else
-                { };
+            security.sudo = mkIf server { wheelNeedsPassword = false; };
+
+            home-manager = mkIf (!server) {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              extraSpecialArgs = {
+                inherit inputs pkgs-unstable pkgs-nur;
+              };
+              users.${username} = user.mkConfig { inherit userConfig; };
+            };
           }
         )
 

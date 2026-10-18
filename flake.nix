@@ -401,6 +401,8 @@
               server = true;
             };
 
+            hardware.memory.enable = true;
+
             services.ssh.enable = true;
             services.gatus.enable = true;
             services.mailserver.enable = true;
@@ -411,13 +413,10 @@
             services.tailscale.enable = true;
             services.website.enable = true;
             services.ip-echo.enable = true;
-            #services.memegenerator.enable = true;
             services.formicer-website.enable = false;
             services.cheese.enable = true;
             services.matrix.enable = true;
             services.screego.enable = true;
-            # NOTE: vulnerable and dropped from nixpkgs
-            # services.crabfit.enable = true;
             services.coredns.enable = true;
             services.prometheus = {
               enable = true;

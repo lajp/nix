@@ -9,14 +9,17 @@
     ./hardware-configuration.nix
   ];
 
-  networking.useDHCP = lib.mkDefault true;
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
-  networking.nameservers = [
-    "1.1.1.1"
-    "9.9.9.9"
-  ];
-  networking.networkmanager.enable = true;
+  networking = {
+    useDHCP = lib.mkDefault true;
+    nameservers = [
+      "1.1.1.1"
+      "9.9.9.9"
+    ];
+    networkmanager.enable = true;
+  };
+
   services.resolved.enable = true;
   networking.useHostResolvConf = false;
 
@@ -53,31 +56,6 @@
 
   age.rekey.hostPubkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPX0OQ3iAjKZBLlk/RoY8pd7k393XOLXD082ODfjmb2q";
 
-  nix.buildMachines = [
-    #{
-    #  sshUser = "builder-ssh";
-    #  sshKey = "/home/lajp/.ssh/id_ed25519";
-    #  protocol = "ssh-ng";
-    #  hostName = "localhost";
-    #  # Each proxy can only service a homegenous set of builder systems (that is,
-    #  # there can be multiple systems, but all builders must support all of those
-    #  # systems.
-    #  systems = [ "x86_64-linux" ];
-    #}
-  ];
-
-  users.users.builder-ssh = {
-    isSystemUser = true;
-    shell = pkgs.bash;
-    group = "users";
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF7gs/ba3jdX+kfCruDK0NluwnFqO4AB+BZV3+2r36gY lajp@framework"
-    ];
-    extraGroups = [ "wheel" ];
-  };
-
-  networking.firewall.interfaces.virbr0.allowedTCPPorts = [ 8080 ];
-
   environment.systemPackages = [
     pkgs.nfs-utils
     pkgs.framework-tool
@@ -85,12 +63,6 @@
   ];
 
   services.rpcbind.enable = true; # needed for NFS
-  # services.k9mail-link = {
-  #   enable = true;
-  #   envFile = "/run/agenix/k9mail-link.env";
-  #   newPrefix = "https://mail.lajp.fi/";
-  #   environment.RUST_LOG = "info";
-  # };
 
   networking.networkmanager.ensureProfiles.profiles = {
     "Aalto VPN" = {
@@ -107,21 +79,8 @@
     };
   };
   networking.networkmanager.plugins = [ pkgs.networkmanager-openconnect ];
-  #programs.nm-applet.enable = true;
 
   services.hardware.bolt.enable = true;
 
   powerManagement.powertop.enable = true;
-
-  # services.udev.extraRules = ''
-  #   # Espressif
-  #   ATTR{idVendor}=="303a", MODE="666"
-  #   # # Raspberry Pi
-  #   # ATTR{idVendor}=="2e8a", MODE="666"
-  #   # # STMicro
-  #   # ATTR{idVendor}=="0483", MODE="666"
-  #   # # TI
-  #   # ATTR{idVendor}=="0451", MODE="666"
-  #   # ATTR{idVendor}=="1cbe", MODE="666"
-  # '';
 }
