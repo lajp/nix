@@ -3,7 +3,6 @@
   config,
   pkgs,
   pkgs-unstable,
-  pkgs-nur,
   ...
 }:
 let
@@ -45,7 +44,7 @@ in
             symbolic
           ]
         ))
-        pkgs-unstable.musescore
+        musescore
         xclip
         mednaffe
         gimp
