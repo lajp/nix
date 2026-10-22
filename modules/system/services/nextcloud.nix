@@ -24,7 +24,7 @@ in
       enable = true;
       package = pkgs.nextcloud33;
       extraApps = {
-        inherit (pkgs.nextcloud32Packages.apps) forms onlyoffice;
+        inherit (pkgs.nextcloud33Packages.apps) forms onlyoffice;
       };
       hostName = "pilvi.lajp.fi";
       https = true;
