@@ -16,9 +16,17 @@ in
     lajp.services.nginx.enable = true;
     virtualisation.docker.enable = true;
 
+    age.secrets.slop-htpasswd = {
+      rekeyFile = ../../../secrets/slop-htpasswd.age;
+      owner = "nginx";
+      group = "nginx";
+      mode = "0400";
+    };
+
     services.nginx.virtualHosts."slop.lajp.fi" = {
       forceSSL = true;
       enableACME = true;
+      basicAuthFile = config.age.secrets.slop-htpasswd.path;
 
       locations."/" = {
         proxyPass = "http://localhost:${toString port}";
