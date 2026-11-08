@@ -15,10 +15,12 @@ in
   ];
 
   nix = {
+    # Servers get a new generation almost every night (auto-upgrade), and each
+    # nixpkgs bump is a near-full new closure, so keep them for a shorter time.
     gc = {
       automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 14d";
+      dates = if server then "daily" else "weekly";
+      options = "--delete-older-than ${if server then "7d" else "14d"}";
     };
 
     registry.nixpkgs.flake = inputs.nixpkgs;
@@ -88,6 +90,11 @@ in
   };
 
   boot.tmp.cleanOnBoot = true;
+
+  # journald defaults to 10% of the filesystem (up to 4G)
+  services.journald.extraConfig = mkIf server ''
+    SystemMaxUse=1G
+  '';
 
   systemd.tmpfiles.rules = [
     "L+ /bin/bash - - - - ${pkgs.bash}/bin/bash"
