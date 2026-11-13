@@ -431,6 +431,7 @@
             };
             services.slop.enable = true;
             services.thelounge.enable = true;
+            services.amp-runner.enable = true;
             # Runs an hour after proxy-pi so the two DNS hosts never switch or
             # reboot together.
             services.auto-upgrade = {

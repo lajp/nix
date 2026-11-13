@@ -58,5 +58,6 @@
     ./k9mail-link.nix
     ./open-webui.nix
     ./thelounge.nix
+    ./amp-runner.nix
   ];
 }
