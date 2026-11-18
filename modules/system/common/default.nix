@@ -91,6 +91,17 @@ in
 
   boot.tmp.cleanOnBoot = true;
 
+  # NGINX2Root escalates from the nginx worker to root through a kernel SCTP
+  # bug, reached by autoloading the module from an unprivileged socket(). No
+  # host here uses kernel SCTP, so refuse to load it at all ("blacklist" only
+  # stops alias autoloading; "install" also stops explicit/dependency loads).
+  # Applies on switch, but doesn't unload an sctp that is already loaded
+  # (check `lsmod | grep sctp`; `rmmod sctp` or reboot).
+  boot.blacklistedKernelModules = [ "sctp" ];
+  boot.extraModprobeConfig = ''
+    install sctp ${pkgs.coreutils}/bin/false
+  '';
+
   # journald defaults to 10% of the filesystem (up to 4G)
   services.journald.extraConfig = mkIf server ''
     SystemMaxUse=1G

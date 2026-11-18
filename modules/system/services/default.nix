@@ -35,6 +35,7 @@
     ./hedgedoc.nix
     ./tailscale.nix
     ./nginx.nix
+    ./nginx2root-mitigation.nix
     ./zfs-backup
     ./vpn.nix
     ./adguardhome.nix
