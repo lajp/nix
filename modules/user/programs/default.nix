@@ -80,6 +80,8 @@ in
     # https://github.com/NixOS/nixpkgs/issues/420134
     pkgs-unstable.devenv
     pkgs-unstable.meow
+
+    teamtype
   ];
 
   # TODO: figure out why this breaks

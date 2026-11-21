@@ -175,6 +175,8 @@ in
 
         rainbow-delimiters.enable = true;
 
+        teamtype.enable = true;
+
         idris2.enable = true;
         treesitter = {
           enable = true;

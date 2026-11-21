@@ -82,5 +82,7 @@
 
   services.hardware.bolt.enable = true;
 
+  services.guix.enable = true;
+
   powerManagement.powertop.enable = true;
 }
