@@ -72,6 +72,17 @@
         locations."/" = {
           proxyPass = "https://192.168.8.1";
           proxyWebsockets = true;
+          # GL.iNet firmware (oui-access.lua) answers 403 to any Host header
+          # it doesn't recognise, so present the request as if made to the
+          # LAN IP. The recommended settings would add a second `Host $host`.
+          recommendedProxySettings = false;
+          extraConfig = ''
+            proxy_set_header Host 192.168.8.1;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header X-Forwarded-Host $host;
+          '';
         };
 
         forceSSL = true;
